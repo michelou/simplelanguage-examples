@@ -1,0 +1,39 @@
+simplelanguage ::= function function* EOF
+
+function ::= IDENTIFIER '(' ( IDENTIFIER ( ',' IDENTIFIER )* )? ')' block
+
+block ::= '{' ( statement )* '}'
+
+statement ::= while_statement | 'break' | 'continue' | if_statement | return_statement | expression ";" | 'debugger' ";"
+
+while_statement ::= 'while' '(' condition ')' block
+
+condition ::= expression
+
+if_statement ::= 'if' '(' condition ')'  block ( 'else' block )?
+
+return_statement ::= 'return' ( expression )? ';'
+
+expression ::= logic_term ( '||' logic_term )*
+
+logic_term ::= logic_factor ( '&&' logic_factor )*
+
+logic_factor ::= arithmetic ( ( '<' | '>' | '>=' | '==' | '!=' ) arithmetic ) ?
+
+arithmetic ::= term ( ( '+' | '-' ) term )*
+
+term ::= factor ( ( '*' | '/') factor )*
+
+factor ::= ident member_expression? | STRING_LITERAL | NUMERIC_LITERAL | '(' expression ')'
+
+member_expression ::= ( '(' expression ( ',' expression )* ')' | '=' expression | '.' IDENTIFIER | '[' expression ']' ) member_expression?
+
+LETTER ::= [A-Za-z_$]
+
+DIGIT ::= [0-9]
+
+IDENTIFIER ::= LETTER ( LETTER | DIGIT )*
+
+STRING_LITERAL ::= '"' [^"\\#xA#xD]* '"'
+
+NUMERIC_LITERAL ::= '0' | [1-9] DIGIT*
