@@ -43,9 +43,32 @@ C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 
 ## Directory structure
 
-The [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example project is a [Maven project](https://maven.apache.org/guides/getting-started/) with five POM files (one [main](pom.xml) project and four subprojects).
+This project is organized as follows:
 
-We added/modified the following files from the original [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example project:
+<pre style="font-size:80%;">
+bin\simplelanguage\build.bat
+bin\simplelanguage\generate_parser.bat
+bin\simplelanguage\sl.bat
+docs\
+simplelanguage\  <i>(Git submodule)</i>
+BUILD.md
+README.md
+setenv.bat
+</pre>
+
+- file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
+- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is the batch script for generating the SL parser source files.
+- file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
+- file [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_04">[[4]](#footnote_04)</sup>.
+- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a Github submodule.
+- file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.
+- file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
+- file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
+
+The [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example project is a [Maven project](https://maven.apache.org/guides/getting-started/) with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
+
+We added/modified the following files in the original [graalvm/simpleLanguage](https://github.com/graalvm/simplelanguage) example project:
+
 <pre style="font-size:80%;">
 component\clean_component.bat
 component\make_component.bat
@@ -68,19 +91,7 @@ In the next section we give a brief description of the added batch files.
 
 We distinguish different sets of batch commands:
 
-1. [**`setenv.bat`**](setenv.bat) - This batch command makes external tools such as [**`javac.exe`**](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html), [**`mvn.cmd`**](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) or [**`cl.exe`**](https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019) directly available from the command prompt (see section [**Project dependencies**](#section_01)).
-
-    <pre style="font-size:80%;">
-    <b>&gt; setenv help</b>
-    Usage: setenv { options | subcommands }
-      Options:
-        -nosdk      don't setup Windows SDK environment (SetEnv.cmd)
-        -verbose    display progress messages
-      Subcommands:
-        help        display this help message
-    </pre>
-
-2. [**`build.bat`**](build.bat) - This batch command provides subcommands such as **`clean`** to delete the generated files (**`target`** directories), **`dist`** to generate the binary distributions (JVM and native versions) and **`parser`** to generate the [ANTLR](https://www.antlr.org/) parser to SL (call to [**`generate_parser.bat`**](generated_parser.bat)).
+1. [**`build.bat`**](build.bat) - This batch command provides subcommands such as **`clean`** to delete the generated files (**`target`** directories), **`dist`** to generate the binary distributions (JVM and native versions) and **`parser`** to generate the [ANTLR](https://www.antlr.org/) parser to SL (call to [**`generate_parser.bat`**](generated_parser.bat)).
     > **:mag_right:** Command [**`build.bat`**](build.bat) differs in two ways from command **`mvn package`**:<br/>
     > - it can also be executed *outside* of the *Windows SDK 7.1 Command Prompt*.<br/>
     > - it generates a distribution-ready output (see section [**Usage examples**](#section_04)).
@@ -162,9 +173,16 @@ Tool paths:
 
 Command [**`setenv -nosdk`**](setenv.bat) is aimed at advanced users; we use option **`-nosdk`** to work with a reduced set of environment variables (4 variables in our case) instead of relying on the *"Windows SDK 7.1 Command Prompt"* shortcut (target **`C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd`**) to setup our development environment.
 
-#### `build.bat`
+#### `simplelanguage\build.bat`
 
-Command [**`build -verbose clean`**](build.bat) deletes all output directories.
+Directory **`simplelanguage\`** contains our fork of the oracle/simplelanguage]() repository; it is setup as follows:
+
+<pre style="font-size:80%;">
+<b>&gt; cp bin\simplelanguage\build.bat simplelanguage</b>
+<b>&gt; cd simplelanguage</b>
+</pre>
+
+Command [**`build.bat -verbose clean`**](bin/simplelanguage/build.bat) deletes all output directories.
 
 <pre style="font-size:80%;">
 <b>&gt; build -verbose clean</b>
@@ -177,7 +195,7 @@ Delete directory S:\target
 
 > **:mag_right:** Unlike the other shell scripts [**`component\make_component.sh`**](component/make_component.sh) generates its output directly into directory **`component\`** instead of **`component\target\`**. We changed that behavior: the corresponding batch file [**`component\make_component.bat`**](component/make_component.bat) generates its output into directory **`component\target\`**.
 
-Command [**`build -native -verbose dist`**](build.bat) generates both the JVM version and the native version of our application.
+Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) generates both the JVM version and the native version of our application.
 
 <pre style="font-size:80%;">
 <b>&gt; build -verbose -native dist</b>
@@ -201,23 +219,23 @@ Command [**`build -native -verbose dist`**](build.bat) generates both the JVM ve
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:exec (make_native) @ simplelanguage-graalvm-native ---
-[S:\\native\target\slnative:3432]    classlist:   2,794.53 ms
-[S:\\native\target\slnative:3432]        (cap):  23,393.11 ms
-[S:\\native\target\slnative:3432]        setup:  24,715.09 ms
-[S:\\native\target\slnative:3432]   (typeflow):  13,055.30 ms
-[S:\\native\target\slnative:3432]    (objects):  10,122.69 ms
-[S:\\native\target\slnative:3432]   (features):   2,000.37 ms
-[S:\\native\target\slnative:3432]     analysis:  26,150.04 ms
-[S:\\native\target\slnative:3432]     (clinit):     529.91 ms
+[S:\simplelanguage\native\target\slnative:3432]    classlist:   2,794.53 ms
+[S:\simplelanguage\native\target\slnative:3432]        (cap):  23,393.11 ms
+[S:\simplelanguage\native\target\slnative:3432]        setup:  24,715.09 ms
+[S:\simplelanguage\native\target\slnative:3432]   (typeflow):  13,055.30 ms
+[S:\simplelanguage\native\target\slnative:3432]    (objects):  10,122.69 ms
+[S:\simplelanguage\native\target\slnative:3432]   (features):   2,000.37 ms
+[S:\simplelanguage\native\target\slnative:3432]     analysis:  26,150.04 ms
+[S:\simplelanguage\native\target\slnative:3432]     (clinit):     529.91 ms
 1415 method(s) included for runtime compilation              
-[S:\\native\target\slnative:3432]     universe:   1,655.70 ms
-[S:\\native\target\slnative:3432]      (parse):   2,496.46 ms
-[S:\\native\target\slnative:3432]     (inline):   3,769.89 ms
-[S:\\native\target\slnative:3432]    (compile):  22,064.46 ms
-[S:\\native\target\slnative:3432]      compile:  30,115.63 ms
-[S:\\native\target\slnative:3432]        image:   2,829.75 ms
-[S:\\native\target\slnative:3432]        write:     753.58 ms
-[S:\\native\target\slnative:3432]      [total]:  90,272.90 ms
+[S:\simplelanguage\native\target\slnative:3432]     universe:   1,655.70 ms
+[S:\simplelanguage\native\target\slnative:3432]      (parse):   2,496.46 ms
+[S:\simplelanguage\native\target\slnative:3432]     (inline):   3,769.89 ms
+[S:\simplelanguage\native\target\slnative:3432]    (compile):  22,064.46 ms
+[S:\simplelanguage\native\target\slnative:3432]      compile:  30,115.63 ms
+[S:\simplelanguage\native\target\slnative:3432]        image:   2,829.75 ms
+[S:\simplelanguage\native\target\slnative:3432]        write:     753.58 ms
+[S:\simplelanguage\native\target\slnative:3432]      [total]:  90,272.90 ms
 [INFO]     
 [INFO] ------------< com.oracle:simplelanguage-graalvm-component >-------------
 [INFO] Building simplelanguage-graalvm-component 19.2.1-SNAPSHOT          [5/5]
@@ -238,7 +256,7 @@ Command [**`build -native -verbose dist`**](build.bat) generates both the JVM ve
 [INFO] Total time:  01:44 min
 [INFO] Finished at: 2019-10-24T10:32:33+02:00
 [INFO] ------------------------------------------------------------------------
-Copy executable S:\native\target\slnative.exe to directory S:\target\sl\bin
+Copy executable S:\simplelanguage\native\target\slnative.exe to directory S:\simplelanguage\target\sl\bin
 </pre>
 
 > **:mag_right:** Omitting option **`-native`** (which controls the **`SL_BUILD_NATIVE`** environment variable) will skip step 4:
@@ -253,7 +271,7 @@ Output directory is **`target\sl\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
 <b>&gt; tree /f target</b>
-S:\TARGET
+S:\simplelanguage\TARGET
 └───sl
     ├───bin
     │       sl.bat
@@ -313,15 +331,15 @@ We can now execute both versions (JVM and native) of our application:
 > </pre>
 
 
-#### `generate_parser.bat`
+#### `simplelanguage\generate_parser.bat`
 
-Command [**`generate_parser`**](generate_parser.bat) with no arguments produces the lexer/parser files for the [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example.
+Command [**`generate_parser.bat`**](generate_parser.bat) with no arguments produces the lexer/parser files for the [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example.
 
 Output directory is **`target\parser\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
 <b>&gt; tree /f target</b>
-S:\TARGET
+S:\simplelanguage\TARGET
 └───parser
     ├───libs
     │       antlr-4.7.2-complete.jar
@@ -408,9 +426,9 @@ Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`g
 </pre>
 
 
-#### `sl.bat`
+#### `simplelanguage\sl.bat`
 
-Usage of command [**`sl`**](sl.bat) is described on the documentation page ["Introduction to SimpleLanguage"](https://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/) of the [GraalVM](https://www.graalvm.org) website; we resume its usage below:
+Usage of command [**`sl.bat`**](bin/simplelanguage/sl.bat) is described on the documentation page ["Introduction to SimpleLanguage"](https://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/) of the [GraalVM](https://www.graalvm.org) website; we resume its usage below:
 
 <pre style="font-size:80%;">
 sl { &lt;option&gt; } [ &lt;file_path&gt; ]

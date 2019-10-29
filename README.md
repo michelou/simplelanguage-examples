@@ -46,30 +46,22 @@ C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 This project is organized as follows:
 
 <pre style="font-size:80%;">
-bin\simplelanguage\build.bat
-bin\simplelanguage\generate_parser.bat
-bin\simplelanguage\sl.bat
-docs\ebnf\SimpleLanguage.md
+bin\simplelanguage\
+docs\
 simplelanguage\  <i>(Git submodule)</i>
-simplelanguage-01\
-simplelanguage-02\
-setenv.bat
 BUILD.md
 README.md
+setenv.bat
 </pre>
 
 where
 
-- file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
-- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is the batch script for generating the SL parser source files.
-- - file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
-- file [**`docs\ebnf\SimpleLanguage.md`**](docs/ebnf/SimpleLanguage.md)<sup id="anchor_04">[[4]](#footnote_04)</sup> presents the EBNF grammar of the SL language as PNG images.
-- directory [**`simplelanguage\`**](simplelanguage/) is a Git submodule pointing to the [**`michelou/simplelanguage`**](https://github.com/michelou/simplelanguage) repository, a fork of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository for building/running SL on a Windows machine.
-- directory [**`simplelanguage-01`**](simplelanguage-01) ...
-- directory [**`simplelanguage-02`**](simplelanguage-02) ...
-- file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
+- directory [**`bin\simplelanguage\`**](bin/simplelanguage/) contains several batch scripts for generating/running the SL parser.
+- directory [**`docs\`**](docs/) contains SL related documentation.
+- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a Github submodule.
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.
 - file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
+- file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
 
 We also define a virtual drive **`S:`** in our working environment in order to reduce/hide the real path of our project directory (see article ["Windows command prompt limitation"](https://support.microsoft.com/en-gb/help/830473/command-prompt-cmd-exe-command-line-string-limitation) from Microsoft Support).
 
@@ -79,7 +71,7 @@ We also define a virtual drive **`S:`** in our working environment in order to r
 > <b>&gt; subst S: %USERPROFILE%\workspace\simplelanguage-examples</b>
 > </pre>
 
-In the next section we give a brief description of the added batch files.
+In the next section we give a brief description of the batch files present in this project.
 
 ## Batch commands
 
@@ -87,15 +79,32 @@ We distinguish different sets of batch commands:
 
 1. [**`setenv.bat`**](setenv.bat) - This batch command makes external tools such as [**`javac.exe`**](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html), [**`mvn.cmd`**](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) or [**`cl.exe`**](https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019) directly available from the command prompt (see section [**Project dependencies**](#section_01)).
 
-    <pre style="font-size:80%;">
-    <b>&gt; setenv help</b>
-    Usage: setenv { options | subcommands }
-      Options:
-        -usesdk     setup Windows SDK environment (SetEnv.cmd)
-        -verbose    display progress messages
-      Subcommands:
-        help        display this help message
-    </pre>
+   <pre style="font-size:80%;">
+   <b>&gt; setenv help</b>
+   Usage: setenv { options | subcommands }
+     Options:
+       -usesdk     setup Windows SDK environment (SetEnv.cmd)
+       -verbose    display progress messages
+     Subcommands:
+       help        display this help message
+   </pre>
+
+2. [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) - This batch command generates the SL component.
+
+   <pre style="font-size:80%;">
+   <b>&gt; build help</b>
+   Usage: build { options | subcommands }
+     Options:
+       -debug      show commands executed by this script
+       -native     generate native executable (native-image)
+       -timer      display total elapsed time
+       -verbose    display progress messages
+    Subcommands:
+       clean       delete generated files
+       dist        generate binary distribution
+       help        display this help message
+       parser      generate ANTLR parser for SL
+   </pre>
 
 ## <span id="section_04">Usage examples</span>
 
@@ -137,11 +146,15 @@ Command [**`setenv -usesdk`**](setenv.bat) is aimed to users who prefer to rely 
 
 #### `simplelanguage\build.bat`
 
-See external description file [WIN.md](https://github.com/michelou/simplelanguage/blob/master/WIN.md) for usage of batch script **`simplelanguage\build.bat`**.
+Usage of batch script [**`simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is presented in document [BUILD.md](BUILD.md).
 
-#### `generate_parser.bat`
+#### `simplelanguage\generate_parser.bat`
 
-See external description file [WIN.md](https://github.com/michelou/simplelanguage/blob/master/WIN.md) for usage of batch script **`simplelanguage\generate_parser.bat`**.
+Usage of batch script [**`simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is presented in document [BUILD.md](BUILD.md).
+
+#### `simplelanguage\sl.bat`
+
+Usage of batch script [**`simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is presented in document [BUILD.md](BUILD.md).
 
 ## Footnotes
 
