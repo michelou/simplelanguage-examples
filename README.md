@@ -56,7 +56,7 @@ setenv.bat
 
 where
 
-- directory [**`bin\simplelanguage\`**](bin/simplelanguage/) contains several batch scripts for generating/running the SL parser.
+- directory [**`bin\simplelanguage\`**](bin/simplelanguage/) contains several batch scripts for generating/running the SL parser on a Windows machine.
 - directory [**`docs\`**](docs/) contains SL related documentation.
 - directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a Github submodule.
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.

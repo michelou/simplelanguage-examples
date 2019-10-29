@@ -175,10 +175,10 @@ Command [**`setenv -nosdk`**](setenv.bat) is aimed at advanced users; we use opt
 
 #### `simplelanguage\build.bat`
 
-Directory **`simplelanguage\`** contains our fork of the oracle/simplelanguage]() repository; it is setup as follows:
+Directory **`simplelanguage\`** contains our fork of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository; it is setup as follows:
 
 <pre style="font-size:80%;">
-<b>&gt; cp bin\simplelanguage\build.bat simplelanguage</b>
+<b>&gt; cp bin\simplelanguage\*.bat simplelanguage</b>
 <b>&gt; cd simplelanguage</b>
 </pre>
 
@@ -186,11 +186,11 @@ Command [**`build.bat -verbose clean`**](bin/simplelanguage/build.bat) deletes a
 
 <pre style="font-size:80%;">
 <b>&gt; build -verbose clean</b>
-Delete directory S:\component\target
-Delete directory S:\language\target
-Delete directory S:\launcher\target
-Delete directory S:\native\target
-Delete directory S:\target
+Delete directory S:\simplelanguage\component\target
+Delete directory S:\simplelanguage\language\target
+Delete directory S:\simplelanguage\launcher\target
+Delete directory S:\simplelanguage\native\target
+Delete directory S:\simplelanguage\target
 </pre>
 
 > **:mag_right:** Unlike the other shell scripts [**`component\make_component.sh`**](component/make_component.sh) generates its output directly into directory **`component\`** instead of **`component\target\`**. We changed that behavior: the corresponding batch file [**`component\make_component.bat`**](component/make_component.bat) generates its output into directory **`component\target\`**.
