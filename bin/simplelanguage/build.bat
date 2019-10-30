@@ -13,18 +13,8 @@ set _EXITCODE=0
 
 for %%f in ("%~dp0") do set _ROOT_DIR=%%~sf
 
-set _COMPONENT_DIR=%_ROOT_DIR%component
-set _LANGUAGE_DIR=%_ROOT_DIR%language
-set _LAUNCHER_DIR=%_ROOT_DIR%launcher
-set _NATIVE_DIR=%_ROOT_DIR%native
-
-set _LAUNCHER_SCRIPTS_DIR=%_LAUNCHER_DIR%\src\main\scripts
-set _LAUNCHER_TARGET_DIR=%_LAUNCHER_DIR%\target
-set _NATIVE_TARGET_DIR=%_NATIVE_DIR%\target
-
-set _TARGET_DIR=%_ROOT_DIR%target
-set _TARGET_BIN_DIR=%_TARGET_DIR%\sl\bin
-set _TARGET_LIB_DIR=%_TARGET_DIR%\sl\lib
+call :env
+if not %_EXITCODE%==0 goto end
 
 call :args %*
 if not %_EXITCODE%==0 goto end
@@ -32,9 +22,6 @@ if %_HELP%==1 call :help & exit /b %_EXITCODE%
 
 rem ##########################################################################
 rem ## Main
-
-call :init
-if not %_EXITCODE%==0 goto end
 
 if %_CLEAN%==1 (
     call :clean
@@ -52,6 +39,39 @@ goto :end
 
 rem ##########################################################################
 rem ## Subroutines
+
+rem output parameter(s): _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
+rem                      _COMPONENT_DIR, _LANGUAGE_DIR, _LAUNCHER_DIR, _NATIVE_DIR
+rem                      _TARGET_DIR, _TARGET_BIN_DIR, _TARGET_LIB_DIR
+rem                      _MVN_CMD, _MVN_OPTS
+:env
+rem ANSI colors in standard Windows 10 shell
+rem see https://gist.github.com/mlocati/#file-win10colors-cmd
+set _DEBUG_LABEL=[46m[%_BASENAME%][0m
+set _ERROR_LABEL=[91mError[0m:
+set _WARNING_LABEL=[93mWarning[0m:
+
+set _COMPONENT_DIR=%_ROOT_DIR%component
+set _LANGUAGE_DIR=%_ROOT_DIR%language
+set _LAUNCHER_DIR=%_ROOT_DIR%launcher
+set _NATIVE_DIR=%_ROOT_DIR%native
+
+set _LAUNCHER_SCRIPTS_DIR=%_LAUNCHER_DIR%\src\main\scripts
+set _LAUNCHER_TARGET_DIR=%_LAUNCHER_DIR%\target
+set _NATIVE_TARGET_DIR=%_NATIVE_DIR%\target
+
+set _TARGET_DIR=%_ROOT_DIR%target
+set _TARGET_BIN_DIR=%_TARGET_DIR%\sl\bin
+set _TARGET_LIB_DIR=%_TARGET_DIR%\sl\lib
+
+if not exist "%MAVEN_HOME%" (
+    echo %_ERROR_LABEL% Could not find installation directory for Maven 3 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+set _MVN_CMD=%MAVEN_HOME%\bin\mvn.cmd
+set _MVN_OPTS=
+goto :eof
 
 rem input parameter: %*
 rem output parameter(s): _CLEAN, _DIST, _PARSER, _DEBUG,  _NATIVE, _VERBOSE
@@ -79,7 +99,7 @@ if "%__ARG:~0,1%"=="-" (
     ) else if /i "%__ARG%"=="-timer" ( set _TIMER=1
     ) else if /i "%__ARG%"=="-verbose" ( set _VERBOSE=1
     ) else (
-        echo Error: Unknown option %__ARG% 1>&2
+        echo %_ERROR_LABEL% Unknown option %__ARG% 1>&2
         set _EXITCODE=1
         goto args_done
    )
@@ -91,7 +111,7 @@ if "%__ARG:~0,1%"=="-" (
     ) else if /i "%__ARG%"=="help" ( set _HELP=1
     ) else if /i "%__ARG%"=="parser" ( set _PARSER=1
     ) else (
-        echo Error: Unknown subcommand %__ARG% 1>&2
+        echo %_ERROR_LABEL% Unknown subcommand %__ARG% 1>&2
         set _EXITCODE=1
         goto args_done
     )
@@ -100,7 +120,7 @@ shift
 goto :args_loop
 :args_done
 if %_TIMER%==1 for /f "delims=" %%i in ('powershell -c "(Get-Date)"') do set _TIMER_START=%%i
-if %_DEBUG%==1 echo [%_BASENAME%] _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _NATIVE=%_NATIVE% _VERBOSE=%_VERBOSE% 1>&2
+if %_DEBUG%==1 echo %_DEBUG_LABEL% _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _NATIVE=%_NATIVE% _VERBOSE=%_VERBOSE% 1>&2
 goto :eof
 
 :help
@@ -117,17 +137,6 @@ echo     help        display this help message
 echo     parser      generate ANTLR parser for SL
 goto :eof
 
-rem output parameter(s): _MVN_CMD, MVN_OPTS
-:init
-if not exist "%MAVEN_HOME%" (
-    echo Error: Could not find installation directory for Maven 3 1>&2
-    set _EXITCODE=1
-    goto :eof
-)
-set _MVN_CMD=%MAVEN_HOME%\bin\mvn.cmd
-set _MVN_OPTS=
-goto :eof
-
 :clean
 for %%f in ("%_COMPONENT_DIR%\target" "%_LANGUAGE_DIR%\target" "%_LAUNCHER_TARGET_DIR%" "%_NATIVE_TARGET_DIR%" "%_TARGET_DIR%") do (
     call :rmdir "%%~f"
@@ -138,7 +147,7 @@ rem input parameter: %1=directory path
 :rmdir
 set __DIR=%~1
 if not exist "!__DIR!\" goto :eof
-if %_DEBUG%==1 ( echo [%_BASENAME%] rmdir /s /q "!__DIR!" 1>&2
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% rmdir /s /q "!__DIR!" 1>&2
 ) else if %_VERBOSE%==1 ( echo Delete directory !__DIR! 1>&2
 )
 rmdir /s /q "!__DIR!"
@@ -156,10 +165,10 @@ if %_DEBUG%==1 ( set __MVN_OPTS=%_MVN_OPTS%
 ) else if %_VERBOSE%==1 ( set __MVN_OPTS=%_MVN_OPTS%
 ) else ( set __MVN_OPTS=--quiet %_MVN_OPTS%
 )
-if %_DEBUG%==1 echo [%_BASENAME%] call %_MVN_CMD% %__MVN_OPTS% package 1>&2
+if %_DEBUG%==1 echo %_DEBUG_LABEL% %_MVN_CMD% %__MVN_OPTS% package 1>&2
 call %_MVN_CMD% %__MVN_OPTS% package
 if not %ERRORLEVEL%==0 (
-    echo Error: Execution of maven package failed 1>&2
+    echo %_ERROR_LABEL% Execution of maven package failed 1>&2
     set _EXITCODE=1
     goto dist_done
 )
@@ -210,12 +219,12 @@ if %_NATIVE%==1 ( set SL_BUILD_NATIVE=true
 ) else ( set SL_BUILD_NATIVE=false
 )
 if %_DEBUG%==1 (
-    echo [%_BASENAME%] ===== B U I L D   V A R I A B L E S ===== 1>&2
-    echo [%_BASENAME%] INCLUDE="%INCLUDE%" 1>&2
-    echo [%_BASENAME%] LIB="%LIB%" 1>&2
-    echo [%_BASENAME%] LIBPATH="%LIBPATH%" 1>&2
-    echo [%_BASENAME%] SL_BUILD_NATIVE=%SL_BUILD_NATIVE% 1>&2
-    echo [%_BASENAME%] ========================================= 1>&2
+    echo %_DEBUG_LABEL% ===== B U I L D   V A R I A B L E S ===== 1>&2
+    echo %_DEBUG_LABEL% INCLUDE="%INCLUDE%" 1>&2
+    echo %_DEBUG_LABEL% LIB="%LIB%" 1>&2
+    echo %_DEBUG_LABEL% LIBPATH="%LIBPATH%" 1>&2
+    echo %_DEBUG_LABEL% SL_BUILD_NATIVE=%SL_BUILD_NATIVE% 1>&2
+    echo %_DEBUG_LABEL% ========================================= 1>&2
 )
 goto :eof
 
@@ -227,7 +236,7 @@ if not "%__DEST_DIR:~-1%"=="\" set __DEST_DIR=%__DEST_DIR%\
 if exist "%__SOURCE_FILE%" (
     for %%f in (%__SOURCE_FILE%) do set __SOURCE_NAME=%%~nxf
     if not exist "%__DEST_DIR%\" mkdir "%__DEST_DIR%"
-    if %_DEBUG%==1 ( echo [%_BASENAME%] copy /y "%__SOURCE_FILE%" "%__DEST_DIR%" 1>&2
+    if %_DEBUG%==1 ( echo %_DEBUG_LABEL% copy /y "%__SOURCE_FILE%" "%__DEST_DIR%" 1>&2
     ) else if %_VERBOSE%==1 ( echo Copy file !__SOURCE_NAME! to directory !__DEST_DIR:%_ROOT_DIR%=! 1>&2
     )
     copy /y "%__SOURCE_FILE%" "%__DEST_DIR%" 1>NUL
@@ -236,7 +245,7 @@ if exist "%__SOURCE_FILE%" (
         goto :eof
     )
 ) else (
-    echo Error: Source file not found ^(%__SOURCE_FILE%^) 1>&2
+    echo %_ERROR_LABEL% Source file not found ^(%__SOURCE_FILE%^) 1>&2
     set _EXITCODE=1
     goto :eof
 )
@@ -245,11 +254,11 @@ goto :eof
 :parser
 set __BATCH_FILE=%_ROOT_DIR%generate_parser.bat
 if not exist "%__BATCH_FILE%" (
-    echo Error: Batch script 'generate_parser.bat' not found 1>&2
+    echo %_ERROR_LABEL% Batch script 'generate_parser.bat' not found 1>&2
     set _EXITCODE=1
     goto :eof
 )
-if %_DEBUG%==1 ( echo [%_BASENAME%] call %__BATCH_FILE% 1>&2
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% %__BATCH_FILE% 1>&2
 ) else if %_VERBOSE%==1 ( echo Generate ANTLR parser for SL 1>&2
 )
 call "%__BATCH_FILE%"
@@ -276,6 +285,6 @@ if %_TIMER%==1 (
     call :duration "%_TIMER_START%" "!__TIMER_END!"
     echo Elapsed time: !_DURATION! 1>&2
 )
-if %_DEBUG%==1 echo [%_BASENAME%] _EXITCODE=%_EXITCODE% 1>&2
+if %_DEBUG%==1 echo %_DEBUG_LABEL% _EXITCODE=%_EXITCODE% 1>&2
 exit /b %_EXITCODE%
 endlocal

@@ -58,7 +58,7 @@ where
 
 - directory [**`bin\simplelanguage\`**](bin/simplelanguage/) contains several batch scripts for generating/running the SL parser on a Windows machine.
 - directory [**`docs\`**](docs/) contains SL related documentation.
-- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a Github submodule.
+- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a [Github submodule](.gitmodules).
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.
 - file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
 - file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
@@ -179,7 +179,7 @@ In our case we downloaded the following installation files (see section <a href=
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
 <a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.2-bin.zip</a>          <i>(  8 MB)</i>
-<a href="https://github.com/oracle/graal/releases/tag/vm-19.2.0">graalvm-ce-windows-amd64-19.2.0.zip</a> <i>(170 MB)</i>
+<a href="https://github.com/oracle/graal/releases/tag/vm-19.2.0">graalvm-ce-windows-amd64-19.2.1.zip</a> <i>(170 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
 </pre>
