@@ -27,7 +27,7 @@ Optionally one may also install the following software:
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**](https://git-scm.com/docs/git) from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**](https://www.linux.org/docs/man1/wc.html)).
 
-For instance our development environment looks as follows (*October 2019*):
+For instance our development environment looks as follows (*October 2019*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.2\                            <i>( 10 MB)</i>
@@ -174,15 +174,6 @@ GRMSDK_EN_DVD.iso is a version for x86 environment.
 GRMSDKX_EN_DVD.iso is a version for x64 environment.
 GRMSDKIAI_EN_DVD.iso is a version for Itanium environment.
 </pre>
-<p style="margin:0 0 1em 20px;">
-In our case we downloaded the following installation files (see section <a href="#section_01"><b>Project dependencies</b></a>):
-</p>
-<pre style="margin:0 0 1em 20px; font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.2-bin.zip</a>          <i>(  8 MB)</i>
-<a href="https://github.com/oracle/graal/releases/tag/vm-19.2.0">graalvm-ce-windows-amd64-19.2.1.zip</a> <i>(170 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
-</pre>
 
 <a name="footnote_03">[3]</a> ***ANTLR distributions*** [↩](#anchor_03)
 
@@ -192,6 +183,18 @@ There exists two binary distributions of <a href="https://www.antlr.org/download
 <pre style="margin:0 0 1em 20px; font-size:80%;">
 <b>&gt; java -cp target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool | findstr Version</b>
 ANTLR Parser Generator  Version 4.7.2
+</pre>
+
+<a name="footnote_04">[4]</a> ***Downloads*** [↩](#anchor_04)
+
+<p style="margin:0 0 1em 20px;">
+In our case we downloaded the following installation files (see section <a href="#section_01"><b>Project dependencies</b></a>):
+</p>
+<pre style="margin:0 0 1em 20px; font-size:80%;">
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.2-bin.zip</a>          <i>(  8 MB)</i>
+<a href="https://github.com/oracle/graal/releases/tag/vm-19.2.0">graalvm-ce-windows-amd64-19.2.1.zip</a> <i>(170 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
 </pre>
 
 ***
