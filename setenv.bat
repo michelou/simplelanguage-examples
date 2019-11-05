@@ -82,7 +82,7 @@ if "%__ARG:~0,1%"=="-" (
     )
 ) else (
     rem subcommand
-    set /a __N=+1
+    set /a __N+=1
     if /i "%__ARG%"=="help" ( set _HELP=1
     ) else (
         echo %_ERROR_LABEL% Unknown subcommand %__ARG% 1>&2
@@ -97,7 +97,7 @@ if %_DEBUG%==1 echo %_DEBUG_LABEL% _HELP=%_HELP% _USE_SDK=%_USE_SDK% _VERBOSE=%_
 goto :eof
 
 :help
-echo Usage: %_BASENAME% { options ^| subcommands }
+echo Usage: %_BASENAME% { option ^| subcommand }
 echo   Options:
 echo     -debug      show commands executed by this script
 echo     -usesdk     setup Windows SDK environment ^(SetEnv.cmd^)

@@ -11,6 +11,8 @@
   </tr>
 </table>
 
+[Dotty](https://github.com/michelou/dotty-examples), [GraalVM](https://github.com/michelou/graalvm-examples) and [LLVM](https://github.com/michelou/llvm-examples) are other topics we are currently investigating.
+
 ## <span id="section_01">Project dependencies</span>
 
 This project depends on several external software for the **Microsoft Windows** platform:
@@ -23,16 +25,16 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.7 tool](https://www.antlr.org/download.html) ([*release notes*](https://github.com/antlr/antlr4/releases/tag/4.7.2)) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.23](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.txt))
+- [Git 2.24](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.0.txt))
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**](https://git-scm.com/docs/git) from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**](https://www.linux.org/docs/man1/wc.html)).
 
-For instance our development environment looks as follows (*October 2019*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*November 2019*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.2\                            <i>( 10 MB)</i>
 C:\opt\graalvm-ce-19.2.1\                             <i>(361 MB)</i>
-C:\opt\Git-2.23.0\                                    <i>(271 MB)</i>
+C:\opt\Git-2.24.0\                                    <i>(271 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
@@ -81,7 +83,7 @@ We distinguish different sets of batch commands:
 
    <pre style="font-size:80%;">
    <b>&gt; setenv help</b>
-   Usage: setenv { options | subcommands }
+   Usage: setenv { option | subcommand }
      Options:
        -usesdk     setup Windows SDK environment (SetEnv.cmd)
        -verbose    display progress messages
@@ -93,7 +95,7 @@ We distinguish different sets of batch commands:
 
    <pre style="font-size:80%;">
    <b>&gt; build help</b>
-   Usage: build { options | subcommands }
+   Usage: build { option | subcommand }
      Options:
        -debug      show commands executed by this script
        -native     generate native executable (native-image)
@@ -115,7 +117,7 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
 Tool versions:
-   javac 1.8.0_222, mvn 3.6.2, git 2.23.0.windows.1, diff 3.7
+   javac 1.8.0_232, mvn 3.6.2, git 2.24.0.windows.1, diff 3.7
    cl 16.00.40219.01 for x64, dumpbin 10.00.40219.01, uuidgen v1.01
 
 <b>&gt; where javac mvn</b>
@@ -129,13 +131,13 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; setenv -verbose</b>
 Tool versions:
-   javac 1.8.0_222, mvn 3.6.2, git 2.23.0.windows.1, diff 3.7
+   javac 1.8.0_232, mvn 3.6.2, git 2.24.0.windows.1, diff 3.7
    cl 16.00.40219.01 for x64, dumpbin 10.00.40219.01, uuidgen v1.01
 Tool paths:
    C:\opt\graalvm-ce-19.2.1\bin\javac.exe
    C:\opt\apache-maven-3.6.2\bin\mvn.cmd
-   C:\opt\Git-2.23.0\bin\git.exe
-   C:\opt\Git-2.23.0\usr\bin\diff.exe
+   C:\opt\Git-2.24.0\bin\git.exe
+   C:\opt\Git-2.24.0\usr\bin\diff.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
    c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
@@ -194,10 +196,11 @@ In our case we downloaded the following installation files (see section <a href=
 <a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.2-bin.zip</a>          <i>(  8 MB)</i>
 <a href="https://github.com/oracle/graal/releases/tag/vm-19.2.0">graalvm-ce-windows-amd64-19.2.1.zip</a> <i>(170 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.24.0-64-bit.7z.exe</a>    <i>( 41 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
 </pre>
 
 ***
 
-*[mics](http://lampwww.epfl.ch/~michelou/)/October 2019* [**&#9650;**](#top)
+*[mics](http://lampwww.epfl.ch/~michelou/)/November 2019* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
