@@ -40,10 +40,10 @@ goto :end
 rem ##########################################################################
 rem ## Subroutines
 
-rem output parameter(s): _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
-rem                      _COMPONENT_DIR, _LANGUAGE_DIR, _LAUNCHER_DIR, _NATIVE_DIR
-rem                      _TARGET_DIR, _TARGET_BIN_DIR, _TARGET_LIB_DIR
-rem                      _MVN_CMD, _MVN_OPTS
+rem output parameters: _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
+rem                    _COMPONENT_DIR, _LANGUAGE_DIR, _LAUNCHER_DIR, _NATIVE_DIR
+rem                    _TARGET_DIR, _TARGET_BIN_DIR, _TARGET_LIB_DIR
+rem                    _MVN_CMD, _MVN_OPTS
 :env
 rem ANSI colors in standard Windows 10 shell
 rem see https://gist.github.com/mlocati/#file-win10colors-cmd
@@ -124,7 +124,7 @@ if %_DEBUG%==1 echo %_DEBUG_LABEL% _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSE
 goto :eof
 
 :help
-echo Usage: %_BASENAME% { options ^| subcommands }
+echo Usage: %_BASENAME% { option ^| subcommand }
 echo   Options:
 echo     -debug      show commands executed by this script
 echo     -native     generate native executable ^(native-image^)

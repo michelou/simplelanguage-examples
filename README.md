@@ -84,9 +84,11 @@ We distinguish different sets of batch commands:
    <pre style="font-size:80%;">
    <b>&gt; setenv help</b>
    Usage: setenv { option | subcommand }
+   &nbsp;
      Options:
        -usesdk     setup Windows SDK environment (SetEnv.cmd)
        -verbose    display progress messages
+   &nbsp;
      Subcommands:
        help        display this help message
    </pre>
@@ -96,11 +98,13 @@ We distinguish different sets of batch commands:
    <pre style="font-size:80%;">
    <b>&gt; build help</b>
    Usage: build { option | subcommand }
+   &nbsp;
      Options:
        -debug      show commands executed by this script
        -native     generate native executable (native-image)
        -timer      display total elapsed time
        -verbose    display progress messages
+   &nbsp;
     Subcommands:
        clean       delete generated files
        dist        generate binary distribution

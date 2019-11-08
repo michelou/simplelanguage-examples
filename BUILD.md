@@ -1,4 +1,4 @@
-# <span id="top">Building SimpleLanguage on Microsoft Windows</span>
+# <span id="top">Building SimpleLanguage on Microsoft Windows</span> <span style="size:30%;"><a href="README.md">↩</a></span>
 
 <table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
   <tr>
@@ -23,16 +23,16 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.7 tool](https://www.antlr.org/download.html) ([*release notes*](https://github.com/antlr/antlr4/releases/tag/4.7.2)) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.23](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.txt))
+- [Git 2.24](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.0.txt))
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**](https://git-scm.com/docs/git) from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**](https://www.linux.org/docs/man1/wc.html)).
 
-For instance our development environment looks as follows (*October 2019*):
+For instance our development environment looks as follows (*November 2019*):
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.2\                            <i>( 10 MB)</i>
 C:\opt\graalvm-ce-19.2.1\                             <i>(361 MB)</i>
-C:\opt\Git-2.23.0\                                    <i>(271 MB)</i>
+C:\opt\Git-2.24.0\                                    <i>(271 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
@@ -56,10 +56,10 @@ README.md
 setenv.bat
 </pre>
 
-- file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
-- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is the batch script for generating the SL parser source files.
+- file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** both inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
+- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) <sup id="anchor_04">[[4]](#footnote_04)</sup> is the batch script for generating the SL parser source files.
 - file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
-- file [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_04">[[4]](#footnote_04)</sup>.
+- directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[[5]](#footnote_05)</sup>.
 - directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a Github submodule.
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.
 - file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
@@ -98,12 +98,14 @@ We distinguish different sets of batch commands:
 
     <pre style="font-size:80%;">
     <b>&gt; build help</b>
-    Usage: build { options | subcommands }
+    Usage: build { option | subcommand }
+    &nbsp;
       Options:
         -debug      show commands executed by this script
         -native     generate executable (native-image)
         -timer      display total elapsed time
         -verbose    display progress messages
+    &nbsp;
       Subcommands:
         clean       delete generated files
         dist        generate binary distribution
@@ -115,10 +117,12 @@ We distinguish different sets of batch commands:
 
     <pre style="font-size:80%;">
     <b>&gt; generate_parser help</b>
-    Usage: generate_parser { options | subcommands }
+    Usage: generate_parser { option | subcommand }
+    &nbsp;
       Options:
         -debug      display commands executed by this script
         -verbose    display progress messages
+    &nbsp;
       Subcommands:
         clean       delete generated files
         help        display this help message
@@ -143,7 +147,7 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
 Tool versions:
-   javac 1.8.0_232, mvn 3.6.2, git 2.23.0.windows.1, diff 3.7
+   javac 1.8.0_232, mvn 3.6.2, git 2.24.0.windows.1, diff 3.7
    cl 16.00.40219.01 for x64, dumpbin 10.00.40219.01, uuidgen v1.01
 
 <b>&gt; where javac mvn</b>
@@ -157,13 +161,13 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; setenv -verbose</b>
 Tool versions:
-   javac 1.8.0_232, mvn 3.6.2, git 2.23.0.windows.1, diff 3.7
+   javac 1.8.0_232, mvn 3.6.2, git 2.24.0.windows.1, diff 3.7
    cl 16.00.40219.01 for x64, dumpbin 10.00.40219.01, uuidgen v1.01
 Tool paths:
    C:\opt\graalvm-ce-19.2.1\bin\javac.exe
    C:\opt\apache-maven-3.6.2\bin\mvn.cmd
-   C:\opt\Git-2.23.0\bin\git.exe
-   C:\opt\Git-2.23.0\usr\bin\diff.exe
+   C:\opt\Git-2.24.0\bin\git.exe
+   C:\opt\Git-2.24.0\usr\bin\diff.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
    c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
@@ -270,14 +274,13 @@ Copy executable S:\simplelanguage\native\target\slnative.exe to directory S:\sim
 Output directory is **`target\sl\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
-<b>&gt; tree /f target</b>
-S:\simplelanguage\TARGET
-└───sl
-    ├───bin
-    │       sl.bat
-    │       slnative.exe
-    │
-    └───lib
+<b>&gt; tree /f target | findstr /v /b "[A-Z]"</b>
+\---sl
+    +---bin
+    |       sl.bat
+    |       slnative.exe
+    |
+    \---lib
             antlr4-runtime-4.7.2.jar
             launcher-19.2.1-SNAPSHOT.jar
             simplelanguage-19.2.1-SNAPSHOT.jar
@@ -338,13 +341,12 @@ Command [**`generate_parser.bat`**](generate_parser.bat) with no arguments produ
 Output directory is **`target\parser\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
-<b>&gt; tree /f target</b>
-S:\simplelanguage\TARGET
-└───parser
-    ├───libs
-    │       antlr-4.7.2-complete.jar
-    │
-    └───src
+<b>&gt; tree /a /f target | findstr /v /b "[A-Z]"</b>
+\---parser
+    \---libs
+    |       antlr-4.7.2-complete.jar
+    |
+    \---src
             SimpleLanguage.interp
             SimpleLanguage.tokens
             SimpleLanguageLexer.interp
@@ -360,27 +362,26 @@ Output directory **`target\parser\`** now contains two additional elements:<br/>
 - the subdirectory **`classes\**\*.class`**:
 
 <pre style="font-size:80%;">
-<b>&gt; tree /f target</b>
-S:\TARGET
-└───parser
-    │   source_list.txt
-    │
-    ├───classes
-    │   ├───com
-    │   │   └───oracle
-    │   │       └───truffle
-    │   │           └───sl
-    │   │               │   *.class
-    │   │               └─  **/*.class
-    │   │
-    │   └───META-INF
-    │       └───truffle
-    │               language
-    │
-    ├───libs
-    │       antlr-4.7.2-complete.jar
-    │
-    └───src
+<b>&gt; tree /a /f target | findstr /v /b "[A-Z]"</b>
+\---parser
+    |   source_list.txt
+    |
+    +---classes
+    |   +---com
+    |   |   \---oracle
+    |   |       \---truffle
+    |   |           \---sl
+    |   |               |   *.class
+    |   |               \   **/*.class
+    |   |
+    |   \---META-INF
+    |       \---truffle
+    |               language
+    |
+    +---libs
+    |       antlr-4.7.2-complete.jar
+    |
+    \---src
             SimpleLanguage.interp
             SimpleLanguage.tokens
             SimpleLanguageLexer.interp
@@ -533,7 +534,13 @@ There exists two binary distributions of <a href="https://www.antlr.org/download
 ANTLR Parser Generator  Version 4.7.2
 </pre>
 
-<a name="footnote_04">[4]</a> ***EBNF grammar*** [↩](#anchor_04)
+<a name="footnote_04">[4]</a> ***Parser generation*** [↩](#anchor_04)
+
+<p style="margin:0 0 1em 20px;">
+Batch file <a href="bin/simplelanguage/generate_parser.bat"><b><code>generate_parser.bat</code></b></a> delegates the addition of the copyright notice to the generated source files to the PowerShell script <a href="bin/simplelanguage/generate_parser.ps1"><b><code>generate_parser.ps1</code></b></a>.
+</p>
+
+<a name="footnote_05">[5]</a> ***EBNF grammar*** [↩](#anchor_05)
 
 <p style="margin:0 0 1em 20px;">
 We used the online tool <a href="https://www.bottlecaps.de/rr/ui">Railroad Diagram Generator</a> to generate the PNG images presented in file <a href="docs/ebnf/SimpleLanguage.md"><b><code>docs\ebnf\SimpleLanguage.md</code></b></a> (based on the grammar file <a href="docs/ebnf/SimpleLanguage.ebnf"><b><code>docs\ebnf\SimpleLanguage.ebnf</code></b></a>).
@@ -541,5 +548,5 @@ We used the online tool <a href="https://www.bottlecaps.de/rr/ui">Railroad Diagr
 
 ***
 
-*[mics](http://lampwww.epfl.ch/~michelou/)/October 2019* [**&#9650;**](#top)
+*[mics](http://lampwww.epfl.ch/~michelou/)/November 2019* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
