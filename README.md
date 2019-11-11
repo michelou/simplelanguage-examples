@@ -83,7 +83,7 @@ We distinguish different sets of batch commands:
 
    <pre style="font-size:80%;">
    <b>&gt; setenv help</b>
-   Usage: setenv { option | subcommand }
+   Usage: setenv { &lt;option&gt; | &lt;subcommand&gt; }
    &nbsp;
      Options:
        -usesdk     setup Windows SDK environment (SetEnv.cmd)
@@ -97,7 +97,7 @@ We distinguish different sets of batch commands:
 
    <pre style="font-size:80%;">
    <b>&gt; build help</b>
-   Usage: build { option | subcommand }
+   Usage: build { &lt;option&gt; | &lt;subcommand&gt; }
    &nbsp;
      Options:
        -debug      show commands executed by this script

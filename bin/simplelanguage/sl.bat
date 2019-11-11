@@ -11,7 +11,7 @@ set _BASENAME=%~n0
 
 set _EXITCODE=0
 
-set _VERSION=19.2.0
+set _VERSION=19.2.1
 
 set _MAIN_CLASS=com.oracle.truffle.sl.launcher.SLMain
 rem set SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd -P)"

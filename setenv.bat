@@ -97,11 +97,13 @@ if %_DEBUG%==1 echo %_DEBUG_LABEL% _HELP=%_HELP% _USE_SDK=%_USE_SDK% _VERBOSE=%_
 goto :eof
 
 :help
-echo Usage: %_BASENAME% { option ^| subcommand }
+echo Usage: %_BASENAME% { ^<option^> ^| ^<subcommand^> }
+echo.
 echo   Options:
 echo     -debug      show commands executed by this script
 echo     -usesdk     setup Windows SDK environment ^(SetEnv.cmd^)
 echo     -verbose    display environment settings
+echo.
 echo   Subcommands:
 echo     help        display this help message
 goto :eof

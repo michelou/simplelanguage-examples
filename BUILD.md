@@ -98,7 +98,7 @@ We distinguish different sets of batch commands:
 
     <pre style="font-size:80%;">
     <b>&gt; build help</b>
-    Usage: build { option | subcommand }
+    Usage: build { &lt;option&gt; | &lt;subcommand&gt; }
     &nbsp;
       Options:
         -debug      show commands executed by this script
@@ -117,7 +117,7 @@ We distinguish different sets of batch commands:
 
     <pre style="font-size:80%;">
     <b>&gt; generate_parser help</b>
-    Usage: generate_parser { option | subcommand }
+    Usage: generate_parser { &lt;option&gt; | &lt;subcommand&gt; }
     &nbsp;
       Options:
         -debug      display commands executed by this script
@@ -544,6 +544,27 @@ Batch file <a href="bin/simplelanguage/generate_parser.bat"><b><code>generate_pa
 
 <p style="margin:0 0 1em 20px;">
 We used the online tool <a href="https://www.bottlecaps.de/rr/ui">Railroad Diagram Generator</a> to generate the PNG images presented in file <a href="docs/ebnf/SimpleLanguage.md"><b><code>docs\ebnf\SimpleLanguage.md</code></b></a> (based on the grammar file <a href="docs/ebnf/SimpleLanguage.ebnf"><b><code>docs\ebnf\SimpleLanguage.ebnf</code></b></a>).
+</p>
+
+<a name="footnote_05">[5]</a> ***Missing library `hsdis-amd64.dll`*** [↩](#anchor_05)
+
+<p style="margin:0 0 1em 20px;">
+Command <b><code>sl -disassemble</code></b> generates the error message <code>Could not load hsdis-amd64.dll</code> with some <b><code>.sl</code></b> files:
+</p>
+<pre style="margin:0 0 1em 20px; font-size:80%;">
+<b>&gt; sl -disassemble language\tests\SumPrint.sl</b>
+CompilerOracle: print *OptimizedCallTarget.callRoot
+CompilerOracle: exclude *OptimizedCallTarget.callRoot
+OpenJDK 64-Bit GraalVM CE 19.2.1 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
+== running on org.graalvm.polyglot.Engine@783e6358
+[...]
+Could not load hsdis-amd64.dll; library not loadable; PrintAssembly is disabled
+</pre>
+<p style="margin:0 0 1em 20px;">
+Since library file <b><code>hsdis-amd64.dll</code></b> is not available anywhere we have to <a href="https://dropzone.nfshost.com/hsdis/">build it ourself</a>.
+</p>
+<p style="margin:0 0 1em 20px;">
+DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-on-windows">Running -XX:CompileCommand on Windows</a></i>" by Dustin Marx (September 7, 2016) provdies more information about that topics.
 </p>
 
 ***
