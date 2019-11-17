@@ -15,8 +15,8 @@
 
 This project depends on several external software for the **Microsoft Windows** platform:
 
-- [Apache Maven 3.6](http://maven.apache.org/download.cgi) ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*](http://maven.apache.org/docs/3.6.2/release-notes.html))
-- [GraalVM Community Edition 19.2](https://github.com/oracle/graal/releases) <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*](https://www.graalvm.org/docs/release-notes/19_2/))
+- [Apache Maven 3.6][maven_downloads] ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*][maven_relnotes])
+- [GraalVM Community Edition 19.2][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes]
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=8442) <sup id="anchor_02a">[[2]](#footnote_02)</sup>
 - [Microsoft Visual C++ 2010 Service Pack 1 Compiler Update for the Windows SDK 7.1](https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422) <sup id="anchor_02b">[[2]](#footnote_02)</sup>
 
@@ -25,7 +25,7 @@ Optionally one may also install the following software:
 - [ANTLR 4.7 tool](https://www.antlr.org/download.html) ([*release notes*](https://github.com/antlr/antlr4/releases/tag/4.7.2)) <sup id="anchor_03">[[3]](#footnote_03)</sup>
 - [Git 2.24](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.0.txt))
 
-> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**](https://git-scm.com/docs/git) from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**](https://www.linux.org/docs/man1/wc.html)).
+> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_exe] from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
 For instance our development environment looks as follows (*November 2019*):
 
@@ -60,12 +60,12 @@ setenv.bat
 - file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) <sup id="anchor_04">[[4]](#footnote_04)</sup> is the batch script for generating the SL parser source files.
 - file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
 - directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[[5]](#footnote_05)</sup>.
-- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository as a Github submodule.
+- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage][graalvm_simplelanguage] repository as a Github submodule.
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.
 - file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
 - file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
 
-The [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example project is a [Maven project](https://maven.apache.org/guides/getting-started/) with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
+The [**`SimpleLanguage`**][graalvm_simplelanguage] example project is a [Maven project](https://maven.apache.org/guides/getting-started/) with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
 
 We added/modified the following files in the original [graalvm/simpleLanguage](https://github.com/graalvm/simplelanguage) example project:
 
@@ -91,7 +91,7 @@ In the next section we give a brief description of the added batch files.
 
 We distinguish different sets of batch commands:
 
-1. [**`build.bat`**](build.bat) - This batch command provides subcommands such as **`clean`** to delete the generated files (**`target`** directories), **`dist`** to generate the binary distributions (JVM and native versions) and **`parser`** to generate the [ANTLR](https://www.antlr.org/) parser to SL (call to [**`generate_parser.bat`**](generated_parser.bat)).
+1. [**`build.bat`**](build.bat) - This batch command provides subcommands such as **`clean`** to delete the generated files (**`target`** directories), **`dist`** to generate the binary distributions (JVM and native versions) and **`parser`** to generate the [ANTLR] parser to SL (call to [**`generate_parser.bat`**](generated_parser.bat)).
     > **:mag_right:** Command [**`build.bat`**](build.bat) differs in two ways from command **`mvn package`**:<br/>
     > - it can also be executed *outside* of the *Windows SDK 7.1 Command Prompt*.<br/>
     > - it generates a distribution-ready output (see section [**Usage examples**](#section_04)).
@@ -142,7 +142,7 @@ We distinguish different sets of batch commands:
 
 #### `setenv.bat`
 
-Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), [**`git.exe`**](https://git-scm.com/docs/git) and [**`cl.exe`**](https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019) directly available from the command prompt:
+Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**][mvn_cmd], [**`git.exe`**][git_exe] and [**`cl.exe`**][windows_cl] directly available from the command prompt:
 
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
@@ -179,7 +179,7 @@ Command [**`setenv -nosdk`**](setenv.bat) is aimed at advanced users; we use opt
 
 #### `simplelanguage\build.bat`
 
-Directory **`simplelanguage\`** contains our fork of the [graalvm/simplelanguage](https://github.com/graalvm/simplelanguage) repository; it is setup as follows:
+Directory **`simplelanguage\`** contains our fork of the [graalvm/simplelanguage][graalvm_simplelanguage] repository; it is setup as follows:
 
 <pre style="font-size:80%;">
 <b>&gt; cp bin\simplelanguage\*.bat simplelanguage</b>
@@ -321,7 +321,7 @@ We can now execute both versions (JVM and native) of our application:
 7000000000000
 </pre>
 
-> **:mag_right:** For instance we can use command [**`dumpbin`**](https://docs.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=vs-2019) to display the definitions exported from executable **`slnative.exe`** whose name starts with **`graal_`**:
+> **:mag_right:** For instance we can use command [**`dumpbin`**][windows_dumpbin] to display the definitions exported from executable **`slnative.exe`** whose name starts with **`graal_`**:
 > <pre style="font-size:80%;">
 > <b>&gt; dumpbin /exports target\sl\bin\slnative.exe | awk '/[A-F0-9] graal_/ {print $4}'</b>
 > graal_attach_thread
@@ -336,14 +336,14 @@ We can now execute both versions (JVM and native) of our application:
 
 #### `simplelanguage\generate_parser.bat`
 
-Command [**`generate_parser.bat`**](generate_parser.bat) with no arguments produces the lexer/parser files for the [**`SimpleLanguage`**](https://github.com/graalvm/simplelanguage) example.
+Command [**`generate_parser.bat`**](generate_parser.bat) with no arguments produces the lexer/parser files for the [**`SimpleLanguage`**][graalvm_simplelanguage] example.
 
 Output directory is **`target\parser\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
 <b>&gt; tree /a /f target | findstr /v /b "[A-Z]"</b>
 \---parser
-    \---libs
+    +---libs
     |       antlr-4.7.2-complete.jar
     |
     \---src
@@ -429,7 +429,7 @@ Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`g
 
 #### `simplelanguage\sl.bat`
 
-Usage of command [**`sl.bat`**](bin/simplelanguage/sl.bat) is described on the documentation page ["Introduction to SimpleLanguage"](https://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/) of the [GraalVM](https://www.graalvm.org) website; we resume its usage below:
+Usage of command [**`sl.bat`**](bin/simplelanguage/sl.bat) is described on the documentation page ["Introduction to SimpleLanguage"](https://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/) of the [GraalVM] website; we resume its usage below:
 
 <pre style="font-size:80%;">
 sl { &lt;option&gt; } [ &lt;file_path&gt; ]
@@ -571,3 +571,18 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 *[mics](http://lampwww.epfl.ch/~michelou/)/November 2019* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
+
+<!-- link refs -->
+
+[antlr]: https://www.antlr.org/
+[git_exe]: https://git-scm.com/docs/git
+[graalvm]: https://www.graalvm.org/
+[graalvm_downloads]: https://github.com/oracle/graal/releases
+[graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/19_2/
+[graalvm_simplelanguage]: https://github.com/graalvm/simplelanguage
+[man1_wc]: https://www.linux.org/docs/man1/wc.html
+[maven_downloads]: http://maven.apache.org/download.cgi
+[maven_relnotes]: http://maven.apache.org/docs/3.6.2/release-notes.html
+[mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+[windows_cl]: https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019
+[windows_dumpbin]: https://docs.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=vs-2019

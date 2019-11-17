@@ -114,7 +114,7 @@ set _GRAAL_HOME=
 set _GRAAL_PATH=
 
 set __JAVAC_EXE=
-for /f %%f in ('where javac.exe 2^>NUL') do set __JAVAC_EXE=%%f
+for /f %%f in ('where javac.exe 2^>NUL') do set "__JAVAC_EXE=%%f"
 if defined __JAVAC_EXE (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of javac executable found in PATH 1>&2
     for %%i in ("%__JAVAC_CMD%") do set __GRAAL_BIN_DIR=%%~dpsi
@@ -147,7 +147,7 @@ set _MAVEN_HOME=
 set _MAVEN_PATH=
 
 set __MVN_CMD=
-for /f %%f in ('where mvn.cmd 2^>NUL') do set __MVN_CMD=%%f
+for /f %%f in ('where mvn.cmd 2^>NUL') do set "__MVN_CMD=%%f"
 if defined __MVN_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Maven executable found in PATH 1>&2
     for %%i in ("%__MVN_CMD%") do set __MVN_BIN_DIR=%%~dpsi
@@ -183,7 +183,7 @@ set _GIT_PATH=
 
 set __GIT_HOME=
 set __GIT_EXE=
-for /f %%f in ('where git.exe 2^>NUL') do set __GIT_EXE=%%f
+for /f %%f in ('where git.exe 2^>NUL') do set "__GIT_EXE=%%f"
 if defined __GIT_EXE (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Git executable found in PATH 1>&2
     rem keep _GIT_PATH undefined since executable already in path

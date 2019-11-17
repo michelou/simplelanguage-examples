@@ -11,23 +11,23 @@
   </tr>
 </table>
 
-[Dotty](https://github.com/michelou/dotty-examples), [GraalVM](https://github.com/michelou/graalvm-examples) and [LLVM](https://github.com/michelou/llvm-examples) are other topics we are currently investigating.
+[Dotty][dotty_examples], [GraalVM][graalvm_examples] and [LLVM][llvm_examples] are other topics we are currently investigating.
 
 ## <span id="section_01">Project dependencies</span>
 
 This project depends on several external software for the **Microsoft Windows** platform:
 
-- [Apache Maven 3.6](http://maven.apache.org/download.cgi) ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*](http://maven.apache.org/docs/3.6.2/release-notes.html))
+- [Apache Maven 3.6][maven_downloads] ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*][maven_relnotes]
 - [GraalVM Community Edition 19.2](https://github.com/oracle/graal/releases) <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*](https://www.graalvm.org/docs/release-notes/19_2/))
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=8442) <sup id="anchor_02a">[[2]](#footnote_02)</sup>
 - [Microsoft Visual C++ 2010 Service Pack 1 Compiler Update for the Windows SDK 7.1](https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422) <sup id="anchor_02b">[[2]](#footnote_02)</sup>
 
 Optionally one may also install the following software:
 
-- [ANTLR 4.7 tool](https://www.antlr.org/download.html) ([*release notes*](https://github.com/antlr/antlr4/releases/tag/4.7.2)) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.24](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.0.txt))
+- [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes] <sup id="anchor_03">[[3]](#footnote_03)</sup>
+- [Git 2.24][git_downloads] ([*release notes*][git_relnotes])
 
-> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**](https://git-scm.com/docs/git) from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**](https://www.linux.org/docs/man1/wc.html)).
+> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**](https://git-scm.com/docs/git) from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
 For instance our development environment looks as follows (*November 2019*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
@@ -40,7 +40,7 @@ C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
 
 > **&#9755;** ***Installation policy***<br/>
-> When possible we install software from a [Zip archive](https://www.howtogeek.com/178146/htg-explains-everything-you-need-to-know-about-zipped-files/) rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`](http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/opt.html) directory on Unix).
+> When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`][linux_opt] directory on Unix).
 
 
 ## Directory structure
@@ -65,9 +65,9 @@ where
 - file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
 - file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
 
-We also define a virtual drive **`S:`** in our working environment in order to reduce/hide the real path of our project directory (see article ["Windows command prompt limitation"](https://support.microsoft.com/en-gb/help/830473/command-prompt-cmd-exe-command-line-string-limitation) from Microsoft Support).
+We also define a virtual drive **`S:`** in our working environment in order to reduce/hide the real path of our project directory (see article ["Windows command prompt limitation"][windows_limitation] from Microsoft Support).
 
-> **:mag_right:** We use the Windows external command [**`subst`**](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/subst) to create virtual drives; for instance:
+> **:mag_right:** We use the Windows external command [**`subst`**][windows_subst] to create virtual drives; for instance:
 >
 > <pre style="font-size:80%;">
 > <b>&gt; subst S: %USERPROFILE%\workspace\simplelanguage-examples</b>
@@ -79,7 +79,7 @@ In the next section we give a brief description of the batch files present in th
 
 We distinguish different sets of batch commands:
 
-1. [**`setenv.bat`**](setenv.bat) - This batch command makes external tools such as [**`javac.exe`**](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html), [**`mvn.cmd`**](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) or [**`cl.exe`**](https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019) directly available from the command prompt (see section [**Project dependencies**](#section_01)).
+1. [**`setenv.bat`**](setenv.bat) - This batch command makes external tools such as [**`javac.exe`**][javac_exe], [**`mvn.cmd`**](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) or [**`cl.exe`**](https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019) directly available from the command prompt (see section [**Project dependencies**](#section_01)).
 
    <pre style="font-size:80%;">
    <b>&gt; setenv help</b>
@@ -116,7 +116,7 @@ We distinguish different sets of batch commands:
 
 #### `setenv.bat`
 
-Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html), [**`git.exe`**](https://git-scm.com/docs/git) and [**`cl.exe`**](https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019) directly available from the command prompt:
+Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**][mvn_cmd], [**`git.exe`**][git_exe] and [**`cl.exe`**][windows_cl] directly available from the command prompt:
 
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
@@ -208,3 +208,24 @@ In our case we downloaded the following installation files (see section <a href=
 
 *[mics](http://lampwww.epfl.ch/~michelou/)/November 2019* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
+
+<!-- link refs -->
+
+[antlr_downloads]: https://www.antlr.org/download.html
+[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.7.2
+[dotty_examples]: https://github.com/michelou/dotty-examples
+[git_downloads]: https://git-scm.com/download/win
+[git_exe]: https://git-scm.com/docs/git
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.0.txt
+[graalvm_examples]: https://github.com/michelou/graalvm-examples
+[javac_exe]: https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html
+[linux_opt]: http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/opt.html
+[llvm_examples]: https://github.com/michelou/llvm-examples
+[man1_wc]: https://www.linux.org/docs/man1/wc.html
+[maven_downloads]: http://maven.apache.org/download.cgi
+[maven_relnotes]: http://maven.apache.org/docs/3.6.2/release-notes.html
+[mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+[windows_cl]: https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019
+[windows_limitation]: https://support.microsoft.com/en-gb/help/830473/command-prompt-cmd-exe-command-line-string-limitation
+[windows_subst]: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/subst
+[zip_archive]: https://www.howtogeek.com/178146/htg-explains-everything-you-need-to-know-about-zipped-files/
