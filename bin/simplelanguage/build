@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+#
+# Copyright (c) 2018-2020 Stéphane Micheloud
+#
+# Licensed under the MIT License.
+#
+
+##############################################################################
+## Subroutines
+
+getHome() {
+    local source="${BASH_SOURCE[0]}"
+    while [ -h "$source" ] ; do
+        local linked="$(readlink "$source")"
+        local dir="$( cd -P $(dirname "$source") && cd -P $(dirname "$linked") && pwd )"
+        source="$dir/$(basename "$linked")"
+    done
+    ( cd -P "$(dirname "$source")" && pwd )
+}
+
+# use variables BASENAME, DEBUG, EXITCODE, TIMER_START
+cleanup() {
+    [[ $1 =~ ^[0-1]$ ]] && EXITCODE=$1
+
+    if [[ $TIMER -eq 1 ]]; then
+        local TIMER_END=$(date +'%s')
+        local duration=$((TIMER_END - TIMER_START))
+        echo "Total elapsed time: $(date -d @$duration +'%H:%M:%S')" 1>&2
+    fi
+    [[ $DEBUG -eq 1 ]] && echo "$DEBUG_LABEL EXITCODE=$EXITCODE" 1>&2
+    exit $EXITCODE
+}
+
+args() {
+    [[ $# -eq 0 ]] && HELP=1 && return $EXITCODE
+
+    for arg in "$@"; do
+        case "$arg" in
+        ## options
+        -debug)   DEBUG=1 ;;
+        -help)    HELP=1 ;;
+        -native)  NATIVE=1 ;;
+        -timer)   TIMER=1 ;;
+        -verbose) VERBOSE=1 ;;
+        -*)
+            echo "$ERROR_LABEL Unknown option $arg" 1>&2
+            EXITCODE=1 && return $EXITCODE
+            ;;
+        ## subcommands
+        clean)    CLEAN=1 ;;
+        dist)     DIST=1 ;;
+        help)     HELP=1 ;;
+        parser)   PARSER=1 ;;
+        *)
+            echo "$ERROR_LABEL Unknown subcommand $arg" 1>&2
+            EXITCODE=1 && return $EXITCODE
+            ;;
+        esac
+    done
+    [[ $DEBUG -eq 1 ]] && echo "$DEBUG_LABEL HELP=$HELP TIMER=$TIMER CLEAN=$CLEAN DIST=$DIST PARSER=$PARSER VERBOSE=$VERBOSE"
+    # See http://www.cyberciti.biz/faq/linux-unix-formatting-dates-for-display/
+    [[ $TIMER -eq 1 ]] && TIMER_START=$(date +"%s")
+    $EXITCODE
+}
+
+help() {
+cat << EOS
+Usage: $BASENAME { <option> | <subcommand> }
+
+  Options:
+    -debug      show commands executed by this script
+    -native     generate native executable (native-image)
+    -timer      display total elapsed time
+    -verbose    display progress messages
+
+  Subcommands:
+    clean       delete generated files
+    dist        generate component archive
+    help        display this help message
+    parser      generate ANTLR parser for SL
+EOS
+}
+
+clean() {
+    if [[ $DEBUG -eq 1 ]]; then
+        echo "$DEBUG_LABEL rm -rf $TOOL_HOME/component/target $TOOL_HOME/language/target $TOOL_HOME/launcher/target $TOOL_HOME/native/target" 1>&2
+    elif [[ $VERBOSE -eq 1 ]]; then
+        echo "Delete directories $TOOL_HOME/{component,language,launcher,native}/target" 1>&2
+    fi
+    rm -rf $TOOL_HOME/component/target $TOOL_HOME/language/target $TOOL_HOME/launcher/target $TOOL_HOME/native/target
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+    $EXITCODE
+}
+
+dist() {
+    if [[ $DEBUG -eq 1 ]]; then
+        MVN_OPTS=
+    elif [[ $VERBOSE -eq 1 ]]; then
+        MVN_OPTS=
+    else
+       MVN_OPTS=--quiet
+    fi
+    if [[ $DEBUG -eq 1 ]]; then
+        echo "$DEBUG_LABEL $MVN_CMD $MVN_OPTS package" 1>&2
+    elif [[ $VERBOSE -eq 1 ]]; then
+        echo "Build SL component" 1>&2
+    fi
+    $MVN_CMD $MVN_OPTS package
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+
+    [[ -d "$TOOL_HOME/target/lib" ]] || mkdir -p "$TOOL_HOME/target/lib"
+    LANGUAGE_JAR_FILE=$(find $TOOL_HOME/language/target/ -name "*language*SNAPSHOT.jar")
+    cp $LANGUAGE_JAR_FILE $TOOL_HOME/target/lib
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+
+    LAUNCHER_JAR_FILE=$(find $TOOL_HOME/launcher/target/ -name "launcher*SNAPSHOT.jar")
+    cp $LAUNCHER_JAR_FILE $TOOL_HOME/target/lib
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+
+    ANTLR4_JAR_FILE=$(find $USERPROFILE/.m2/repository/org/antlr/ -name "antlr4*.jar")
+    cp $ANTLR4_JAR_FILE $TOOL_HOME/target/lib
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+
+    [[ -d "$TOOL_HOME/target/bin" ]] || mkdir -p "$TOOL_HOME/target/bin"
+    cp $TOOL_HOME/launcher/src/main/scripts/sl.bat $TOOL_HOME/target/bin
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+
+    if [[ $NATIVE -eq 1 ]]; then
+        cp $TOOL_HOME/native/target/slnative.exe $TOOL_HOME/target/bin
+        [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+    fi
+}
+
+##############################################################################
+## Environment setup
+
+BASENAME=$(basename "${BASH_SOURCE[0]%.*}")
+
+EXITCODE=0
+
+TOOL_HOME="$(getHome)"
+
+CLEAN=0
+DIST=0
+DEBUG=0
+HELP=0
+NATIVE=0
+TIMER=0
+VERBOSE=0
+
+DEBUG_LABEL="[46m[DEBUG][0m"
+ERROR_LABEL="[91mError:[0m"
+
+case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
+    "msys"*|"cygwin"*|"mingw"*)
+        MVN_CMD="$(which mvn).cmd"
+        ;;
+    *)
+        MVN_CMD="$(which mvn)"
+        ;;
+esac
+# 
+if [[ -z "$JAVA_HOME" ]]; then
+    echo "$ERROR_LABEL Variable JAVA_HOME not defined" 1>&2
+    cleanup 1
+fi
+## simplelanguage is a Maven project
+if [[ ! -f "$MVN_CMD" ]]; then
+    echo "$ERROR_LABEL Maven command not found" 1>&2
+    cleanup 1
+fi
+
+args "$@"
+[[ $EXITCODE -eq 0 ]] || cleanup 1
+
+##############################################################################
+## Main
+
+[[ $HELP -eq 1 ]] && help && cleanup
+
+if [[ $CLEAN -eq 1 ]]; then
+    clean
+    [[ $EXITCODE -eq 0 ]] || cleanup 1
+fi
+if [[ $DIST -eq 1 ]]; then
+    dist
+    [[ $EXITCODE -eq 0 ]] || cleanup 1
+fi
+
+##############################################################################
+## Cleanups
+
+cleanup

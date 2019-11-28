@@ -18,13 +18,21 @@ if not %_EXITCODE%==0 goto end
 
 call :args %*
 if not %_EXITCODE%==0 goto end
-if %_HELP%==1 call :help & exit /b %_EXITCODE%
+
 
 rem ##########################################################################
 rem ## Main
 
+if %_HELP%==1 (
+    call :help
+    exit /b !_EXITCODE!
+)
 if %_CLEAN%==1 (
     call :clean
+    if not !_EXITCODE!==0 goto end
+)
+if %_UPDATE%==1 (
+    call :update
     if not !_EXITCODE!==0 goto end
 )
 if %_DIST%==1 (
@@ -64,6 +72,9 @@ set _TARGET_DIR=%_ROOT_DIR%target
 set _TARGET_BIN_DIR=%_TARGET_DIR%\sl\bin
 set _TARGET_LIB_DIR=%_TARGET_DIR%\sl\lib
 
+set _GIT_CMD=git.exe
+set _GIT_OPTS=
+
 if not exist "%MAVEN_HOME%" (
     echo %_ERROR_LABEL% Could not find installation directory for Maven 3 1>&2
     set _EXITCODE=1
@@ -74,7 +85,7 @@ set _MVN_OPTS=
 goto :eof
 
 rem input parameter: %*
-rem output parameter(s): _CLEAN, _DIST, _PARSER, _DEBUG,  _NATIVE, _VERBOSE
+rem output parameter(s): _CLEAN, _DIST, _PARSER, _DEBUG,  _NATIVE, _UPDATE, _VERBOSE
 :args
 set _CLEAN=0
 set _DIST=0
@@ -83,6 +94,7 @@ set _DEBUG=0
 set _HELP=0
 set _NATIVE=0
 set _TIMER=0
+set _UPDATE=0
 set _VERBOSE=0
 set __N=0
 :args_loop
@@ -110,6 +122,7 @@ if "%__ARG:~0,1%"=="-" (
     ) else if /i "%__ARG%"=="dist" ( set _DIST=1
     ) else if /i "%__ARG%"=="help" ( set _HELP=1
     ) else if /i "%__ARG%"=="parser" ( set _PARSER=1
+    ) else if /i "%__ARG%"=="update" ( set _UPDATE=1
     ) else (
         echo %_ERROR_LABEL% Unknown subcommand %__ARG% 1>&2
         set _EXITCODE=1
@@ -119,8 +132,8 @@ if "%__ARG:~0,1%"=="-" (
 shift
 goto :args_loop
 :args_done
+if %_DEBUG%==1 echo %_DEBUG_LABEL% _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _NATIVE=%_NATIVE% _UPDATE=%_UPDATE% _VERBOSE=%_VERBOSE% 1>&2
 if %_TIMER%==1 for /f "delims=" %%i in ('powershell -c "(Get-Date)"') do set _TIMER_START=%%i
-if %_DEBUG%==1 echo %_DEBUG_LABEL% _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _NATIVE=%_NATIVE% _VERBOSE=%_VERBOSE% 1>&2
 goto :eof
 
 :help
@@ -137,6 +150,7 @@ echo     clean       delete generated files
 echo     dist        generate binary distribution
 echo     help        display this help message
 echo     parser      generate ANTLR parser for SL
+echo     update      fetch/merge local directories simplelanguage
 goto :eof
 
 :clean
@@ -159,6 +173,35 @@ if not %ERRORLEVEL%==0 (
 )
 goto :eof
 
+:update
+if not exist "%_ROOT_DIR%\.travis.yml" goto :eof
+
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% Current directory is %_ROOT_DIR% 1>&2
+) else if %_VERBOSE%==1 ( echo %_VERBOSE_LABEL% Current directory is %_ROOT_DIR% 1>&2
+)
+pushd "%_ROOT_DIR%"
+
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% %_GIT_CMD% %_GIT_OPTS% fetch upstream master 1>&2
+) else if %_VERBOSE%==1 ( echo %_VERBOSE_LABEL% Update local directory %_ROOT_DIR% 1>&2
+)
+call %_GIT_CMD% %_GIT_OPTS% fetch upstream master
+if not %ERRORLEVEL%==0 (
+    popd
+    set _EXITCODE=1
+    goto :eof
+)
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% %_GIT_CMD% %_GIT_OPTS% merge upstream/master 1>&2
+) else if %_VERBOSE%==1 ( echo %_VERBOSE_LABEL% Update local directory %_ROOT_DIR% 1>&2
+)
+call %_GIT_CMD% %_GIT_OPTS% merge upstream/master
+if not %ERRORLEVEL%==0 (
+    popd
+    set _EXITCODE=1
+    goto :eof
+)
+popd
+goto :eof
+
 :dist
 setlocal
 call :dist_env
@@ -167,7 +210,9 @@ if %_DEBUG%==1 ( set __MVN_OPTS=%_MVN_OPTS%
 ) else if %_VERBOSE%==1 ( set __MVN_OPTS=%_MVN_OPTS%
 ) else ( set __MVN_OPTS=--quiet %_MVN_OPTS%
 )
-if %_DEBUG%==1 echo %_DEBUG_LABEL% %_MVN_CMD% %__MVN_OPTS% package 1>&2
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% %_MVN_CMD% %__MVN_OPTS% package 1>&2
+) else if %_VERBOSE%==1 ( echo %_MVN_CMD% package 1>&2
+)
 call %_MVN_CMD% %__MVN_OPTS% package
 if not %ERRORLEVEL%==0 (
     echo %_ERROR_LABEL% Execution of maven package failed 1>&2
@@ -203,19 +248,19 @@ goto :eof
 :dist_env
 if defined sdkdir goto dist_env_done
 
-set __MSVC_ARCH=
-set __NET_ARCH=Framework\v4.0.30319
-set __SDK_ARCH=
 if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
-    set __MSVC_ARCH=\amd64
-    set __NET_ARCH=Framework64\v4.0.30319
-    set __SDK_ARCH=\x64
+    set __MSVC_LIB=Lib\amd64
+    set __NET_FRAMEWORK=Framework64\v4.0.30319
+    set __SDK_LIB=lib\x64
+) else (
+    set __MSVC_LIB=Lib
+    set __NET_FRAMEWORK=Framework\v4.0.30319
+    set __SDK_LIB=lib
 )
-rem Variables MSVC_HOME, MSVS_HOME and SDK_HOME are defined by setenv.bat
+rem Variables MSVC_HOME and SDK_HOME are defined by setenv.bat
 set INCLUDE=%MSVC_HOME%\INCLUDE;%SDK_HOME%\INCLUDE;%SDK_HOME%\INCLUDE\gl
-set LIB=%MSVC_HOME%\Lib%__MSVC_ARCH%;%SDK_HOME%\lib%__SDK_ARCH%
-set LIBPATH=c:\WINDOWS\Microsoft.NET\%__NET_ARCH%;%MSVC_HOME%\lib%__MSVC_ARCH%
-set PATH=c:\WINDOWS\Microsoft.NET\%__NET_ARCH%;%MSVS_HOME%\Common7\IDE;%MSVS_HOME%\Common7\Tools;%MSVC_HOME%\Bin%__MSVC_ARCH%;%SDK_HOME%\Bin%__SDK_ARCH%;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;%MAVEN_HOME%\bin
+set LIB=%MSVC_HOME%\%__MSVC_LIB%;%SDK_HOME%\%__SDK_LIB%
+set LIBPATH=c:\WINDOWS\Microsoft.NET\%__NET_FRAMEWORK%;%MSVC_HOME%\%__MSVC_LIB%
 :dist_env_done
 if %_NATIVE%==1 ( set SL_BUILD_NATIVE=true
 ) else ( set SL_BUILD_NATIVE=false
