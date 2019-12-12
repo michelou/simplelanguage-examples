@@ -53,9 +53,6 @@ if not exist "%_JAR_CMD%" (
     goto end
 )
 
-call :args %*
-if not %_EXITCODE%==0 goto end
-
 rem ##########################################################################
 rem ## Main
 

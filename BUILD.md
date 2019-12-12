@@ -16,29 +16,32 @@
 This project depends on several external software for the **Microsoft Windows** platform:
 
 - [Apache Maven 3.6][maven_downloads] ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*][maven_relnotes])
-- [GraalVM Community Edition 19.2][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes]
-- [Microsoft Windows SDK for Windows 7 and .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=8442) <sup id="anchor_02a">[[2]](#footnote_02)</sup>
+- [GraalVM Community Edition 19.3 LTS][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes]
+- [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
+- [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
+<!--
 - [Microsoft Visual C++ 2010 Service Pack 1 Compiler Update for the Windows SDK 7.1](https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422) <sup id="anchor_02b">[[2]](#footnote_02)</sup>
+-->
 
 Optionally one may also install the following software:
 
-- [ANTLR 4.7 tool](https://www.antlr.org/download.html) ([*release notes*](https://github.com/antlr/antlr4/releases/tag/4.7.2)) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.24](https://git-scm.com/download/win) ([*release notes*](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.0.txt))
+- [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
+- [Git 2.24][git_downloads] ([*release notes*][git_relnotes])
 
-> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_exe] from the command line (as well as over 250 Unix commands like [**`awk`**](https://www.linux.org/docs/man1/awk.html), [**`diff`**](https://www.linux.org/docs/man1/diff.html), [**`file`**](https://www.linux.org/docs/man1/file.html), [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
+> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*November 2019*):
+For instance our development environment looks as follows (*December 2019*):
 
 <pre style="font-size:80%;">
-C:\opt\apache-maven-3.6.2\                            <i>( 10 MB)</i>
-C:\opt\graalvm-ce-19.2.1\                             <i>(361 MB)</i>
-C:\opt\Git-2.24.0\                                    <i>(271 MB)</i>
+C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
+C:\opt\graalvm-ce-java8-19.3.0\                       <i>(361 MB)</i>
+C:\opt\Git-2.24.1\                                    <i>(271 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
 
 > **&#9755;** ***Installation policy***<br/>
-> When possible we install software from a [Zip archive](https://www.howtogeek.com/178146/htg-explains-everything-you-need-to-know-about-zipped-files/) rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`](http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/opt.html) directory on Unix).
+> When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`][unix_opt] directory on Unix).
 
 
 ## Directory structure
@@ -65,9 +68,9 @@ setenv.bat
 - file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
 - file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
 
-The [**`SimpleLanguage`**][graalvm_simplelanguage] example project is a [Maven project](https://maven.apache.org/guides/getting-started/) with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
+The [**`SimpleLanguage`**][graalvm_simplelanguage] example project is a [Maven project][maven_project] with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
 
-We added/modified the following files in the original [graalvm/simpleLanguage](https://github.com/graalvm/simplelanguage) example project:
+We added/modified the following files in the original [graalvm/simpleLanguage][github_graalvm_sl] example project:
 
 <pre style="font-size:80%;">
 component\clean_component.bat
@@ -142,18 +145,19 @@ We distinguish different sets of batch commands:
 
 #### `setenv.bat`
 
-Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**][mvn_cmd], [**`git.exe`**][git_exe] and [**`cl.exe`**][windows_cl] directly available from the command prompt:
+Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**][mvn_cmd], [**`git.exe`**][git_cli] and [**`cl.exe`**][windows_cl] directly available from the command prompt:
 
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
 Tool versions:
-   javac 1.8.0_232, mvn 3.6.2, git 2.24.0.windows.1, diff 3.7
-   cl 16.00.40219.01 for x64, dumpbin 10.00.40219.01, uuidgen v1.01
+   javac 1.8.0_232, mvn 3.6.3, cl 16.00.40219.01 for x64
+   dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
+   git 2.24.1.windows.2, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; where javac mvn</b>
-C:\opt\graalvm-ce-19.2.1\bin\javac.exe
-C:\opt\apache-maven-3.6.2\bin\mvn
-C:\opt\apache-maven-3.6.2\bin\mvn.cmd
+C:\opt\graalvm-ce-java8-19.3.0\bin\javac.exe
+C:\opt\apache-maven-3.6.3\bin\mvn
+C:\opt\apache-maven-3.6.3\bin\mvn.cmd
 </pre>
 
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
@@ -161,17 +165,21 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; setenv -verbose</b>
 Tool versions:
-   javac 1.8.0_232, mvn 3.6.2, git 2.24.0.windows.1, diff 3.7
-   cl 16.00.40219.01 for x64, dumpbin 10.00.40219.01, uuidgen v1.01
+   javac 1.8.0_232, mvn 3.6.3, cl 16.00.40219.01 for x64
+   dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
+   git 2.24.1.windows.2, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
-   C:\opt\graalvm-ce-19.2.1\bin\javac.exe
-   C:\opt\apache-maven-3.6.2\bin\mvn.cmd
-   C:\opt\Git-2.24.0\bin\git.exe
-   C:\opt\Git-2.24.0\usr\bin\diff.exe
+   C:\opt\graalvm-ce-java8-19.3.0\bin\javac.exe
+   C:\opt\apache-maven-3.6.3\bin\mvn.cmd
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
-   c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
+   C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
+   C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\link.exe
+   C:\opt\Git-2.24.1\usr\bin\link.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
-   C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\Uuidgen.Exe
+   C:\opt\Git-2.24.1\bin\git.exe
+   C:\opt\Git-2.24.1\mingw64\bin\git.exe
+   C:\opt\Git-2.24.1\usr\bin\diff.exe
+   C:\opt\Git-2.24.1\bin\bash.exe
 </pre>
 
 
@@ -215,11 +223,11 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [INFO] simplelanguage-graalvm-component                                   [pom]
 [INFO]
 [INFO] ------------------< com.oracle:simplelanguage-parent >------------------
-[INFO] Building simplelanguage-parent 19.2.1-SNAPSHOT                     [1/5]
+[INFO] Building simplelanguage-parent 19.3.0-SNAPSHOT                     [1/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [...]
 [INFO] --------------< com.oracle:simplelanguage-graalvm-native >--------------
-[INFO] Building simplelanguage-graalvm-native 19.2.1-SNAPSHOT             [4/5]
+[INFO] Building simplelanguage-graalvm-native 19.3.0-SNAPSHOT             [4/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:exec (make_native) @ simplelanguage-graalvm-native ---
@@ -242,12 +250,12 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [S:\simplelanguage\native\target\slnative:3432]      [total]:  90,272.90 ms
 [INFO]     
 [INFO] ------------< com.oracle:simplelanguage-graalvm-component >-------------
-[INFO] Building simplelanguage-graalvm-component 19.2.1-SNAPSHOT          [5/5]
+[INFO] Building simplelanguage-graalvm-component 19.3.0-SNAPSHOT          [5/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]   
 [INFO] --- exec-maven-plugin:1.6.0:exec (make_component) @ simplelanguage-graalvm-component ---
 [INFO] ------------------------------------------------------------------------
-[INFO] Reactor Summary for simplelanguage-parent 19.2.1-SNAPSHOT:
+[INFO] Reactor Summary for simplelanguage-parent 19.3.0-SNAPSHOT:
 [INFO]
 [INFO] simplelanguage-parent .............................. SUCCESS [  0.036 s]
 [INFO] simplelanguage ..................................... SUCCESS [ 16.164 s]
@@ -282,16 +290,16 @@ Output directory is **`target\sl\`**; its structure looks as follows:
     |
     \---lib
             antlr4-runtime-4.7.2.jar
-            launcher-19.2.1-SNAPSHOT.jar
-            simplelanguage-19.2.1-SNAPSHOT.jar
+            launcher-19.3.0-SNAPSHOT.jar
+            simplelanguage-19.3.0-SNAPSHOT.jar
 </pre>
 
 > **:mag_right:** As expected the file sizes for the JVM and native versions are very different:
 > <pre style="font-size:80%;">
 > <b>&gt; where /t /r target\sl\lib *.jar</b>
 >    337904   22.07.2019      18:41:46  S:\target\sl\lib\antlr4-runtime-4.7.2.jar
->      4962   24.10.2019      10:31:06  S:\target\sl\lib\launcher-19.2.1-SNAPSHOT.jar
->    339676   24.10.2019      10:31:04 S:\target\sl\lib\simplelanguage-19.2.1-SNAPSHOT.jar
+>      4962   24.10.2019      10:31:06  S:\target\sl\lib\launcher-19.3.0-SNAPSHOT.jar
+>    339676   24.10.2019      10:31:04 S:\target\sl\lib\simplelanguage-19.3.0-SNAPSHOT.jar
 >
 > <b>&gt; where /t /r target\sl\bin *.exe</b>
 >  27229696   24.10.2019      10:32:30  S:\target\sl\bin\slnative.exe
@@ -413,8 +421,8 @@ Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`g
 <b>&gt; generate_parser -debug test</b>
 [generate_parser] _DEBUG=1 _TEST=1 _VERBOSE=0
 [generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
-[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
-[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-19.2.1\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
+[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
+[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-19.3.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
 == running on org.graalvm.polyglot.Engine@56cbfb61
 7
 34
@@ -501,8 +509,11 @@ For instance, the SL source file [**`Fibonacci.sl`**](language/tests/Fibonacci.s
 <a name="footnote_01">[1]</a> ***2 GraalVM editions*** [↩](#anchor_01)
 
 <p style="margin:0 0 1em 20px;">
-<a href="https://www.graalvm.org/docs/getting-started/">GraalVM</a> is available as Community Edition (CE) and Enterprise Edition (EE): GraalVM CE is based on the <a href="https://adoptopenjdk.net/">OpenJDK 8</a> and <a href="https://www.oracle.com/technetwork/graalvm/downloads/index.html">GraalVM EE</a> is developed on top of the <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java SE 1.8.0_231</a>.
+<a href="https://www.graalvm.org/docs/getting-started/">GraalVM</a> is available as Community Edition (CE) and Enterprise Edition (EE):
 </p>
+<ul><li>GraalVM CE is based either on the <a href="https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot">OpenJDK 8</a> or on <a href="https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot">OpenJDK 11</a> and</li>
+<li><a href="https://www.oracle.com/technetwork/graalvm/downloads/index.html">GraalVM EE</a> is developed on top of the <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle Java SE 1.8.0_231</a> respectively on Oracle Java SE 11.</li>
+</ul>
 
 <a name="footnote_02">[2]</a> ***2018-09-24*** [↩](#anchor_02a)
 
@@ -518,8 +529,8 @@ GRMSDKIAI_EN_DVD.iso is a version for Itanium environment.
 In our case we downloaded the following installation files (see section <a href="#section_01"><b>Project dependencies</b></a>):
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.2-bin.zip</a>          <i>(  8 MB)</i>
-<a href="https://github.com/oracle/graal/releases/tag/vm-19.2.1">graalvm-ce-windows-amd64-19.2.1.zip</a> <i>(170 MB)</i>
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.3-bin.zip</a>          <i>(  8 MB)</i>
+<a href="https://github.com/oracle/graal/releases/tag/vm-19.3.0">graalvm-ce-windows-amd64-19.3.0.zip</a> <i>(170 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
 </pre>
@@ -555,7 +566,7 @@ Command <b><code>sl -disassemble</code></b> generates the error message <code>Co
 <b>&gt; sl -disassemble language\tests\SumPrint.sl</b>
 CompilerOracle: print *OptimizedCallTarget.callRoot
 CompilerOracle: exclude *OptimizedCallTarget.callRoot
-OpenJDK 64-Bit GraalVM CE 19.2.1 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
+OpenJDK 64-Bit GraalVM CE 19.3.0 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
 == running on org.graalvm.polyglot.Engine@783e6358
 [...]
 Could not load hsdis-amd64.dll; library not loadable; PrintAssembly is disabled
@@ -569,20 +580,34 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 ***
 
-*[mics](http://lampwww.epfl.ch/~michelou/)/November 2019* [**&#9650;**](#top)
+*[mics](http://lampwww.epfl.ch/~michelou/)/December 2019* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
 
 [antlr]: https://www.antlr.org/
-[git_exe]: https://git-scm.com/docs/git
+[antlr_downloads]: https://www.antlr.org/download.html
+[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.7.2
+[git_cli]: https://git-scm.com/docs/git
+[git_downloads]: https://git-scm.com/download/win
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.1.txt
+[github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [graalvm]: https://www.graalvm.org/
 [graalvm_downloads]: https://github.com/oracle/graal/releases
-[graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/19_2/
+[graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/19_3/
 [graalvm_simplelanguage]: https://github.com/graalvm/simplelanguage
+[man1_awk]: https://www.linux.org/docs/man1/awk.html
+[man1_diff]: https://www.linux.org/docs/man1/diff.html
+[man1_file]: https://www.linux.org/docs/man1/file.html
 [man1_wc]: https://www.linux.org/docs/man1/wc.html
 [maven_downloads]: http://maven.apache.org/download.cgi
-[maven_relnotes]: http://maven.apache.org/docs/3.6.2/release-notes.html
+[maven_project]: https://maven.apache.org/guides/getting-started/
+[maven_relnotes]: http://maven.apache.org/docs/3.6.3/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+[unix_opt]: http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/opt.html
+[vs2010_downloads]: https://visualstudio.microsoft.com/vs/older-downloads/
+[vs2010_relnotes]: https://docs.microsoft.com/en-us/visualstudio/releasenotes/vs2010-version-history
 [windows_cl]: https://docs.microsoft.com/en-us/cpp/build/reference/compiling-a-c-cpp-program?view=vs-2019
 [windows_dumpbin]: https://docs.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=vs-2019
+[windows_sdk]: https://www.microsoft.com/en-us/download/details.aspx?id=8442
+[zip_archive]: https://www.howtogeek.com/178146/htg-explains-everything-you-need-to-know-about-zipped-files/

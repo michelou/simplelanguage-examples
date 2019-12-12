@@ -324,13 +324,13 @@ if %ERRORLEVEL%==0 (
 )
 where /q link.exe
 if %ERRORLEVEL%==0 (
-    for /f "tokens=1-5,*" %%i in ('link.exe ^| findstr Version 2^>^NUL') do set "__VERSIONS_LINE2=%__VERSIONS_LINE2% link %%n"
+    for /f "tokens=1-5,*" %%i in ('link.exe ^| findstr Version 2^>^NUL') do set "__VERSIONS_LINE2=%__VERSIONS_LINE2% link %%n,"
     set __WHERE_ARGS=%__WHERE_ARGS% link.exe
 )
 rem Microsoft Windows SDK v7.1
 where /q uuidgen.exe
 if %ERRORLEVEL%==0 (
-    for /f "tokens=1-3,4,*" %%f in ('uuidgen.exe /v') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% uuidgen %%i,"
+    for /f "tokens=1-3,4,*" %%f in ('uuidgen.exe /v') do set "__VERSIONS_LINE2=%__VERSIONS_LINE2% uuidgen %%i"
     set __WHERE_ARGS=%__WHERE_ARGS% uuidgen.exe
 )
 where /q git.exe
