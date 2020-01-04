@@ -72,6 +72,12 @@ set _TARGET_DIR=%_ROOT_DIR%target
 set _TARGET_BIN_DIR=%_TARGET_DIR%\sl\bin
 set _TARGET_LIB_DIR=%_TARGET_DIR%\sl\lib
 
+for /f "delims=" %%f in ('where /r "%MSVS_HOME%" vcvarsall.bat') do set "_VCVARSALL_FILE=%%f"
+if not exist "%_VCVARSALL_FILE%" (
+    echo %_ERROR_LABEL% Internal error ^(vcvarsall.bat not found^) 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
 set _GIT_CMD=git.exe
 set _GIT_OPTS=
 
@@ -220,17 +226,17 @@ if not %ERRORLEVEL%==0 (
     goto dist_done
 )
 set __LANGUAGE_JAR_FILE=
-for %%f in (%_LANGUAGE_DIR%\target\*language*SNAPSHOT.jar) do set __LANGUAGE_JAR_FILE=%%~f
+for %%f in (%_LANGUAGE_DIR%\target\*language*SNAPSHOT.jar) do set "__LANGUAGE_JAR_FILE=%%~f"
 call :dist_copy "%__LANGUAGE_JAR_FILE%" "%_TARGET_LIB_DIR%\"
 if not %_EXITCODE%==0 goto dist_done
 
 set __LAUNCHER_JAR_FILE=
-for %%f in (%_LAUNCHER_TARGET_DIR%\launcher*SNAPSHOT.jar) do set __LAUNCHER_JAR_FILE=%%~f
+for %%f in (%_LAUNCHER_TARGET_DIR%\launcher*SNAPSHOT.jar) do set "__LAUNCHER_JAR_FILE=%%~f"
 call :dist_copy "%__LAUNCHER_JAR_FILE%" "%_TARGET_LIB_DIR%\"
 if not %_EXITCODE%==0 goto dist_done
 
 set __ANTLR4_JAR_FILE=
-for /f "delims=" %%f in ('where /r "%USERPROFILE%\.m2\repository\org\antlr" *.jar') do set __ANTLR4_JAR_FILE=%%~f
+for /f "delims=" %%f in ('where /r "%USERPROFILE%\.m2\repository\org\antlr" *.jar') do set "__ANTLR4_JAR_FILE=%%~f"
 call :dist_copy "%__ANTLR4_JAR_FILE%" "%_TARGET_LIB_DIR%\"
 if not %_EXITCODE%==0 goto dist_done
 
@@ -246,24 +252,17 @@ endlocal
 goto :eof
 
 :dist_env
-if defined sdkdir goto dist_env_done
+set SL_BUILD_NATIVE=
+if %_NATIVE%==0 goto :eof
 
-if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
-    set __MSVC_LIB=Lib\amd64
-    set __NET_FRAMEWORK=Framework64\v4.0.30319
-    set __SDK_LIB=lib\x64
+set SL_BUILD_NATIVE=true
+
+rem check if MSVS 2010 installation is complete
+if exist "%MSVC_HOME%\bin\amd64\vcvars64.bat" (
+    call :dist_env_vcvarsall
 ) else (
-    set __MSVC_LIB=Lib
-    set __NET_FRAMEWORK=Framework\v4.0.30319
-    set __SDK_LIB=lib
-)
-rem Variables MSVC_HOME and SDK_HOME are defined by setenv.bat
-set INCLUDE=%MSVC_HOME%\INCLUDE;%SDK_HOME%\INCLUDE;%SDK_HOME%\INCLUDE\gl
-set LIB=%MSVC_HOME%\%__MSVC_LIB%;%SDK_HOME%\%__SDK_LIB%
-set LIBPATH=c:\WINDOWS\Microsoft.NET\%__NET_FRAMEWORK%;%MSVC_HOME%\%__MSVC_LIB%
-:dist_env_done
-if %_NATIVE%==1 ( set SL_BUILD_NATIVE=true
-) else ( set SL_BUILD_NATIVE=false
+    echo %_WARNING_LABEL% File bin\amd64\vcvars64.bat not found; use fallback solution 1>&2
+    call :dist_env_fallback
 )
 if %_DEBUG%==1 (
     echo %_DEBUG_LABEL% ===== B U I L D   V A R I A B L E S ===== 1>&2
@@ -274,6 +273,41 @@ if %_DEBUG%==1 (
     echo %_DEBUG_LABEL% ========================================= 1>&2
 )
 goto :eof
+
+:dist_env_vcvarsall
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_VCVARSALL_FILE%" amd64 1>&2
+) else if %_VERBOSE%==1 ( echo Set up environment for Microsoft Visual Studio tools 1>&2
+)
+call "%_VCVARSALL_FILE%" amd64
+if not !ERRORLEVEL!==0 (
+    echo %_ERROR_LABEL% Failed to set up environment for Microsoft Visual Studio tools 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+set "PATH=%PATH%;%MSVC_HOME%\bin\amd64"
+goto :eof
+
+rem Fallback solution in case MSVS 2010 installation is incomplete, i.e.
+rem files bin\vcvars32.bat, bin\amd64\vcvars64.bat, etc. are missing.
+:dist_env_fallback
+if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
+    set __MSVC_BIN=bin\amd64
+    set __MSVC_LIB=Lib\amd64
+    set __NET_FRAMEWORK=Framework64\v4.0.30319
+    set __SDK_LIB=lib\x64
+) else (
+    set __MSVC_BIN=bin
+    set __MSVC_LIB=Lib
+    set __NET_FRAMEWORK=Framework\v4.0.30319
+    set __SDK_LIB=lib
+)
+rem Variables MSVC_HOME and SDK_HOME are defined by setenv.bat
+set "INCLUDE=%MSVC_HOME%\INCLUDE;%SDK_HOME%\INCLUDE;%SDK_HOME%\INCLUDE\gl"
+set "LIB=%MSVC_HOME%\%__MSVC_LIB%;%SDK_HOME%\%__SDK_LIB%"
+set "LIBPATH=c:\WINDOWS\Microsoft.NET\%__NET_FRAMEWORK%;%MSVC_HOME%\%__MSVC_LIB%"
+set "PATH=%PATH%;%MSVC_HOME%\%__MSVC_BIN%"
+goto :eof
+
 
 :dist_copy
 set __SOURCE_FILE=%~1

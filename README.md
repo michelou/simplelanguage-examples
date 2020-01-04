@@ -32,11 +32,11 @@ Optionally one may also install the following software:
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*December 2019*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*January 2020*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
-C:\opt\graalvm-ce-java8-19.3.0\                       <i>(361 MB)</i>
+C:\opt\graalvm-ce-java8-19.3.0.2                      <i>(360 MB)</i>
 C:\opt\Git-2.24.1\                                    <i>(277 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
@@ -129,12 +129,11 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
 Tool versions:
-   javac 1.8.0_232, mvn 3.6.3, cl 16.00.40219.01 for x64
-   dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
+   javac 1.8.0_232, mvn 3.6.3,
    git 2.24.1.windows.2, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; where javac mvn</b>
-C:\opt\graalvm-ce-java8-19.3.0\bin\javac.exe
+C:\opt\graalvm-ce-java8-19.3.0.2\bin\javac.exe
 C:\opt\apache-maven-3.6.3\bin\mvn
 C:\opt\apache-maven-3.6.3\bin\mvn.cmd
 </pre>
@@ -144,21 +143,18 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; setenv -verbose</b>
 Tool versions:
-   javac 1.8.0_232, mvn 3.6.3, cl 16.00.40219.01 for x64
-   dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
+   javac 1.8.0_232, mvn 3.6.3,
    git 2.24.1.windows.2, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
-   C:\opt\graalvm-ce-java8-19.3.0\bin\javac.exe
+   C:\opt\graalvm-ce-java8-19.3.0.2\bin\javac.exe
    C:\opt\apache-maven-3.6.3\bin\mvn.cmd
-   C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
-   C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
-   C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\link.exe
-   C:\opt\Git-2.24.1\usr\bin\link.exe
-   C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
    C:\opt\Git-2.24.1\bin\git.exe
    C:\opt\Git-2.24.1\mingw64\bin\git.exe
    C:\opt\Git-2.24.1\usr\bin\diff.exe
    C:\opt\Git-2.24.1\bin\bash.exe
+Environment variables:
+   MSVC_HOME="C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC"
+   MSVS_HOME="C:\Program Files (x86)\Microsoft Visual Studio 10.0"
 </pre>
 
 Command [**`setenv -sdk`**](setenv.bat) is aimed to users who prefer to rely on the *"Windows SDK 7.1 Command Prompt"* shortcut (target **`C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd`**) to setup their development environment.
@@ -217,16 +213,16 @@ ANTLR Parser Generator  Version 4.7.2
 In our case we downloaded the following installation files (see section <a href="#section_01"><b>Project dependencies</b></a>):
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.3-bin.zip</a>                <i>(  8 MB)</i>
-<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-19.3.0">graalvm-ce-java8-windows-amd64-19.3.0.zip</a> <i>(154 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                        <i>(570 MB)</i>
-<a href="https://git-scm.com/download/win">PortableGit-2.24.1-64-bit.7z.exe</a>    <i>      ( 41 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                 <i>(121 MB)</i>
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.3-bin.zip</a>                  <i>(  8 MB)</i>
+<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-19.3.0">graalvm-ce-java8-windows-amd64-19.3.0.2.zip</a> <i>(154 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                          <i>(570 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.24.1-64-bit.7z.exe</a>    <i>        ( 41 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                   <i>(121 MB)</i>
 </pre>
 
 ***
 
-*[mics](http://lampwww.epfl.ch/~michelou/)/December 2019* [**&#9650;**](#top)
+*[mics](http://lampwww.epfl.ch/~michelou/)/January 2020* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
