@@ -65,8 +65,8 @@ setenv.bat
 - file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
 - directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[[5]](#footnote_05)</sup>.
 - directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage][graalvm_simplelanguage] repository as a Github submodule.
-- file [**`BUILD.md`**](BUILD.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document for generating the SL component.
-- file [**`README.md`**](README.md) is the [Markdown](https://guides.github.com/features/mastering-markdown/) document of this page.
+- file [**`BUILD.md`**](BUILD.md) is the [Markdown][github_markdown] document of this page.
+- file [**`README.md`**](README.md) is the [Markdown][github_markdown] document describing this project.
 - file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
 
 The [**`SimpleLanguage`**][graalvm_simplelanguage] example project is a [Maven project][maven_project] with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
@@ -585,7 +585,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 ***
 
-*[mics](http://lampwww.epfl.ch/~michelou/)/February 2020* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/February 2020* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -597,6 +597,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 [git_downloads]: https://git-scm.com/download/win
 [git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.25.1.txt
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
+[github_markdown]: https://guides.github.com/features/mastering-markdown/
 [graalvm]: https://www.graalvm.org/
 [graalvm_downloads]: https://github.com/oracle/graal/releases
 [graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/20_0/
