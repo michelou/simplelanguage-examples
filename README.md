@@ -3,7 +3,7 @@
 <table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:60px;max-width:100px;">
-    <a href="https://www.graalvm.org/"><img style="border:0;" src="https://www.graalvm.org/resources/img/graalvm.png" alt="GraalVM"/></a>
+    <a href="https://www.graalvm.org/"><img style="border:0;" src="https://www.graalvm.org/resources/img/graalvm.png" alt="GraalVM logo"/></a>
   </td>
   <td style="border:0;padding:0;vertical-align:text-top;">
     In the following we describe how to modify the <b><code><a href="https://github.com/graalvm/simplelanguage" alt="SimpleLanguage">SimpleLanguage</a></code></b> (aka SL) example project on a Windows machine.<br/>In particular we show how to add new builtins, extend the SL parser.
@@ -28,16 +28,16 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.25][git_downloads] ([*release notes*][git_relnotes])
+- [Git 2.26][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*February 2020*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*April 2020*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
 C:\opt\graalvm-ce-java8-20.0.0\                       <i>(670 MB)</i>
-C:\opt\Git-2.25.1\                                    <i>(277 MB)</i>
+C:\opt\Git-2.26.0\                                    <i>(277 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
@@ -131,7 +131,7 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <b>&gt; setenv</b>
 Tool versions:
    javac 1.8.0_242, mvn 3.6.3,
-   git 2.25.1.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.26.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; where javac mvn</b>
 C:\opt\graalvm-ce-java8-20.0.0\bin\javac.exe
@@ -145,7 +145,7 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <b>&gt; setenv -verbose</b>
 Tool versions:
    javac 1.8.0_242, mvn 3.6.3,
-   git 2.25.1.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.26.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
    C:\opt\graalvm-ce-java8-20.0.0\bin\javac.exe
    C:\opt\apache-maven-3.6.3\bin\mvn.cmd
@@ -217,13 +217,13 @@ In our case we downloaded the following installation files (see section <a href=
 <a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.3-bin.zip</a>                 <i>(  8 MB)</i>
 <a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.0.0">graalvm-ce-java8-windows-amd64-20.0.0.zip</a>  <i>(268 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                         <i>(570 MB)</i>
-<a href="https://git-scm.com/download/win">PortableGit-2.25.1-64-bit.7z.exe</a>    <i>       ( 41 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.26.0-64-bit.7z.exe</a>    <i>       ( 41 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                  <i>(121 MB)</i>
 </pre>
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/February 2020* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/April 2020* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -233,7 +233,7 @@ In our case we downloaded the following installation files (see section <a href=
 [dotty_examples]: https://github.com/michelou/dotty-examples
 [git_downloads]: https://git-scm.com/download/win
 [git_cli]: https://git-scm.com/docs/git
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.24.1.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.26.0.txt
 [github_michelou_sl]: https://github.com/michelou/simplelanguage
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://github.github.com/gfm/

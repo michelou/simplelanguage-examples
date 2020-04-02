@@ -26,16 +26,16 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.25][git_downloads] ([*release notes*][git_relnotes])
+- [Git 2.26][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*February 2020*):
+For instance our development environment looks as follows (*April 2020*):
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
 C:\opt\graalvm-ce-java8-20.0.0\                       <i>(670 MB)</i>
-C:\opt\Git-2.25.1\                                    <i>(271 MB)</i>
+C:\opt\Git-2.26.0\                                    <i>(271 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
@@ -153,7 +153,7 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 Tool versions:
    javac 1.8.0_242, mvn 3.6.3, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.25.1.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.26.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; where javac mvn</b>
 C:\opt\graalvm-ce-java8-20.0.0\bin\javac.exe
@@ -168,19 +168,19 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 Tool versions:
    javac 1.8.0_242, mvn 3.6.3, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.25.1.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.26.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
    C:\opt\graalvm-ce-java8-20.0.0\bin\javac.exe
    C:\opt\apache-maven-3.6.3\bin\mvn.cmd
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\link.exe
-   C:\opt\Git-2.25.1\usr\bin\link.exe
+   C:\opt\Git-2.26.0\usr\bin\link.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
-   C:\opt\Git-2.25.1\bin\git.exe
-   C:\opt\Git-2.25.1\mingw64\bin\git.exe
-   C:\opt\Git-2.25.1\usr\bin\diff.exe
-   C:\opt\Git-2.25.1\bin\bash.exe
+   C:\opt\Git-2.26.0\bin\git.exe
+   C:\opt\Git-2.26.0\mingw64\bin\git.exe
+   C:\opt\Git-2.26.0\usr\bin\diff.exe
+   C:\opt\Git-2.26.0\bin\bash.exe
 </pre>
 
 
@@ -585,7 +585,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/February 2020* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/April 2020* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -595,7 +595,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 [antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.7.2
 [git_cli]: https://git-scm.com/docs/git
 [git_downloads]: https://git-scm.com/download/win
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.25.1.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.26.0.txt
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://guides.github.com/features/mastering-markdown/
 [graalvm]: https://www.graalvm.org/
