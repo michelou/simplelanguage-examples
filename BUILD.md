@@ -3,7 +3,7 @@
 <table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:60px;max-width:100px;">
-    <a href="https://www.graalvm.org/"><img style="border:0;" src="https://www.graalvm.org/resources/img/graalvm.png" alt="GraalVM"/></a>
+    <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="https://www.graalvm.org/resources/img/graalvm.png" alt="GraalVM"/></a>
   </td>
   <td style="border:0;padding:0;vertical-align:text-top;">
     In the following we describe how to build/run the <b><code><a href="https://github.com/graalvm/simplelanguage" alt="SimpleLanguage">SimpleLanguage</a></code></b> (aka SL) example project on a Windows machine.<br/>In particular we show how to generate both the JVM version and the native version of the SL parser.
@@ -16,7 +16,7 @@
 This project depends on several external software for the **Microsoft Windows** platform:
 
 - [Apache Maven 3.6][maven_downloads] ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*][maven_relnotes])
-- [GraalVM Community Edition 20.0 LTS][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
+- [GraalVM Community Edition 20.1 LTS][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
 - [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
 <!--
@@ -26,7 +26,7 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.26][git_downloads] ([*release notes*][git_relnotes])
+- [Git 2.27][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
@@ -34,12 +34,12 @@ For instance our development environment looks as follows (*April 2020*):
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
-C:\opt\graalvm-ce-java8-20.0.0\                       <i>(670 MB)</i>
-C:\opt\Git-2.26.0\                                    <i>(271 MB)</i>
+C:\opt\graalvm-ce-java8-20.1.0\                       <i>(670 MB)</i>
+C:\opt\Git-2.27.0\                                    <i>(278 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
-<!-- 19.3.1 = 360 MB, 20.0.0 -> 670 MB -->
+<!-- 19.3.1 = 360 MB, 20.9.0 -> 670 MB, 20.1.0 -> MB -->
 
 > **&#9755;** ***Installation policy***<br/>
 > When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`][unix_opt] directory on Unix).
@@ -50,14 +50,14 @@ C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 This project is organized as follows:
 
 <pre style="font-size:80%;">
-bin\simplelanguage\build.bat
-bin\simplelanguage\generate_parser.bat
-bin\simplelanguage\sl.bat
+<a href="bin/simplelanguage/build.bat">bin\simplelanguage\build.bat</a>
+<a href="bin/simplelanguage/generate_parser.bat">bin\simplelanguage\generate_parser.bat</a>
+<a href="bin/simplelanguage/sl.bat">bin\simplelanguage\sl.bat</a>
 docs\
 simplelanguage\  <i>(Git submodule)</i>
 BUILD.md
-README.md
-setenv.bat
+<a href="README.md">README.md</a>
+<a herf="setenv.bat">setenv.bat</a>
 </pre>
 
 - file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** both inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
@@ -85,9 +85,9 @@ native\pom.xml                    <i>(modified)</i>
 
 where
 
-- directory [**`component\`**](component/) contains two additional batch files.
-- file [**`launcher\src\main\scripts\sl.bat`**](launcher/src/main/scripts/sl.bat) is the batch script to be bundled into the SL distribution.
-- directory [**`native\`**](native/) contains two additional batch files.
+- directory [**`component\`**](/simplelanguage/blob/master/component/) contains two additional batch files.
+- file [**`launcher\src\main\scripts\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script to be bundled into the SL distribution.
+- directory [**`native\`**](/simplelanguage/blob/master/native/) contains two additional batch files.
 
 In the next section we give a brief description of the added batch files.
 
@@ -95,13 +95,13 @@ In the next section we give a brief description of the added batch files.
 
 We distinguish different sets of batch commands:
 
-1. [**`build.bat`**](build.bat) - This batch command provides subcommands such as **`clean`** to delete the generated files (**`target`** directories), **`dist`** to generate the binary distributions (JVM and native versions) and **`parser`** to generate the [ANTLR] parser to SL (call to [**`generate_parser.bat`**](generated_parser.bat)).
-    > **:mag_right:** Command [**`build.bat`**](build.bat) differs in two ways from command **`mvn package`**:<br/>
+1. [**`build.bat`**](bin/simplelanguage/build.bat) - This batch command provides subcommands such as **`clean`** to delete the generated files (**`target`** directories), **`dist`** to generate the binary distributions (JVM and native versions) and **`parser`** to generate the [ANTLR] parser to SL (call to [**`generate_parser.bat`**](bin/simplelanguage/generated_parser.bat)).
+    > **:mag_right:** Command [**`build.bat`**](bin/simplelanguage/build.bat) differs in two ways from command **`mvn package`**:<br/>
     > - it can also be executed *outside* of the *Windows SDK 7.1 Command Prompt*.<br/>
     > - it generates a distribution-ready output (see section [**Usage examples**](#section_04)).
 
     <pre style="font-size:80%;">
-    <b>&gt; build help</b>
+    <b>&gt; <a href="bin/simplelanguage/build.bat">build</a> help</b>
     Usage: build { &lt;option&gt; | &lt;subcommand&gt; }
     &nbsp;
       Options:
@@ -115,12 +115,13 @@ We distinguish different sets of batch commands:
         dist        generate binary distribution
         help        display this help message
         parser      generate ANTLR parser for SL
-    </pre>
+        test        test binary distribution
+        update      fetch/merge local directories simplelanguage</pre>
 
-3. [**`generate_parser.bat`**](generate_parser.bat) - This batch command generates the [ANTLR](https://www.antlr.org/) parser from the grammar file [**`SimpleLanguage.g4`**](./language/src/main/java/com/oracle/truffle/sl/parser/SimpleLanguage.g4). Compared to the corresponding shell script [**`generate_parser`**](generate_parser), it also provides subcommand **`clean`** and subcommand **`test`** to run a single test (same as in file [**`.travis.yml`**](.travis.yml)).
+3. [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) - This batch command generates the [ANTLR](https://www.antlr.org/) parser from the grammar file [**`SimpleLanguage.g4`**](./language/src/main/java/com/oracle/truffle/sl/parser/SimpleLanguage.g4). Compared to the corresponding shell script [**`generate_parser`**](generate_parser), it also provides subcommand **`clean`** and subcommand **`test`** to run a single test (same as in file [**`.travis.yml`**](.travis.yml)).
 
     <pre style="font-size:80%;">
-    <b>&gt; generate_parser help</b>
+    <b>&gt; <a href="bin/simplelanguage/generate_parser.bat">generate_parser</a> help</b>
     Usage: generate_parser { &lt;option&gt; | &lt;subcommand&gt; }
     &nbsp;
       Options:
@@ -130,8 +131,7 @@ We distinguish different sets of batch commands:
       Subcommands:
         clean       delete generated files
         help        display this help message
-        test        perform test with generated ANTLR parser
-    </pre>
+        test        perform test with generated ANTLR parser</pre>
 
 4. [**`sl.bat`**](sl.bat) - This batch command performs the same operations as the corresponding shell script [**`sl`**](sl) (called from [Travis job](https://docs.travis-ci.com/user/job-lifecycle/) **`script`** in file [**`.travis.yml`**](.travis.yml)).
 
@@ -151,12 +151,12 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
 Tool versions:
-   javac 1.8.0_242, mvn 3.6.3, cl 16.00.40219.01 for x64
+   javac 1.8.0_252, mvn 3.6.3, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.26.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.27.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; where javac mvn</b>
-C:\opt\graalvm-ce-java8-20.0.0\bin\javac.exe
+C:\opt\graalvm-ce-java8-20.1.0\bin\javac.exe
 C:\opt\apache-maven-3.6.3\bin\mvn
 C:\opt\apache-maven-3.6.3\bin\mvn.cmd
 </pre>
@@ -166,21 +166,21 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; setenv -verbose</b>
 Tool versions:
-   javac 1.8.0_242, mvn 3.6.3, cl 16.00.40219.01 for x64
+   javac 1.8.0_252, mvn 3.6.3, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.26.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.27.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
-   C:\opt\graalvm-ce-java8-20.0.0\bin\javac.exe
+   C:\opt\graalvm-ce-java8-20.1.0\bin\javac.exe
    C:\opt\apache-maven-3.6.3\bin\mvn.cmd
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\link.exe
-   C:\opt\Git-2.26.0\usr\bin\link.exe
+   C:\opt\Git-2.27.0\usr\bin\link.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
-   C:\opt\Git-2.26.0\bin\git.exe
-   C:\opt\Git-2.26.0\mingw64\bin\git.exe
-   C:\opt\Git-2.26.0\usr\bin\diff.exe
-   C:\opt\Git-2.26.0\bin\bash.exe
+   C:\opt\Git-2.27.0\bin\git.exe
+   C:\opt\Git-2.27.0\mingw64\bin\git.exe
+   C:\opt\Git-2.27.0\usr\bin\diff.exe
+   C:\opt\Git-2.27.0\bin\bash.exe
 </pre>
 
 
@@ -198,7 +198,7 @@ Directory **`simplelanguage\`** contains our fork of the [graalvm/simplelanguage
 Command [**`build.bat -verbose clean`**](bin/simplelanguage/build.bat) deletes all output directories.
 
 <pre style="font-size:80%;">
-<b>&gt; build -verbose clean</b>
+<b>&gt; <a hre="bin/simplelanguage/build.bat">build</a> -verbose clean</b>
 Delete directory S:\simplelanguage\component\target
 Delete directory S:\simplelanguage\language\target
 Delete directory S:\simplelanguage\launcher\target
@@ -211,7 +211,7 @@ Delete directory S:\simplelanguage\target
 Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) generates both the JVM version and the native version of our application.
 
 <pre style="font-size:80%;">
-<b>&gt; build -verbose -native dist</b>
+<b>&gt; <a hre="bin/simplelanguage/build.bat">build</a> -verbose -native dist</b>
 [INFO] Scanning for projects...
 [...]
 [INFO] ------------------------------------------------------------------------
@@ -224,11 +224,11 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [INFO] simplelanguage-graalvm-component                                   [pom]
 [INFO]
 [INFO] ------------------< com.oracle:simplelanguage-parent >------------------
-[INFO] Building simplelanguage-parent 20.0.0-SNAPSHOT                     [1/5]
+[INFO] Building simplelanguage-parent 20.1.0                              [1/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [...]
 [INFO] --------------< com.oracle:simplelanguage-graalvm-native >--------------
-[INFO] Building simplelanguage-graalvm-native 20.0.0-SNAPSHOT             [4/5]
+[INFO] Building simplelanguage-graalvm-native 20.1.0                      [4/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:exec (make_native) @ simplelanguage-graalvm-native ---
@@ -251,29 +251,29 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [S:\SIMPLE~3\native\target\slnative:1136]      [total]:  84,987.77 ms,  5.30 GB
 [INFO]     
 [INFO] ------------< com.oracle:simplelanguage-graalvm-component >-------------
-[INFO] Building simplelanguage-graalvm-component 20.0.0-SNAPSHOT          [5/5]
+[INFO] Building simplelanguage-graalvm-component 20.1.0                   [5/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]   
 [INFO] --- exec-maven-plugin:1.6.0:exec (make_component) @ simplelanguage-graalvm-component ---
 [INFO] ------------------------------------------------------------------------
-[INFO] Reactor Summary for simplelanguage-parent 20.0.0-SNAPSHOT:
+[INFO] Reactor Summary for simplelanguage-parent 20.1.0:
 [INFO]
-[INFO] simplelanguage-parent .............................. SUCCESS [  0.047 s]
-[INFO] simplelanguage ..................................... SUCCESS [  6.001 s]
-[INFO] launcher ........................................... SUCCESS [  1.250 s]
-[INFO] simplelanguage-graalvm-native ...................... SUCCESS [01:28 min]
-[INFO] simplelanguage-graalvm-component ................... SUCCESS [  1.906 s]
+[INFO] simplelanguage-parent .............................. SUCCESS [  0.038 s]
+[INFO] simplelanguage ..................................... SUCCESS [ 13.497 s]
+[INFO] launcher ........................................... SUCCESS [  1.338 s]
+[INFO] simplelanguage-graalvm-native ...................... SUCCESS [05:17 min]
+[INFO] simplelanguage-graalvm-component ................... SUCCESS [  2.041 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  01:37 min
-[INFO] Finished at: 2020-02-21T23:54:48+01:00
+[INFO] Total time:  05:35 min
+[INFO] Finished at: 2020-06-13T21:32:24+02:00
 [INFO] ------------------------------------------------------------------------
-[build] copy /y "S:\SIMPLE~3\language\target\simplelanguage-20.0.0-SNAPSHOT.jar" "S:\SIMPLE~3\target\sl\lib\"
-[build] copy /y "S:\SIMPLE~3\launcher\target\launcher-20.0.0-SNAPSHOT.jar" "S:\SIMPLE~3\target\sl\lib\"
-[build] copy /y "C:\Users\michelou\.m2\repository\org\antlr\antlr4-runtime\4.7.2\antlr4-runtime-4.7.2.jar" "S:\SIMPLE~3\target\sl\lib\"
-[build] copy /y "S:\SIMPLE~3\launcher\src\main\scripts\sl.bat" "S:\SIMPLE~3\target\sl\bin\"
-[build] copy /y "S:\SIMPLE~3\native\target\slnative.exe" "S:\SIMPLE~3\target\sl\bin\"
+Copy file simplelanguage-20.1.0.jar to directory "target\sl\lib\"
+Copy file launcher-20.1.0.jar to directory "target\sl\lib\"
+Copy file antlr4-runtime-4.7.2.jar to directory "target\sl\lib\"
+Copy file sl.bat to directory "target\sl\bin\"
+Copy file slnative.exe to directory "target\sl\bin\"
 </pre>
 
 > **:mag_right:** Omitting option **`-native`** (which controls the **`SL_BUILD_NATIVE`** environment variable) will skip step 4:
@@ -295,19 +295,19 @@ Output directory is **`target\sl\`**; its structure looks as follows:
     |
     \---lib
             antlr4-runtime-4.7.2.jar
-            launcher-20.0.0-SNAPSHOT.jar
-            simplelanguage-20.0.0-SNAPSHOT.jar
+            launcher-20.1.0.jar
+            simplelanguage-20.1.0.jar
 </pre>
 
 > **:mag_right:** As expected the file sizes for the JVM and native versions are very different:
 > <pre style="font-size:80%;">
 > <b>&gt; where /t /r target\sl\lib *.jar</b>
 >    337904   22.07.2019      17:41:46  S:\simplelanguage\target\sl\lib\antlr4-runtime-4.7.2.jar
->      4959   21.02.2020      23:45:30  S:\simplelanguage\target\sl\lib\launcher-20.0.0-SNAPSHOT.jar
->    364235   21.02.2020      23:45:24  S:\simplelanguage\target\sl\lib\simplelanguage-20.0.0-SNAPSHOT.jar
+>      6000   13.06.2020      21:27:04  S:\simplelanguage\target\sl\lib\launcher-20.1.0.jar
+>    404099   13.06.2020      21:27:02  S:\simplelanguage\target\sl\lib\simplelanguage-20.1.0.jar
 >
 > <b>&gt; where /t /r target\sl\bin *.exe</b>
->  26524160   21.02.2020      23:54:44  S:\simplelanguage\target\sl\bin\slnative.exe
+>  27879936   13.06.2020      21:32:21  S:\simplelanguage\target\sl\bin\slnative.exe
 > </pre>
 
 We can now execute both versions (JVM and native) of our application:
@@ -349,7 +349,7 @@ We can now execute both versions (JVM and native) of our application:
 
 #### `simplelanguage\generate_parser.bat`
 
-Command [**`generate_parser.bat`**](generate_parser.bat) with no arguments produces the lexer/parser files for the [**`SimpleLanguage`**][graalvm_simplelanguage] example.
+Command [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) with no arguments produces the lexer/parser files for the [**`SimpleLanguage`**][graalvm_simplelanguage] example.
 
 Output directory is **`target\parser\`**; its structure looks as follows:
 
@@ -368,7 +368,7 @@ Output directory is **`target\parser\`**; its structure looks as follows:
             SimpleLanguageParser.java
 </pre>
 
-Command [**`generate_parser test`**](generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](language/src/) and executes the SL main class [**`SLMain`**](launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
+Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](language/src/) and executes the SL main class [**`SLMain`**](launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
 
 Output directory **`target\parser\`** now contains two additional elements:<br/>
 - the [argument file](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javac.html#commandlineargfile) **`source_list.txt`**<br/>
@@ -403,7 +403,7 @@ Output directory **`target\parser\`** now contains two additional elements:<br/>
             SimpleLanguageParser.java
 </pre>
 
-Adding option **`-verbose`** to the above command (i.e. [**`generate_parser -verbose test`**](generate_parser.bat)) additionally displays progress messages: 
+Adding option **`-verbose`** to the above command (i.e. [**`generate_parser -verbose test`**](bin/simplelanguage/generate_parser.bat)) additionally displays progress messages: 
 
 <pre style="font-size:80%;">
 <b>&gt; generate_parser -verbose test</b>
@@ -420,14 +420,14 @@ Execute test with SimpleLangage example tests\Add.sl
 7000000000000
 </pre>
 
-Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`generate_parser -debug test`**](generate_parser.bat)) displays the internally executed commands:
+Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`generate_parser -debug test`**](bin/simplelanguage/generate_parser.bat)) displays the internally executed commands:
 
 <pre style="font-size:80%;">
 <b>&gt; generate_parser -debug test</b>
 [generate_parser] _DEBUG=1 _TEST=1 _VERBOSE=0
 [generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
-[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
-[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.0.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
+[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
+[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
 == running on org.graalvm.polyglot.Engine@56cbfb61
 7
 34
@@ -454,7 +454,7 @@ where **`<option>`** takes one of the following forms:
 - **`-J`**[**`<java_option>`**](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html), eg. **`-J-Xmx4M`**, **`-J-XshowSettings:vm`**,<br/>**`-J-Dgraal.ShowConfiguration=(none|info|verbose)`**
 - or **`--<key>=<value>`**, eg. **`--log.level=FINE`** (see example below)
 
-For instance passing [**`language\tests\Add.sl`**](language/tests/Add.sl) as argument generates the following output:
+For instance passing [**`language\tests\Add.sl`**](/simplelanguage/blob/master/language/tests/Add.sl) as argument generates the following output:
 
 <pre style="font-size:80%;">
 <b>&gt; sl language\tests\Add.sl</b>
@@ -468,14 +468,14 @@ For instance passing [**`language\tests\Add.sl`**](language/tests/Add.sl) as arg
 7000000000000
 </pre>
 
-Command [**`sl`**](sl.bat) also accepts **`--<key>=<value>`** options; those are handled by the main class [**`SLMain`**](launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java) and are passed to the GraalVM [execution engine](https://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/Engine.html).
+Command [**`sl`**](bin/simplelanguage/sl.bat) also accepts **`--<key>=<value>`** options; those are handled by the main class [**`SLMain`**](launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java) and are passed to the GraalVM [execution engine](https://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/Engine.html).
 
 | *Option* (key/value) | *Description* |
 | :------- | :------------ |
 | <code>--engine.Inlining=&lt;value&gt;</code> | Controls inlining.<br/> Values: <code>true</code> or <code>false</code> |
 | <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html"><code>--log.level=&lt;value&gt;</code></a> | Controls the logging output.<br/>Values: <code>SEVERE</code>, <code>WARNING</code>, .., <code>FINEST</code> |
 
-For instance, the SL source file [**`Fibonacci.sl`**](language/tests/Fibonacci.sl) defines the two functions **`main`** and **`fib`** which are listed together with the SL built-in functions when specifying option [**`--log.level=FINE`**](https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html).
+For instance, the SL source file [**`Fibonacci.sl`**](/simplelanguage/blob/master/language/tests/Fibonacci.sl) defines the two functions **`main`** and **`fib`** which are listed together with the SL built-in functions when specifying option [**`--log.level=FINE`**](https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html).
 
 <pre style="font-size:80%;">
 <b>&gt; sl "--log.level=FINE" language\tests\Fibonacci.sl</b>
@@ -535,7 +535,7 @@ In our case we downloaded the following installation files (see section <a href=
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
 <a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.3-bin.zip</a>          <i>(  8 MB)</i>
-<a href="https://github.com/oracle/graal/releases/tag/vm-20.0.0">graalvm-ce-windows-amd64-20.0.0.zip</a> <i>(170 MB)</i>
+<a href="https://github.com/oracle/graal/releases/tag/vm-20.1.0">graalvm-ce-windows-amd64-20.1.0.zip</a> <i>(170 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
 </pre>
@@ -543,7 +543,7 @@ In our case we downloaded the following installation files (see section <a href=
 <a name="footnote_03">[3]</a> ***ANTLR distributions*** [↩](#anchor_03)
 
 <p style="margin:0 0 1em 20px;">
-There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
+There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="bin/simplelanguage/generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
 <b>&gt; java -cp target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool | findstr Version</b>
@@ -571,7 +571,7 @@ Command <b><code>sl -disassemble</code></b> generates the error message <code>Co
 <b>&gt; sl -disassemble language\tests\SumPrint.sl</b>
 CompilerOracle: print *OptimizedCallTarget.callRoot
 CompilerOracle: exclude *OptimizedCallTarget.callRoot
-OpenJDK 64-Bit GraalVM CE 20.0.0 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
+OpenJDK 64-Bit GraalVM CE 20.1.0 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
 == running on org.graalvm.polyglot.Engine@783e6358
 [...]
 Could not load hsdis-amd64.dll; library not loadable; PrintAssembly is disabled
@@ -585,7 +585,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/April 2020* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/June 2020* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -595,7 +595,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 [antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.7.2
 [git_cli]: https://git-scm.com/docs/git
 [git_downloads]: https://git-scm.com/download/win
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.26.0.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.27.0.txt
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://guides.github.com/features/mastering-markdown/
 [graalvm]: https://www.graalvm.org/

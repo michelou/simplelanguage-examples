@@ -1,28 +1,27 @@
 @echo off
 setlocal enabledelayedexpansion
 
-rem only for interactive debugging
+@rem only for interactive debugging
 set _DEBUG=0
 
-rem ##########################################################################
-rem ## Environment setup
-
-set _BASENAME=%~n0
+@rem #########################################################################
+@rem ## Environment setup
 
 set _EXITCODE=0
-
-for %%f in ("%~dp0") do set _ROOT_DIR=%%~sf
 
 call :env
 if not %_EXITCODE%==0 goto end
 
 call :args %*
 if not %_EXITCODE%==0 goto end
-if %_HELP%==1 call :help & exit /b %_EXITCODE%
 
-rem ##########################################################################
-rem ## Main
+@rem #########################################################################
+@rem ## Main
 
+if %_HELP%==1 (
+    call :help
+    exit /b !_EXITCODE!
+)
 set _GRAAL_PATH=
 set _MAVEN_PATH=
 set _GIT_PATH=
@@ -47,19 +46,67 @@ if not %_EXITCODE%==0 goto end
 
 goto end
 
-rem ##########################################################################
-rem ## Subroutines
+@rem #########################################################################
+@rem ## Subroutines
 
-rem output parameter(s): _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
+@rem output parameter(s): _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
 :env
-rem ANSI colors in standard Windows 10 shell
-rem see https://gist.github.com/mlocati/#file-win10colors-cmd
-set _DEBUG_LABEL=[46m[%_BASENAME%][0m
-set _ERROR_LABEL=[91mError[0m:
-set _WARNING_LABEL=[93mWarning[0m:
+set _BASENAME=%~n0
+set "_ROOT_DIR=%~dp0"
+
+call :env_colors
+set _DEBUG_LABEL=%_NORMAL_BG_CYAN%[%_BASENAME%]%_RESET%
+set _ERROR_LABEL=%_STRONG_FG_RED%Error%_RESET%:
+set _WARNING_LABEL=%_STRONG_FG_YELLOW%Warning%_RESET%:
 goto :eof
 
-rem input parameter: %*
+:env_colors
+@rem ANSI colors in standard Windows 10 shell
+@rem see https://gist.github.com/mlocati/#file-win10colors-cmd
+set _RESET=[0m
+set _BOLD=[1m
+set _UNDERSCORE=[4m
+set _INVERSE=[7m
+
+@rem normal foreground colors
+set _NORMAL_FG_BLACK=[30m
+set _NORMAL_FG_RED=[31m
+set _NORMAL_FG_GREEN=[32m
+set _NORMAL_FG_YELLOW=[33m
+set _NORMAL_FG_BLUE=[34m
+set _NORMAL_FG_MAGENTA=[35m
+set _NORMAL_FG_CYAN=[36m
+set _NORMAL_FG_WHITE=[37m
+
+@rem normal background colors
+set _NORMAL_BG_BLACK=[40m
+set _NORMAL_BG_RED=[41m
+set _NORMAL_BG_GREEN=[42m
+set _NORMAL_BG_YELLOW=[43m
+set _NORMAL_BG_BLUE=[44m
+set _NORMAL_BG_MAGENTA=[45m
+set _NORMAL_BG_CYAN=[46m
+set _NORMAL_BG_WHITE=[47m
+
+@rem strong foreground colors
+set _STRONG_FG_BLACK=[90m
+set _STRONG_FG_RED=[91m
+set _STRONG_FG_GREEN=[92m
+set _STRONG_FG_YELLOW=[93m
+set _STRONG_FG_BLUE=[94m
+set _STRONG_FG_MAGENTA=[95m
+set _STRONG_FG_CYAN=[96m
+set _STRONG_FG_WHITE=[97m
+
+@rem strong background colors
+set _STRONG_BG_BLACK=[100m
+set _STRONG_BG_RED=[101m
+set _STRONG_BG_GREEN=[102m
+set _STRONG_BG_YELLOW=[103m
+set _STRONG_BG_BLUE=[104m
+goto :eof
+
+@rem input parameter: %*
 :args
 set _HELP=0
 set _BASH=0
@@ -101,17 +148,28 @@ if %_DEBUG%==1 echo %_DEBUG_LABEL% _HELP=%_HELP% _BASH=%_BASH% _SDK=%_SDK% _VERB
 goto :eof
 
 :help
-echo Usage: %_BASENAME% { ^<option^> ^| ^<subcommand^> }
+if %_VERBOSE%==1 (
+    set __BEG_P=%_STRONG_FG_CYAN%%_UNDERSCORE%
+    set __BEG_O=%_STRONG_FG_GREEN%
+    set __BEG_N=%_NORMAL_FG_YELLOW%
+    set __END=%_RESET%
+) else (
+    set __BEG_P=
+    set __BEG_O=
+    set __BEG_N=
+    set __END=
+)
+echo Usage: %__BEG_O%%_BASENAME% { ^<option^> ^| ^<subcommand^> }%__END%
 echo.
-echo   Options:
-echo     -bash       start Git bash shell instead of Windows command prompt
-echo     -debug      show commands executed by this script
-echo     -java11     use Java 11 installation of GraalVM ^(instead of Java 8^)
-echo     -sdk        setup Windows SDK environment ^(SetEnv.cmd^)
-echo     -verbose    display environment settings
+echo   %__BEG_P%Options:%__END%
+echo     %__BEG_O%-bash%__END%       start Git bash shell instead of Windows command prompt
+echo     %__BEG_O%-debug%__END%      show commands executed by this script
+echo     %__BEG_O%-java11%__END%     use Java 11 installation of GraalVM ^(instead of Java 8^)
+echo     %__BEG_O%-sdk%__END%        setup Windows SDK environment ^(%__BEG_O%SetEnv.cmd%__END%^)
+echo     %__BEG_O%-verbose%__END%    display environment settings
 echo.
-echo   Subcommands:
-echo     help        display this help message
+echo   %__BEG_P%Subcommands:%__END%
+echo     %__BEG_O%help%__END%        display this help message
 goto :eof
 
 rem output parameter(s): _GRAAL_HOME, _GRAAL_PATH
@@ -123,8 +181,8 @@ set __JAVAC_EXE=
 for /f %%f in ('where javac.exe 2^>NUL') do set "__JAVAC_EXE=%%f"
 if defined __JAVAC_EXE (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of javac executable found in PATH 1>&2
-    for %%i in ("%__JAVAC_CMD%") do set __GRAAL_BIN_DIR=%%~dpsi
-    for %%f in ("!__GRAAL_BIN_DIR!..") do set _GRAAL_HOME=%%~sf
+    for %%i in ("%__JAVAC_CMD%") do set "__GRAAL_BIN_DIR=%%~dpi"
+    for %%f in ("!__GRAAL_BIN_DIR!\.") do set "_GRAAL_HOME=%%~dpf"
     rem keep _GRAAL_PATH undefined since executable already in path
     goto :eof
 ) else if defined GRAAL_HOME (
@@ -282,14 +340,14 @@ set _GIT_HOME=
 set _GIT_PATH=
 
 set __GIT_CMD=
-for /f %%f in ('where git.exe 2^>NUL') do set __GIT_CMD=%%f
+for /f %%f in ('where git.exe 2^>NUL') do set "__GIT_CMD=%%f"
 if defined __GIT_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Git executable found in PATH 1>&2
-    for %%i in ("%__GIT_CMD%") do set __GIT_BIN_DIR=%%~dpsi
-    for %%f in ("!__GIT_BIN_DIR!..") do set _GIT_HOME=%%~sf
+    for %%i in ("%__GIT_CMD%") do set "__GIT_BIN_DIR=%%~dpi"
+    for %%f in ("!__GIT_BIN_DIR!\.") do set "_GIT_HOME=%%~dpf"
     rem Executable git.exe is present both in bin\ and \mingw64\bin\
     if not "!_GIT_HOME:mingw=!"=="!_GIT_HOME!" (
-        for %%f in ("!_GIT_HOME!\..") do set _GIT_HOME=%%~sf
+        for %%f in ("!_GIT_HOME!\.") do set "_GIT_HOME=%%~dpf"
     )
     rem keep _GIT_PATH undefined since executable already in path
     goto :eof
@@ -312,10 +370,6 @@ if not exist "%_GIT_HOME%\bin\git.exe" (
     set _EXITCODE=1
     goto :eof
 )
-rem path name of installation directory may contain spaces
-for /f "delims=" %%f in ("%_GIT_HOME%") do set _GIT_HOME=%%~sf
-if %_DEBUG%==1 echo %_DEBUG_LABEL% Using default Git installation directory %_GIT_HOME% 1>&2
-
 set "_GIT_PATH=;%_GIT_HOME%\bin;%_GIT_HOME%\mingw64\bin;%_GIT_HOME%\usr\bin"
 goto :eof
 
@@ -380,7 +434,7 @@ endlocal & (
             if not defined MSVC_HOME set "MSVC_HOME=%_MSVC_HOME%"
             if not defined SDK_HOME set "SDK_HOME=%_SDK_HOME%"
         )
-        set "PATH=%_GRAAL_PATH%%PATH%%_MAVEN_PATH%%_SDK_PATH%%_GIT_PATH%"
+        set "PATH=%_GRAAL_PATH%%PATH%%_MAVEN_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
         call :print_env %_VERBOSE% "%_GIT_HOME%"
     )
     if %_DEBUG%==1 echo %_DEBUG_LABEL% _EXITCODE=%_EXITCODE% 1>&2
