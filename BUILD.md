@@ -25,7 +25,7 @@ This project depends on several external software for the **Microsoft Windows** 
 
 Optionally one may also install the following software:
 
-- [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
+- [ANTLR 4.8 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
 - [Git 2.27][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
@@ -368,7 +368,7 @@ Output directory is **`target\parser\`**; its structure looks as follows:
             SimpleLanguageParser.java
 </pre>
 
-Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](https://github.com/michelou/simplelanguage/language/src/) and executes the SL main class [**`SLMain`**](https://github.com/michelou/simplelanguage/blob/master/launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
+Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](https://github.com/michelou/simplelanguage/tree/master/language/src) and executes the SL main class [**`SLMain`**](https://github.com/michelou/simplelanguage/blob/master/launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
 
 Output directory **`target\parser\`** now contains two additional elements:<br/>
 - the [argument file](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javac.html#commandlineargfile) **`source_list.txt`**<br/>

@@ -18,7 +18,7 @@
 This project depends on several external software for the **Microsoft Windows** platform:
 
 - [Apache Maven 3.6][maven_downloads] ([requires Java 7][maven_history])  ([*release notes*][maven_relnotes])
-- [GraalVM Community Edition 20.2 LTS][graalvm_releases] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
+- [GraalVM Community Edition 20.1 LTS][graalvm_releases] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
 - [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
 <!--
@@ -27,8 +27,8 @@ This project depends on several external software for the **Microsoft Windows** 
 
 Optionally one may also install the following software:
 
-- [ANTLR 4.7 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.26][git_downloads] ([*release notes*][git_relnotes])
+- [ANTLR 4.8 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
+- [Git 2.27][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
@@ -55,9 +55,9 @@ This project is organized as follows:
 bin\simplelanguage\
 docs\
 simplelanguage\  <i>(Git submodule)</i>
-BUILD.md
+<a href="BUILD.md">BUILD.md</a>
 README.md
-setenv.bat
+<a href="setenv.bat">setenv.bat</a>
 </pre>
 
 where
@@ -87,7 +87,7 @@ We distinguish different sets of batch commands:
 
    <pre style="font-size:80%;">
    <b>&gt; setenv help</b>
-   Usage: setenv { &lt;option&gt; | &lt;subcommand&gt; }
+   Usage: <a href="setenv.bat">setenv</a> { &lt;option&gt; | &lt;subcommand&gt; }
    &nbsp;
      Options:
        -bash       start Git bash shell instead of Windows command prompt
@@ -103,7 +103,7 @@ We distinguish different sets of batch commands:
 2. [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) - This batch command generates the SL component.
 
    <pre style="font-size:80%;">
-   <b>&gt; build help</b>
+   <b>&gt; <a href="bin/simplelanguage/build.bat">build</a> help</b>
    Usage: build { &lt;option&gt; | &lt;subcommand&gt; }
    &nbsp;
      Options:
@@ -128,7 +128,7 @@ We distinguish different sets of batch commands:
 Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**][mvn_cmd], [**`git.exe`**][git_cli] and [**`cl.exe`**][windows_cl] directly available from the command prompt:
 
 <pre style="font-size:80%;">
-<b>&gt; setenv</b>
+<b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
    javac 1.8.0_252, mvn 3.6.3,
    git 2.27.0.windows.1, diff 3.7 bash 4.4.23(1)-release
@@ -142,7 +142,7 @@ C:\opt\apache-maven-3.6.3\bin\mvn.cmd
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 
 <pre style="font-size:80%;">
-<b>&gt; setenv -verbose</b>
+<b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
    javac 1.8.0_252, mvn 3.6.3,
    git 2.27.0.windows.1, diff 3.7 bash 4.4.23(1)-release
@@ -166,13 +166,13 @@ Usage of batch file [**`build.bat`**](bin/simplelanguage/build.bat) and bash scr
 
 #### `simplelanguage\generate_parser.bat`
 
-Batch file [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is functionally equivalent to the bash script [**`generate_parser`**](bin/simplelanguage/generate_parser).
+Batch file [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is functionally equivalent to the bash script [**`generate_parser`**](https://github.com/michelou/simplelanguage/blob/master/generate_parser.sh).
 
 Usage of batch file [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) is presented in document [BUILD.md](BUILD.md).
 
 #### `simplelanguage\sl.bat`
 
-Batch file [**`sl.bat`**](bin/simplelanguage/sl.bat) is functionally equivalent to the bash script [**`sl`**](bin/simplelanguage/sl).
+Batch file [**`sl.bat`**](bin/simplelanguage/sl.bat) is functionally equivalent to the bash script [**`sl`**](https://github.com/michelou/simplelanguage/blob/master/sl).
 
 Usage of batch file [**`sl.bat`**](bin/simplelanguage/sl.bat) is presented in document [BUILD.md](BUILD.md).
 
@@ -229,7 +229,7 @@ In our case we downloaded the following installation files (see section <a href=
 <!-- link refs -->
 
 [antlr_downloads]: https://www.antlr.org/download.html
-[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.7.2
+[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.8
 [dotty_examples]: https://github.com/michelou/dotty-examples
 [git_downloads]: https://git-scm.com/download/win
 [git_cli]: https://git-scm.com/docs/git
@@ -239,7 +239,7 @@ In our case we downloaded the following installation files (see section <a href=
 [github_markdown]: https://github.github.com/gfm/
 [graalsqueak_examples]: https://github.com/michelou/graalsqueak-examples
 [graalvm_examples]: https://github.com/michelou/graalvm-examples
-[graalvm_releases]: https://github.com/oracle/graal/releases
+[graalvm_releases]: https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.1.0
 [graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/20_1/
 [haskell_examples]: https://github.com/michelou/haskell-examples
 [javac_exe]: https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html
