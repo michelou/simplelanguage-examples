@@ -30,7 +30,7 @@ Optionally one may also install the following software:
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*April 2020*):
+For instance our development environment looks as follows (*June 2020*):
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
@@ -368,7 +368,7 @@ Output directory is **`target\parser\`**; its structure looks as follows:
             SimpleLanguageParser.java
 </pre>
 
-Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](https://github.com/michelou/simplelanguage/language/src/) and executes the SL main class [**`SLMain`**](https://github.com/michelou/simplelanguage/launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
+Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](https://github.com/michelou/simplelanguage/language/src/) and executes the SL main class [**`SLMain`**](https://github.com/michelou/simplelanguage/blob/master/launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
 
 Output directory **`target\parser\`** now contains two additional elements:<br/>
 - the [argument file](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javac.html#commandlineargfile) **`source_list.txt`**<br/>
@@ -423,7 +423,7 @@ Execute test with SimpleLangage example tests\Add.sl
 Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`generate_parser -debug test`**](bin/simplelanguage/generate_parser.bat)) displays the internally executed commands:
 
 <pre style="font-size:80%;">
-<b>&gt; generate_parser -debug test</b>
+<b>&gt; <a href="bin/simplelanguage/generate_parser.bat">generate_parser</a> -debug test</b>
 [generate_parser] _DEBUG=1 _TEST=1 _VERBOSE=0
 [generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
 [generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
@@ -454,7 +454,7 @@ where **`<option>`** takes one of the following forms:
 - **`-J`**[**`<java_option>`**](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html), eg. **`-J-Xmx4M`**, **`-J-XshowSettings:vm`**,<br/>**`-J-Dgraal.ShowConfiguration=(none|info|verbose)`**
 - or **`--<key>=<value>`**, eg. **`--log.level=FINE`** (see example below)
 
-For instance passing [**`language\tests\Add.sl`**](/simplelanguage/blob/master/language/tests/Add.sl) as argument generates the following output:
+For instance passing [**`language\tests\Add.sl`**](https://github.com/michelou/simplelanguage/blob/master/language/tests/Add.sl) as argument generates the following output:
 
 <pre style="font-size:80%;">
 <b>&gt; <a href="bin/simplelanguage/sl.bat">sl</a> language\tests\Add.sl</b>
@@ -468,7 +468,7 @@ For instance passing [**`language\tests\Add.sl`**](/simplelanguage/blob/master/l
 7000000000000
 </pre>
 
-Command [**`sl`**](bin/simplelanguage/sl.bat) also accepts **`--<key>=<value>`** options; those are handled by the main class [**`SLMain`**](launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java) and are passed to the GraalVM [execution engine](https://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/Engine.html).
+Command [**`sl`**](bin/simplelanguage/sl.bat) also accepts **`--<key>=<value>`** options; those are handled by the main class [**`SLMain`**](https://github.com/michelou/simplelanguage/blob/master/launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java) and are passed to the GraalVM [execution engine](https://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/Engine.html).
 
 | *Option* (key/value) | *Description* |
 | :------- | :------------ |
@@ -478,7 +478,7 @@ Command [**`sl`**](bin/simplelanguage/sl.bat) also accepts **`--<key>=<value>`**
 For instance, the SL source file [**`Fibonacci.sl`**](/simplelanguage/blob/master/language/tests/Fibonacci.sl) defines the two functions **`main`** and **`fib`** which are listed together with the SL built-in functions when specifying option [**`--log.level=FINE`**](https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html).
 
 <pre style="font-size:80%;">
-<b>&gt; sl "--log.level=FINE" language\tests\Fibonacci.sl</b>
+<b>&gt; <a href="bin/simplelanguage/sl.bat">sl</a> "--log.level=FINE" language\tests\Fibonacci.sl</b>
 == running on org.graalvm.polyglot.Engine@e580929
 [sl::SLFunction] FINE: Installed call target for: readln
 [sl::SLFunction] FINE: Installed call target for: print
