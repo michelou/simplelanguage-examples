@@ -130,7 +130,7 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <pre style="font-size:80%;">
 <b>&gt; setenv</b>
 Tool versions:
-   javac 1.8.0_242, mvn 3.6.3,
+   javac 1.8.0_252, mvn 3.6.3,
    git 2.27.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; where javac mvn</b>
@@ -144,7 +144,7 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; setenv -verbose</b>
 Tool versions:
-   javac 1.8.0_242, mvn 3.6.3,
+   javac 1.8.0_252, mvn 3.6.3,
    git 2.27.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
    C:\opt\graalvm-ce-java8-20.1.0\bin\javac.exe

@@ -1,18 +1,15 @@
 @echo off
 
-rem ##########################################################################
-rem ## Environment setup
-
-set _BASENAME=%~n0
+@rem #########################################################################
+@rem ## Environment setup
 
 set _EXITCODE=0
 
-for %%f in ("%~dp0") do set _ROOT_DIR=%%~sf
+call :env
+if not %_EXITCODE%==0 goto end
 
-set _TARGET_DIR=%_ROOT_DIR%target
-
-rem ##########################################################################
-rem ## Main
+@rem #########################################################################
+@rem ## Main
 
 if exist "%_TARGET_DIR%\" ( rmdir /s /q "%_TARGET_DIR%"
 ) else ( echo Directory %_TARGET_DIR% not found.
@@ -20,8 +17,18 @@ if exist "%_TARGET_DIR%\" ( rmdir /s /q "%_TARGET_DIR%"
 
 goto end
 
-rem ##########################################################################
-rem ## Cleanups
+@rem #########################################################################
+@rem ## Subroutines
+
+:env
+set _BASENAME=%~n0
+set "_ROOT_DIR=%~dp0"
+
+set "_TARGET_DIR=%_ROOT_DIR%target"
+goto :eof
+
+@rem #########################################################################
+@rem ## Cleanups
 
 :end
 exit /b %_EXITCODE%

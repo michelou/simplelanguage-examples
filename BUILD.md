@@ -54,17 +54,17 @@ This project is organized as follows:
 <a href="bin/simplelanguage/generate_parser.bat">bin\simplelanguage\generate_parser.bat</a>
 <a href="bin/simplelanguage/sl.bat">bin\simplelanguage\sl.bat</a>
 docs\
-simplelanguage\  <i>(Git submodule)</i>
+simplelanguage\  <i>(<a href=".gitmodules">Git submodule</a>)</i>
 BUILD.md
 <a href="README.md">README.md</a>
-<a herf="setenv.bat">setenv.bat</a>
+<a href="setenv.bat">setenv.bat</a>
 </pre>
 
 - file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** both inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
 - file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) <sup id="anchor_04">[[4]](#footnote_04)</sup> is the batch script for generating the SL parser source files.
 - file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
 - directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[[5]](#footnote_05)</sup>.
-- directory [**`simplelanguage\`**](simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage][graalvm_simplelanguage] repository as a Github submodule.
+- directory [**`simplelanguage\`**](https://github.com/michelou/simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage][graalvm_simplelanguage] repository as a Github submodule.
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown][github_markdown] document of this page.
 - file [**`README.md`**](README.md) is the [Markdown][github_markdown] document describing this project.
 - file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
@@ -118,7 +118,7 @@ We distinguish different sets of batch commands:
         test        test binary distribution
         update      fetch/merge local directories simplelanguage</pre>
 
-3. [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) - This batch command generates the [ANTLR](https://www.antlr.org/) parser from the grammar file [**`SimpleLanguage.g4`**](./language/src/main/java/com/oracle/truffle/sl/parser/SimpleLanguage.g4). Compared to the corresponding shell script [**`generate_parser`**](generate_parser), it also provides subcommand **`clean`** and subcommand **`test`** to run a single test (same as in file [**`.travis.yml`**](.travis.yml)).
+3. [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) - This batch command generates the [ANTLR](https://www.antlr.org/) parser from the grammar file [**`SimpleLanguage.g4`**](https://github.com/michelou/simplelanguage/blob/master/language/src/main/java/com/oracle/truffle/sl/parser/SimpleLanguage.g4). Compared to the corresponding shell script [**`generate_parser`**](generate_parser), it also provides subcommand **`clean`** and subcommand **`test`** to run a single test (same as in file [**`.travis.yml`**](https://github.com/michelou/simplelanguage/blob/master/.travis.yml)).
 
     <pre style="font-size:80%;">
     <b>&gt; <a href="bin/simplelanguage/generate_parser.bat">generate_parser</a> help</b>
@@ -133,11 +133,11 @@ We distinguish different sets of batch commands:
         help        display this help message
         test        perform test with generated ANTLR parser</pre>
 
-4. [**`sl.bat`**](sl.bat) - This batch command performs the same operations as the corresponding shell script [**`sl`**](sl) (called from [Travis job](https://docs.travis-ci.com/user/job-lifecycle/) **`script`** in file [**`.travis.yml`**](.travis.yml)).
+4. [**`sl.bat`**](sl.bat) - This batch command performs the same operations as the corresponding shell script [**`sl`**](https://github.com/michelou/simplelanguage/blob/master/sl) (called from [Travis job](https://docs.travis-ci.com/user/job-lifecycle/) **`script`** in file [**`.travis.yml`**](.travis.yml)).
 
 5. [**`component\clean_component.bat`**](bin/simplelanguage/component/clean_component.bat) and [**`component\make_component.bat`**](bin/simplelanguage/component/make_component.bat) - These two batch commands are called from the POM file [**`component\pom.xml`**](bin/simplelanguage/component/pom.xml) as their shell equivalents.
 
-6. [**`launcher\src\main\scripts\sl.bat`**](launcher/src/main/scripts/sl.bat) - This batch command is a minimized version of [**`sl.bat`**](sl.bat); command [**`build dist`**](build.bat) does add it to the generated binary distribution (see [**next section**](#section_04)).
+6. [**`launcher\src\main\scripts\sl.bat`**](launcher/src/main/scripts/sl.bat) - This batch command is a minimized version of [**`sl.bat`**](sl.bat); command [**`build dist`**](bin/simplelanguage/build.bat) does add it to the generated binary distribution (see [**next section**](#section_04)).
 
 7. [**`native\clean_native.bat`**](bin/simplelanguage/native/clean_native.bat) and [**`native\make_native.bat`**](native/make_native.bat) - These two batch commands are called from the POM file [**`native\pom.xml`**](native/pom.xml) as their shell equivalents.
 
@@ -271,7 +271,7 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [INFO] ------------------------------------------------------------------------
 Copy file simplelanguage-20.1.0.jar to directory "target\sl\lib\"
 Copy file launcher-20.1.0.jar to directory "target\sl\lib\"
-Copy file antlr4-runtime-4.7.2.jar to directory "target\sl\lib\"
+Copy file antlr4-runtime-4.8.jar to directory "target\sl\lib\"
 Copy file sl.bat to directory "target\sl\bin\"
 Copy file slnative.exe to directory "target\sl\bin\"
 </pre>
@@ -294,7 +294,7 @@ Output directory is **`target\sl\`**; its structure looks as follows:
     |       slnative.exe
     |
     \---lib
-            antlr4-runtime-4.7.2.jar
+            antlr4-runtime-4.8.jar
             launcher-20.1.0.jar
             simplelanguage-20.1.0.jar
 </pre>
@@ -302,7 +302,7 @@ Output directory is **`target\sl\`**; its structure looks as follows:
 > **:mag_right:** As expected the file sizes for the JVM and native versions are very different:
 > <pre style="font-size:80%;">
 > <b>&gt; where /t /r target\sl\lib *.jar</b>
->    337904   22.07.2019      17:41:46  S:\simplelanguage\target\sl\lib\antlr4-runtime-4.7.2.jar
+>    337904   22.07.2019      17:41:46  S:\simplelanguage\target\sl\lib\antlr4-runtime-4.8.jar
 >      6000   13.06.2020      21:27:04  S:\simplelanguage\target\sl\lib\launcher-20.1.0.jar
 >    404099   13.06.2020      21:27:02  S:\simplelanguage\target\sl\lib\simplelanguage-20.1.0.jar
 >
@@ -357,7 +357,7 @@ Output directory is **`target\parser\`**; its structure looks as follows:
 <b>&gt; tree /a /f target | findstr /v /b "[A-Z]"</b>
 \---parser
     +---libs
-    |       antlr-4.7.2-complete.jar
+    |       antlr-4.8-complete.jar
     |
     \---src
             SimpleLanguage.interp
@@ -392,7 +392,7 @@ Output directory **`target\parser\`** now contains two additional elements:<br/>
     |               language
     |
     +---libs
-    |       antlr-4.7.2-complete.jar
+    |       antlr-4.8-complete.jar
     |
     \---src
             SimpleLanguage.interp
@@ -425,9 +425,9 @@ Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`g
 <pre style="font-size:80%;">
 <b>&gt; <a href="bin/simplelanguage/generate_parser.bat">generate_parser</a> -debug test</b>
 [generate_parser] _DEBUG=1 _TEST=1 _VERBOSE=0
-[generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
-[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
-[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.7.2-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
+[generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.8-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
+[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.8-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
+[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.8-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-20.1.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.8-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
 == running on org.graalvm.polyglot.Engine@56cbfb61
 7
 34
@@ -546,8 +546,8 @@ In our case we downloaded the following installation files (see section <a href=
 There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="bin/simplelanguage/generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
-<b>&gt; java -cp target\parser\libs\antlr-4.7.2-complete.jar org.antlr.v4.Tool | findstr Version</b>
-ANTLR Parser Generator  Version 4.7.2
+<b>&gt; java -cp target\parser\libs\antlr-4.8-complete.jar org.antlr.v4.Tool | findstr Version</b>
+ANTLR Parser Generator  Version 4.8
 </pre>
 
 <a name="footnote_04">[4]</a> ***Parser generation*** [↩](#anchor_04)
@@ -592,15 +592,15 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 [antlr]: https://www.antlr.org/
 [antlr_downloads]: https://www.antlr.org/download.html
-[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.7.2
+[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.8
 [git_cli]: https://git-scm.com/docs/git
 [git_downloads]: https://git-scm.com/download/win
 [git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.27.0.txt
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://guides.github.com/features/mastering-markdown/
 [graalvm]: https://www.graalvm.org/
-[graalvm_downloads]: https://github.com/oracle/graal/releases
-[graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/20_0/
+[graalvm_downloads]: https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.1.0
+[graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/20_1/
 [graalvm_simplelanguage]: https://github.com/graalvm/simplelanguage
 [man1_awk]: https://www.linux.org/docs/man1/awk.html
 [man1_diff]: https://www.linux.org/docs/man1/diff.html

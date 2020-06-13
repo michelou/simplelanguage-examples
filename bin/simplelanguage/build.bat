@@ -447,16 +447,20 @@ if exist "%__SOURCE_FILE%" (
 goto :eof
 
 :parser
-set __BATCH_FILE=%_ROOT_DIR%generate_parser.bat
+set "__BATCH_FILE=%_ROOT_DIR%generate_parser.bat"
 if not exist "%__BATCH_FILE%" (
     echo %_ERROR_LABEL% Batch script 'generate_parser.bat' not found 1>&2
     set _EXITCODE=1
     goto :eof
 )
-if %_DEBUG%==1 ( echo %_DEBUG_LABEL% %__BATCH_FILE% 1>&2
+set __BATCH_ARGS=
+if %_DEBUG%==1 set __BATCH_ARGS=%__BATCH_ARGS% -debug
+if %_VERBOSE%==1 set __BATCH_ARGS=%__BATCH_ARGS% -verbose
+
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% %__BATCH_FILE% %__BATCH_ARGS% 1>&2
 ) else if %_VERBOSE%==1 ( echo Generate ANTLR parser for SL 1>&2
 )
-call "%__BATCH_FILE%"
+call "%__BATCH_FILE%" %__BATCH_ARGS%
 if not %ERRORLEVEL%==0 (
     set _EXITCODE=1
     goto :eof
