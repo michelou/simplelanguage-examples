@@ -1,17 +1,17 @@
 @echo off
 setlocal enabledelayedexpansion
 
-rem only for interactive debugging
+@rem only for interactive debugging
 set _DEBUG=0
 
-rem ##########################################################################
-rem ## Environment setup
+@rem #########################################################################
+@rem ## Environment setup
 
 set _BASENAME=%~n0
 
 set _EXITCODE=0
 
-set _VERSION=19.2.1
+set _VERSION=20.1.0
 
 set _MAIN_CLASS=com.oracle.truffle.sl.launcher.SLMain
 rem set SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd -P)"
@@ -20,10 +20,10 @@ for %%f in ("%~dp0") do set _SCRIPT_HOME=%%~sf
 call :init
 if not %_EXITCODE%==0 goto end
 
-rem ##########################################################################
-rem # Locations of the language and launcher jars as well as the java command are
-rem # different if I'm running from the repository or as a component in GraalVM
-rem ##########################################################################
+@rem #########################################################################
+@rem # Locations of the language and launcher jars as well as the java command are
+@rem # different if I'm running from the repository or as a component in GraalVM
+@rem #########################################################################
 call :graalvm_version "%_SCRIPT_HOME%\..\release"
 if defined _GRAALVM_VERSION (
     set _LANGUAGE_PATH=

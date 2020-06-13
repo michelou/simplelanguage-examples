@@ -85,9 +85,9 @@ native\pom.xml                    <i>(modified)</i>
 
 where
 
-- directory [**`component\`**](/simplelanguage/blob/master/component/) contains two additional batch files.
+- directory [**`component\`**](https://github.com/michelou/simplelanguage/blob/master/component/) contains two additional batch files.
 - file [**`launcher\src\main\scripts\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script to be bundled into the SL distribution.
-- directory [**`native\`**](/simplelanguage/blob/master/native/) contains two additional batch files.
+- directory [**`native\`**](https://github.com/michelou/simplelanguage/blob/master/native/) contains two additional batch files.
 
 In the next section we give a brief description of the added batch files.
 
@@ -135,11 +135,11 @@ We distinguish different sets of batch commands:
 
 4. [**`sl.bat`**](sl.bat) - This batch command performs the same operations as the corresponding shell script [**`sl`**](sl) (called from [Travis job](https://docs.travis-ci.com/user/job-lifecycle/) **`script`** in file [**`.travis.yml`**](.travis.yml)).
 
-5. [**`component\clean_component.bat`**](component/clean_component.bat) and [**`component\make_component.bat`**](component/make_component.bat) - These two batch commands are called from the POM file [**`component\pom.xml`**](component/pom.xml) as their shell equivalents.
+5. [**`component\clean_component.bat`**](bin/simplelanguage/component/clean_component.bat) and [**`component\make_component.bat`**](bin/simplelanguage/component/make_component.bat) - These two batch commands are called from the POM file [**`component\pom.xml`**](bin/simplelanguage/component/pom.xml) as their shell equivalents.
 
 6. [**`launcher\src\main\scripts\sl.bat`**](launcher/src/main/scripts/sl.bat) - This batch command is a minimized version of [**`sl.bat`**](sl.bat); command [**`build dist`**](build.bat) does add it to the generated binary distribution (see [**next section**](#section_04)).
 
-7. [**`native\clean_native.bat`**](native/clean_native.bat) and [**`native\make_native.bat`**](native/make_native.bat) - These two batch commands are called from the POM file [**`native\pom.xml`**](native/pom.xml) as their shell equivalents.
+7. [**`native\clean_native.bat`**](bin/simplelanguage/native/clean_native.bat) and [**`native\make_native.bat`**](native/make_native.bat) - These two batch commands are called from the POM file [**`native\pom.xml`**](native/pom.xml) as their shell equivalents.
 
 
 ## <span id="section_04">Usage examples</span>
@@ -149,7 +149,7 @@ We distinguish different sets of batch commands:
 Command [**`setenv`**](setenv.bat) is executed once to setup our development environment; it makes external tools such as [**`mvn.cmd`**][mvn_cmd], [**`git.exe`**][git_cli] and [**`cl.exe`**][windows_cl] directly available from the command prompt:
 
 <pre style="font-size:80%;">
-<b>&gt; setenv</b>
+<b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
    javac 1.8.0_252, mvn 3.6.3, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
@@ -164,7 +164,7 @@ C:\opt\apache-maven-3.6.3\bin\mvn.cmd
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 
 <pre style="font-size:80%;">
-<b>&gt; setenv -verbose</b>
+<b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
    javac 1.8.0_252, mvn 3.6.3, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
@@ -206,7 +206,7 @@ Delete directory S:\simplelanguage\native\target
 Delete directory S:\simplelanguage\target
 </pre>
 
-> **:mag_right:** Unlike the other shell scripts [**`component\make_component.sh`**](component/make_component.sh) generates its output directly into directory **`component\`** instead of **`component\target\`**. We changed that behavior: the corresponding batch file [**`component\make_component.bat`**](component/make_component.bat) generates its output into directory **`component\target\`**.
+> **:mag_right:** Unlike the other shell scripts [**`component\make_component.sh`**](https://github.com/michelou/simplelanguage/component/make_component.sh) generates its output directly into directory **`component\`** instead of **`component\target\`**. We changed that behavior: the corresponding batch file [**`component\make_component.bat`**](bin/simplelanguage/component/make_component.bat) generates its output into directory **`component\target\`**.
 
 Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) generates both the JVM version and the native version of our application.
 
@@ -368,7 +368,7 @@ Output directory is **`target\parser\`**; its structure looks as follows:
             SimpleLanguageParser.java
 </pre>
 
-Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](language/src/) and executes the SL main class [**`SLMain`**](launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
+Command [**`generate_parser test`**](bin/simplelanguage/generate_parser.bat) compiles the lexer/parser files from directory **`target\parser\src\`** with source files from [**`language\src\`**](https://github.com/michelou/simplelanguage/language/src/) and executes the SL main class [**`SLMain`**](https://github.com/michelou/simplelanguage/launcher/src/main/java/com/oracle/truffle/sl/launcher/SLMain.java). 
 
 Output directory **`target\parser\`** now contains two additional elements:<br/>
 - the [argument file](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javac.html#commandlineargfile) **`source_list.txt`**<br/>
@@ -406,7 +406,7 @@ Output directory **`target\parser\`** now contains two additional elements:<br/>
 Adding option **`-verbose`** to the above command (i.e. [**`generate_parser -verbose test`**](bin/simplelanguage/generate_parser.bat)) additionally displays progress messages: 
 
 <pre style="font-size:80%;">
-<b>&gt; generate_parser -verbose test</b>
+<b>&gt; <a href="bin/simplelanguage/generate_parser.bat">generate_parser</a> -verbose test</b>
 Generate ANTLR parser files into directory S:\target\parser\src
 Compile Java source files to directory S:\target\parser\classes
 Execute test with SimpleLangage example tests\Add.sl
@@ -457,7 +457,7 @@ where **`<option>`** takes one of the following forms:
 For instance passing [**`language\tests\Add.sl`**](/simplelanguage/blob/master/language/tests/Add.sl) as argument generates the following output:
 
 <pre style="font-size:80%;">
-<b>&gt; sl language\tests\Add.sl</b>
+<b>&gt; <a href="bin/simplelanguage/sl.bat">sl</a> language\tests\Add.sl</b>
 == running on org.graalvm.polyglot.Engine@47d384ee
 7
 34
