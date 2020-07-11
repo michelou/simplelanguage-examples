@@ -131,6 +131,21 @@ dist() {
     fi
 }
 
+parser() {
+    BASH_FILE=$TOOL_HOME/generate_parser
+    if [[ ! -f $BASH_FILE ]]; then
+        echo "$ERROR_LABEL Bash script 'generate_parser' not found" 1>&2
+        EXITCODE=1
+        return $EXITCODE
+    fi
+    if [[ $DEBUG -eq 1 ]]; then echo "$DEBUG_LABEL $BASH_FILE" 1>&2
+    elif {[ $VERBOSE -eq 1 ]]; then echo "Generate ANTLR parser for SL" 1>&2
+    fi
+    source $BASH_FILE
+    [[ $? -eq 0 ]] || ( EXITCODE=1 && return $EXITCODE )
+    $EXITCODE
+}
+
 ##############################################################################
 ## Environment setup
 
@@ -184,6 +199,10 @@ if [[ $CLEAN -eq 1 ]]; then
 fi
 if [[ $DIST -eq 1 ]]; then
     dist
+    [[ $EXITCODE -eq 0 ]] || cleanup 1
+fi
+if [[ $PARSER -eq 1 ]]; then
+    parser
     [[ $EXITCODE -eq 0 ]] || cleanup 1
 fi
 

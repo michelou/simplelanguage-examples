@@ -65,8 +65,12 @@ set "_LANGUAGE_DIR=%_ROOT_DIR%language"
 set "_LAUNCHER_DIR=%_ROOT_DIR%launcher"
 set "_NATIVE_DIR=%_ROOT_DIR%native"
 
+set "_LANGUAGE_SOURCE_DIR=%_LANGUAGE_DIR%\src\main\java"
+
 set "_LAUNCHER_SCRIPTS_DIR=%_LAUNCHER_DIR%\src\main\scripts"
+set "_LAUNCHER_SOURCE_DIR=%_LAUNCHER_DIR%\src\main\java"
 set "_LAUNCHER_TARGET_DIR=%_LAUNCHER_DIR%\target"
+
 set "_NATIVE_TARGET_DIR=%_NATIVE_DIR%\target"
 
 set "_TARGET_DIR=%_ROOT_DIR%target"
@@ -159,11 +163,11 @@ if not defined __ARG (
 )
 if "%__ARG:~0,1%"=="-" (
     @rem option
-    if /i "%__ARG%"=="-debug" ( set _DEBUG=1
-    ) else if /i "%__ARG%"=="-help" ( set _HELP=1
-    ) else if /i "%__ARG%"=="-native" ( set _NATIVE=1
-    ) else if /i "%__ARG%"=="-timer" ( set _TIMER=1
-    ) else if /i "%__ARG%"=="-verbose" ( set _VERBOSE=1
+    if "%__ARG%"=="-debug" ( set _DEBUG=1
+    ) else if "%__ARG%"=="-help" ( set _HELP=1
+    ) else if "%__ARG%"=="-native" ( set _NATIVE=1
+    ) else if "%__ARG%"=="-timer" ( set _TIMER=1
+    ) else if "%__ARG%"=="-verbose" ( set _VERBOSE=1
     ) else (
         echo %_ERROR_LABEL% Unknown option %__ARG% 1>&2
         set _EXITCODE=1
@@ -171,12 +175,12 @@ if "%__ARG:~0,1%"=="-" (
    )
 ) else (
     @rem subcommand
-    if /i "%__ARG%"=="clean" ( set _CLEAN=1
-    ) else if /i "%__ARG%"=="dist" ( set _DIST=1
-    ) else if /i "%__ARG%"=="help" ( set _HELP=1
-    ) else if /i "%__ARG%"=="parser" ( set _PARSER=1
-    ) else if /i "%__ARG%"=="test" ( set _DIST=1& set _TEST=1
-    ) else if /i "%__ARG%"=="update" ( set _UPDATE=1
+    if "%__ARG%"=="clean" ( set _CLEAN=1
+    ) else if "%__ARG%"=="dist" ( set _DIST=1
+    ) else if "%__ARG%"=="help" ( set _HELP=1
+    ) else if "%__ARG%"=="parser" ( set _PARSER=1
+    ) else if "%__ARG%"=="test" ( set _DIST=1& set _TEST=1
+    ) else if "%__ARG%"=="update" ( set _UPDATE=1
     ) else (
         echo %_ERROR_LABEL% Unknown subcommand %__ARG% 1>&2
         set _EXITCODE=1
@@ -187,7 +191,10 @@ if "%__ARG:~0,1%"=="-" (
 shift
 goto :args_loop
 :args_done
-if %_DEBUG%==1 echo %_DEBUG_LABEL% _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _NATIVE=%_NATIVE% _TEST=%_TEST% _UPDATE=%_UPDATE% _VERBOSE=%_VERBOSE% 1>&2
+if %_DEBUG%==1 (
+    echo %_DEBUG_LABEL% Options    : _NATIVE=%_NATIVE% _TIMER=%_TIMER% _VERBOSE=%_VERBOSE% 1>&2
+    echo %_DEBUG_LABEL% Subcommands: _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _TEST=%_TEST% _UPDATE=%_UPDATE% 1>&2
+)
 if %_TIMER%==1 for /f "delims=" %%i in ('powershell -c "(Get-Date)"') do set _TIMER_START=%%i
 goto :eof
 
@@ -218,6 +225,7 @@ echo     %__BEG_O%help%__END%        display this help message
 echo     %__BEG_O%parser%__END%      generate ANTLR parser for SL
 echo     %__BEG_O%test%__END%        test binary distribution
 echo     %__BEG_O%update%__END%      fetch/merge local directories simplelanguage
+echo.
 goto :eof
 
 :clean
@@ -272,7 +280,7 @@ goto :eof
 :dist
 set "__TIMESTAMP_FILE=%_TARGET_DIR%\.latest-build"
 
-call :compile_required "%__TIMESTAMP_FILE%" "%_LAUNCHER_TARGET_DIR%\launcher-*.jar"
+call :compile_required "%__TIMESTAMP_FILE%" "%_LANGUAGE_SOURCE_DIR%\*.java" "%_LAUNCHER_SOURCE_DIR%\*.java"
 if %_COMPILE_REQUIRED%==0 goto :eof
 
 setlocal
@@ -316,9 +324,7 @@ if %_NATIVE%==1 (
 :dist_done
 endlocal
 
-for /f %%i in ('powershell -C "Get-Date -uformat %%Y%%m%%d%%H%%M%%S"') do (
-    echo %%i> "%__TIMESTAMP_FILE%"
-)
+echo. > "%__TIMESTAMP_FILE%"
 goto :eof
 
 :dist_env
@@ -378,30 +384,38 @@ set "LIBPATH=c:\WINDOWS\Microsoft.NET\%__NET_FRAMEWORK%;%MSVC_HOME%\%__MSVC_LIB%
 set "PATH=%PATH%;%MSVC_HOME%\%__MSVC_BIN%"
 goto :eof
 
-@rem input parameter: 1=timestamp file 2=path (wildcards accepted)
+@rem input parameter: 1=target file 2,3,..=path (wildcards accepted)
 @rem output parameter: _COMPILE_REQUIRED
 :compile_required
-set __TIMESTAMP_FILE=%~1
-set __PATH=%~2
+set "__TARGET_FILE=%~1"
 
-set __SOURCE_TIMESTAMP=
-for /f "usebackq" %%i in (`powershell -c "gci -recurse '%__PATH%' | sort LastWriteTime | select -last 1 -expandProperty LastWriteTime | Get-Date -uformat %%Y%%m%%d%%H%%M%%S" 2^>NUL`) do (
+set __PATH_ARRAY=
+set __PATH_ARRAY1=
+:compile_path
+shift
+set __PATH=%~1
+if not defined __PATH goto :compile_next
+set __PATH_ARRAY=%__PATH_ARRAY%,'%__PATH%'
+set __PATH_ARRAY1=%__PATH_ARRAY1%,'!__PATH:%_ROOT_DIR%=!'
+goto :compile_path
+
+:compile_next
+set __TARGET_TIMESTAMP=00000000000000
+for /f "usebackq" %%i in (`powershell -c "gci -path '%__TARGET_FILE%' -ea Stop | select -last 1 -expandProperty LastWriteTime | Get-Date -uformat %%Y%%m%%d%%H%%M%%S" 2^>NUL`) do (
+     set __TARGET_TIMESTAMP=%%i
+)
+set __SOURCE_TIMESTAMP=00000000000000
+for /f "usebackq" %%i in (`powershell -c "gci -recurse -path %__PATH_ARRAY:~1% -ea Stop | sort LastWriteTime | select -last 1 -expandProperty LastWriteTime | Get-Date -uformat %%Y%%m%%d%%H%%M%%S" 2^>NUL`) do (
     set __SOURCE_TIMESTAMP=%%i
 )
-if not defined __SOURCE_TIMESTAMP (
-   set _COMPILE_REQUIRED=1
-   goto :eof
-)
-if exist "%__TIMESTAMP_FILE%" ( set /p __GENERATED_TIMESTAMP=<%__TIMESTAMP_FILE%
-) else ( set __GENERATED_TIMESTAMP=00000000000000
-)
-if %_DEBUG%==1 echo %_DEBUG_LABEL% %__GENERATED_TIMESTAMP% %__TIMESTAMP_FILE% 1>&2
-
-call :newer %__SOURCE_TIMESTAMP% %__GENERATED_TIMESTAMP%
+call :newer %__SOURCE_TIMESTAMP% %__TARGET_TIMESTAMP%
 set _COMPILE_REQUIRED=%_NEWER%
-if %_DEBUG%==1 ( echo %_DEBUG_LABEL% _COMPILE_REQUIRED=%_COMPILE_REQUIRED% 1>&2
+if %_DEBUG%==1 (
+    echo %_DEBUG_LABEL% %__TARGET_TIMESTAMP% '%__TARGET_FILE%' 1>&2
+    echo %_DEBUG_LABEL% %__SOURCE_TIMESTAMP% %__PATH_ARRAY:~1% 1>&2
+    echo %_DEBUG_LABEL% _COMPILE_REQUIRED=%_COMPILE_REQUIRED% 1>&2
 ) else if %_VERBOSE%==1 if %_COMPILE_REQUIRED%==0 if %__SOURCE_TIMESTAMP% gtr 0 (
-    echo No compilation needed ^("!__PATH:%_ROOT_DIR%=!"^) 1>&2
+    echo No compilation needed ^(%__PATH_ARRAY1:~1%^) 1>&2
 )
 goto :eof
 
