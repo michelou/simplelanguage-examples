@@ -11,7 +11,7 @@
   </tr>
 </table>
 
-[Dotty][dotty_examples], [GraalSqueak][graalsqueak_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kotlin][kotlin_examples] and [LLVM][llvm_examples] are other topics we are currently investigating.
+[Dotty][dotty_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples] and [TruffleSqueak][trufflesqueak_examples] are other topics we are currently investigating.
 
 ## <span id="section_01">Project dependencies</span>
 
@@ -54,7 +54,7 @@ This project is organized as follows:
 <pre style="font-size:80%;">
 bin\simplelanguage\
 docs\
-simplelanguage\  <i>(Git submodule)</i>
+simplelanguage\  <i>(<a href=".gitmodules">Git submodule</a>)</i>
 <a href="BUILD.md">BUILD.md</a>
 README.md
 <a href="setenv.bat">setenv.bat</a>
@@ -86,7 +86,7 @@ We distinguish different sets of batch commands:
 1. [**`setenv.bat`**](setenv.bat) - This batch command makes external tools such as [**`javac.exe`**][javac_exe], [**`mvn.cmd`**][maven_cli] or [**`cl.exe`**](vs2010_cl) directly available from the command prompt (see section [**Project dependencies**](#section_01)).
 
    <pre style="font-size:80%;">
-   <b>&gt; setenv help</b>
+   <b>&gt; <a href="setenv.bat">setenv</a> help</b>
    Usage: <a href="setenv.bat">setenv</a> { &lt;option&gt; | &lt;subcommand&gt; }
    &nbsp;
      Options:
@@ -237,7 +237,6 @@ In our case we downloaded the following installation files (see section <a href=
 [github_michelou_sl]: https://github.com/michelou/simplelanguage
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://github.github.com/gfm/
-[graalsqueak_examples]: https://github.com/michelou/graalsqueak-examples
 [graalvm_examples]: https://github.com/michelou/graalvm-examples
 [graalvm_releases]: https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.1.0
 [graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/20_1/
@@ -260,6 +259,7 @@ In our case we downloaded the following installation files (see section <a href=
 [maven_history]: https://maven.apache.org/docs/history.html
 [maven_relnotes]: https://maven.apache.org/docs/3.6.3/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+[trufflesqueak_examples]: https://github.com/michelou/trufflesqueak-examples
 [vs2010_cl]: https://docs.microsoft.com/en-us/cpp/build/reference/compiler-command-line-syntax?view=vs-2019
 [vs2010_downloads]: https://visualstudio.microsoft.com/vs/older-downloads/
 [vs2010_relnotes]: https://docs.microsoft.com/en-us/visualstudio/releasenotes/vs2010-version-history

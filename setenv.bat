@@ -22,11 +22,16 @@ if %_HELP%==1 (
     call :help
     exit /b !_EXITCODE!
 )
+
+set _GIT_PATH=
 set _GRAAL_PATH=
 set _MAVEN_PATH=
-set _GIT_PATH=
 set _MSVC_PATH=
+set _MSYS_PATH=
 set _SDK_PATH=
+
+call :git
+if not %_EXITCODE%==0 goto end
 
 call :graal
 if not %_EXITCODE%==0 goto end
@@ -34,11 +39,11 @@ if not %_EXITCODE%==0 goto end
 call :maven
 if not %_EXITCODE%==0 goto end
 
-call :git
-if not %_EXITCODE%==0 goto end
-
 call :msvs_2010
 rem call :msvs
+if not %_EXITCODE%==0 goto end
+
+call :msys
 if not %_EXITCODE%==0 goto end
 
 call :sdk
@@ -318,6 +323,40 @@ if not defined __ASSIGNED_PATH (
 set _SUBST_PATH=%__DRIVE_NAME%
 goto :eof
 
+@rem output parameter(s): _MSYS_HOME, _MSYS_PATH
+:msys
+set _MSYS_HOME=
+set _MSYS_PATH=
+
+set __MAKE_CMD=
+for /f %%f in ('where make.exe 2^>NUL') do set "__MAKE_CMD=%%f"
+if defined __MAKE_CMD (
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of GNU Make executable found in PATH 1>&2
+    for /f "delims=" %%i in ("%__MAKE_CMD%") do set "__MAKE_BIN_DIR=%%~dpi"
+    for %%f in ("!__MAKE_BIN_DIR!") do set "_MSYS_HOME=%%~dpf"
+    @rem keep _MSYS_PATH undefined since executable already in path
+    goto :eof
+) else if defined MSYS_HOME (
+    set "_MSYS_HOME=%MSYS_HOME%"
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable MSYS_HOME 1>&2
+) else (
+    set "__PATH=%ProgramFiles%"
+    for /f "delims=" %%f in ('dir /ad /b "!__PATH!\msys*" 2^>NUL') do set "_MSYS_HOME=!__PATH!\%%f"
+    if not defined _MSYS_HOME (
+        set __PATH=C:\opt
+        for /f %%f in ('dir /ad /b "!__PATH!\msys*" 2^>NUL') do set "_MSYS_HOME=!__PATH!\%%f"
+    )
+)
+if not exist "%_MSYS_HOME%\usr\bin\make.exe" (
+    echo %_ERROR_LABEL% GNU Make executable not found ^(%_MSYS_HOME%^) 1>&2
+    set _MSYS_HOME=
+    set _EXITCODE=1
+    goto :eof
+)
+@rem 1st path -> (make.exe, python.exe), 2nd path -> gcc.exe
+set "_MSYS_PATH=;%_MSYS_HOME%\usr\bin;%_MSYS_HOME%\mingw64\bin"
+goto :eof
+
 rem native-image dependency
 :sdk
 set "_SDK_HOME=C:\Program Files\Microsoft SDKs\Windows\v7.1"
@@ -434,7 +473,7 @@ endlocal & (
             if not defined MSVC_HOME set "MSVC_HOME=%_MSVC_HOME%"
             if not defined SDK_HOME set "SDK_HOME=%_SDK_HOME%"
         )
-        set "PATH=%_GRAAL_PATH%%PATH%%_MAVEN_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
+        set "PATH=%_GRAAL_PATH%%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
         call :print_env %_VERBOSE% "%_GIT_HOME%"
     )
     if %_DEBUG%==1 echo %_DEBUG_LABEL% _EXITCODE=%_EXITCODE% 1>&2
