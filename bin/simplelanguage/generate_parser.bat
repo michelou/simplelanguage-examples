@@ -61,28 +61,31 @@ set _DEBUG_LABEL=%_NORMAL_BG_CYAN%[%_BASENAME%]%_RESET%
 set _ERROR_LABEL=%_STRONG_FG_RED%Error%_RESET%:
 set _WARNING_LABEL=%_STRONG_FG_YELLOW%Warning%_RESET%:
 
-set _LANGUAGE_DIR=%_ROOT_DIR%language
-set _LAUNCHER_DIR=%_ROOT_DIR%launcher
-set _TARGET_DIR=%_ROOT_DIR%target
+set "_LANGUAGE_DIR=%_ROOT_DIR%language"
+set "_LAUNCHER_DIR=%_ROOT_DIR%launcher"
+set "_TARGET_DIR=%_ROOT_DIR%target"
 
-set _PARSER_DIR=%_TARGET_DIR%\parser
-set _PARSER_CLASSES_DIR=%_PARSER_DIR%\classes
-set _PARSER_LIBS_DIR=%_PARSER_DIR%\libs
-set _PARSER_SOURCE_DIR=%_PARSER_DIR%\src
+set "_PARSER_DIR=%_TARGET_DIR%\parser"
+set "_PARSER_CLASSES_DIR=%_PARSER_DIR%\classes"
+set "_PARSER_LIBS_DIR=%_PARSER_DIR%\libs"
+set "_PARSER_SOURCE_DIR=%_PARSER_DIR%\src"
 
 set _ANTLR_JAR_NAME=antlr-4.7.2-complete.jar
+@rem set _ANTLR_JAR_NAME=antlr-4.8-complete.jar
 set _ANTLR_JAR_URL=https://www.antlr.org/download/%_ANTLR_JAR_NAME%
-set _ANTLR_JAR_FILE=%_PARSER_LIBS_DIR%\%_ANTLR_JAR_NAME%
+set "_ANTLR_JAR_FILE=%_PARSER_LIBS_DIR%\%_ANTLR_JAR_NAME%"
 
 set _CURL_CMD=curl.exe
 set _CURL_OPTS=
 if not %_DEBUG%==1 set _CURL_OPTS=--silent
 
-set _JAVA_CMD=java.exe
-set _JAVA_OPTS=
-
-set _JAVAC_CMD=javac.exe
-set _JAVAC_OPTS=-Xlint:deprecation
+if not exist "%JAVA_HOME%\bin\javac.exe" (
+    echo %_ERROR_LABEL% Java SDK installation not found 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+set "_JAVA_CMD=%JAVA_HOME%\bin\java.exe"
+set "_JAVAC_CMD=%JAVA_HOME%\bin\javac.exe"
 
 set _TAIL_CMD=tail.exe
 set _TAIL_OPTS=
@@ -161,9 +164,9 @@ if not defined __ARG (
 )
 if "%__ARG:~0,1%"=="-" (
     @rem option
-	if /i "%__ARG%"=="-debug" ( set _DEBUG=1
-    ) else if /i "%__ARG%"=="-help" ( set _HELP=1
-    ) else if /i "%__ARG%"=="-verbose" ( set _VERBOSE=1
+	if "%__ARG%"=="-debug" ( set _DEBUG=1
+    ) else if "%__ARG%"=="-help" ( set _HELP=1
+    ) else if "%__ARG%"=="-verbose" ( set _VERBOSE=1
     ) else (
         echo %_ERROR_LABEL% Unknown option %__ARG% 1>&2
         set _EXITCODE=1
@@ -171,12 +174,12 @@ if "%__ARG:~0,1%"=="-" (
     )
 ) else (
     @rem subcommand
-	if /i "%__ARG%"=="help" ( set _HELP=1
-    ) else if /i "%__ARG%"=="build" ( set _BUILD=1
-    ) else if /i "%__ARG%"=="clean" ( set _CLEAN=1
-    ) else if /i "%__ARG%"=="install" ( set _BUILD=1& set _TEST=1& set _INSTALL=1
-    ) else if /i "%__ARG%"=="test" ( set _BUILD=1& set _TEST=1
-    ) else if /i "%__ARG:~0,5%"=="test:" (
+	if "%__ARG%"=="help" ( set _HELP=1
+    ) else if "%__ARG%"=="build" ( set _BUILD=1
+    ) else if "%__ARG%"=="clean" ( set _CLEAN=1
+    ) else if "%__ARG%"=="install" ( set _BUILD=1& set _TEST=1& set _INSTALL=1
+    ) else if "%__ARG%"=="test" ( set _BUILD=1& set _TEST=1
+    ) else if "%__ARG:~0,5%"=="test:" (
         set /a "__NUMBER=%__ARG:~5%" + 0
         if !__NUMBER! gtr 0 ( set "_TEST_COUNT=!__NUMBER!"
         ) else (
@@ -195,7 +198,11 @@ if "%__ARG:~0,1%"=="-" (
 shift
 goto :args_loop
 :args_done
-if %_DEBUG%==1 echo %_DEBUG_LABEL% _CLEAN=%_CLEAN% _BUILD=%_BUILD% _DEBUG=%_DEBUG% _TEST=%_TEST% _VERBOSE=%_VERBOSE% 1>&2
+if %_DEBUG%==1 (
+    echo %_DEBUG_LABEL% Options    : _DEBUG=%_DEBUG% _VERBOSE=%_VERBOSE% 1>&2
+    echo %_DEBUG_LABEL% Subcommands: _CLEAN=%_CLEAN% _BUILD=%_BUILD% _TEST=%_TEST% 1>&2
+    echo %_DEBUG_LABEL% Variables  : JAVA_HOME="%JAVA_HOME%" 1>&2
+)
 goto :eof
 
 :help
@@ -249,10 +256,10 @@ goto :eof
 
 @rem input parameter: %1=directory path
 :rmdir
-set __DIR=%~1
-if not exist "!__DIR!\" goto :eof
-if %_DEBUG%==1 ( echo %_DEBUG_LABEL% rmdir /s /q "!__DIR!" 1>&2
-) else if %_VERBOSE%==1 ( echo Delete directory !__DIR! 1>&2
+set "__DIR=%~1"
+if not exist "%__DIR%\" goto :eof
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% rmdir /s /q "%__DIR%" 1>&2
+) else if %_VERBOSE%==1 ( echo Delete directory "!__DIR:%_ROOT_DIR%=!" 1>&2
 )
 rmdir /s /q "!__DIR!"
 if not %ERRORLEVEL%==0 (
@@ -306,8 +313,8 @@ for /f %%f in ('where /r "%_PARSER_LIBS_DIR%" *.jar') do (
 )
 set __CPATH=%__CPATH%%_PARSER_CLASSES_DIR%
 
-set __SOURCE_LIST_FILE=%_PARSER_DIR%\source_list.txt
-if exist "%__SOURCE_LIST_FILE%" del "%__SOURCE_LIST_FILE%"
+set "__SOURCES_FILE=%_PARSER_DIR%\source_list.txt"
+if exist "%__SOURCES_FILE%" del "%__SOURCES_FILE%"
 
 for /f %%f in ('where /r "%_LANGUAGE_DIR%\src\main\java" *.java') do (
     set __SOURCE_FILE_NAME=%%~nxf
@@ -316,20 +323,22 @@ for /f %%f in ('where /r "%_LANGUAGE_DIR%\src\main\java" *.java') do (
     ) else if "!__SOURCE_FILE_NAME!"=="SimpleLanguageLexer.java" (
         rem ignore
     ) else (
-        echo %%f>> "%__SOURCE_LIST_FILE%"
+        echo %%f>> "%__SOURCES_FILE%"
     )
 )
 for /f %%f in ('where /r "%_LAUNCHER_DIR%\src\main\java" *.java') do (
-    echo %%f>> "%__SOURCE_LIST_FILE%"
+    echo %%f>> "%__SOURCES_FILE%"
 )
 for /f %%f in ('where /r "%_PARSER_SOURCE_DIR%" *.java') do (
-    echo %%f>> "%__SOURCE_LIST_FILE%"
+    echo %%f>> "%__SOURCES_FILE%"
 )
+set "__OPTS_FILE=%_TARGET_DIR%\javac_opts.txt"
+echo -Xlint:deprecation -cp "%__CPATH:\=\\%" -d "%_PARSER_CLASSES_DIR:\=\\%" > "%__OPTS_FILE%"
 
-if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_JAVAC_CMD%" %_JAVAC_OPTS% -cp %__CPATH% -d "%_PARSER_CLASSES_DIR%" "@%__SOURCE_LIST_FILE%" 1>&2
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_JAVAC_CMD%" "@%__OPTS_FILE%" "@%__SOURCES_FILE%" 1>&2
 ) else if %_VERBOSE%==1 ( echo Compile Java source files to directory %_PARSER_CLASSES_DIR% 1>&2
 )
-call "%_JAVAC_CMD%" %_JAVAC_OPTS% -cp %__CPATH% -d "%_PARSER_CLASSES_DIR%" "@%__SOURCE_LIST_FILE%"
+call "%_JAVAC_CMD%" "@%__OPTS_FILE%" "@%__SOURCES_FILE%"
 if not %ERRORLEVEL%==0 (
     set _EXITCODE=1
     goto :eof
@@ -338,7 +347,7 @@ set "__OUTPUT_DIR=%_PARSER_DIR%\output"
 if not exist "%__OUTPUT_DIR%" mkdir "%__OUTPUT_DIR%"
 
 @rem see https://github.com/oracle/graal/issues/1474
-set __JAVA_OPTS=%_JAVA_OPTS% -Dtruffle.class.path.append=%_ANTLR_JAR_FILE%;%_PARSER_CLASSES_DIR%
+set __JAVA_OPTS=-Dtruffle.class.path.append=%_ANTLR_JAR_FILE%;%_PARSER_CLASSES_DIR%
 
 if %_VERBOSE%==1 echo Execute test suite for SL 1>&2
 
@@ -351,7 +360,7 @@ for %%f in (%_LANGUAGE_DIR%\tests\*.sl) do (
     if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_JAVA_CMD%" %__JAVA_OPTS% -cp %__CPATH% %__MAIN_CLASS% "!__SL_FILE!" ^> !__OUTPUT_FILE! 1>&2
     ) else if %_VERBOSE%==1 ( echo    Compile !__SL_FILE:%_LANGUAGE_DIR%\=! and check output with !__CHECK_FILE:%_LANGUAGE_DIR%\=! 1>&2
     )
-    call "%_JAVA_CMD%" %__JAVA_OPTS% -cp %__CPATH% %__MAIN_CLASS% !__SL_FILE! > !__OUTPUT_FILE! 2>&1
+    call "%_JAVA_CMD%" %__JAVA_OPTS% -cp %__CPATH% %__MAIN_CLASS% "!__SL_FILE!" > !__OUTPUT_FILE! 2>&1
     if not !ERRORLEVEL!==0 (
         @rem some tests may contain errors
         @rem set _EXITCODE=1

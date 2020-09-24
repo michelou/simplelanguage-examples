@@ -50,7 +50,7 @@ goto :end
 @rem output parameters: _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
 @rem                    _COMPONENT_DIR, _LANGUAGE_DIR, _LAUNCHER_DIR, _NATIVE_DIR
 @rem                    _TARGET_DIR, _TARGET_BIN_DIR, _TARGET_LIB_DIR
-@rem                    _MVN_CMD, _MVN_OPTS
+@rem                    _MVN_CMD
 :env
 set _BASENAME=%~n0
 set "_ROOT_DIR=%~dp0"
@@ -92,7 +92,6 @@ if not exist "%MAVEN_HOME%" (
     goto :eof
 )
 set "_MVN_CMD=%MAVEN_HOME%\bin\mvn.cmd"
-set _MVN_OPTS=
 goto :eof
 
 :env_colors
@@ -194,6 +193,7 @@ goto :args_loop
 if %_DEBUG%==1 (
     echo %_DEBUG_LABEL% Options    : _NATIVE=%_NATIVE% _TIMER=%_TIMER% _VERBOSE=%_VERBOSE% 1>&2
     echo %_DEBUG_LABEL% Subcommands: _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _TEST=%_TEST% _UPDATE=%_UPDATE% 1>&2
+    echo %_DEBUG_LABEL% Variables  : JAVA_HOME="%JAVA_HOME%" MAVEN_HOME="%MAVEN_HOME%" 1>&2
 )
 if %_TIMER%==1 for /f "delims=" %%i in ('powershell -c "(Get-Date)"') do set _TIMER_START=%%i
 goto :eof
@@ -225,7 +225,6 @@ echo     %__BEG_O%help%__END%        display this help message
 echo     %__BEG_O%parser%__END%      generate ANTLR parser for SL
 echo     %__BEG_O%test%__END%        test binary distribution
 echo     %__BEG_O%update%__END%      fetch/merge local directories simplelanguage
-echo.
 goto :eof
 
 :clean
@@ -237,9 +236,9 @@ goto :eof
 @rem input parameter: %1=directory path
 :rmdir
 set "__DIR=%~1"
-if not exist "!__DIR!\" goto :eof
-if %_DEBUG%==1 ( echo %_DEBUG_LABEL% rmdir /s /q "!__DIR!" 1>&2
-) else if %_VERBOSE%==1 ( echo Delete directory !__DIR! 1>&2
+if not exist "%__DIR%\" goto :eof
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% rmdir /s /q "%__DIR%" 1>&2
+) else if %_VERBOSE%==1 ( echo Delete directory "!__DIR:%_ROOT_DIR%=!" 1>&2
 )
 rmdir /s /q "!__DIR!"
 if not %ERRORLEVEL%==0 (
@@ -286,12 +285,12 @@ if %_COMPILE_REQUIRED%==0 goto :eof
 setlocal
 call :dist_env
 
-if %_DEBUG%==1 ( set __MVN_OPTS=%_MVN_OPTS%
-) else if %_VERBOSE%==1 ( set __MVN_OPTS=%_MVN_OPTS%
-) else ( set __MVN_OPTS=--quiet %_MVN_OPTS%
+if %_DEBUG%==1 ( set __MVN_OPTS=
+) else if %_VERBOSE%==1 ( set __MVN_OPTS=
+) else ( set __MVN_OPTS=--quiet
 )
 if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_MVN_CMD%" %__MVN_OPTS% package 1>&2
-) else if %_VERBOSE%==1 ( echo %_MVN_CMD% package 1>&2
+) else if %_VERBOSE%==1 ( echo "%_MVN_CMD%" %__MVN_OPTS% package 1>&2
 )
 call "%_MVN_CMD%" %__MVN_OPTS% package
 if not %ERRORLEVEL%==0 (
@@ -309,11 +308,16 @@ for %%f in (%_LAUNCHER_TARGET_DIR%\launcher-*.jar) do set "__LAUNCHER_JAR_FILE=%
 call :dist_copy "%__LAUNCHER_JAR_FILE%" "%_TARGET_LIB_DIR%\"
 if not %_EXITCODE%==0 goto dist_done
 
-set __ANTLR4_JAR_FILE=
-for /f "delims=" %%f in ('where /r "%USERPROFILE%\.m2\repository\org\antlr" *.jar') do set "__ANTLR4_JAR_FILE=%%~f"
-call :dist_copy "%__ANTLR4_JAR_FILE%" "%_TARGET_LIB_DIR%\"
-if not %_EXITCODE%==0 goto dist_done
+call :libs_cpath
+if not %_EXITCODE%==0 goto :eof
 
+:dist_loop
+for /f "delims=; tokens=1,*" %%f in ("%_LIBS_CPATH%") do (
+    call :dist_copy "%%f" "%_TARGET_LIB_DIR%\"
+    if not %_EXITCODE%==0 goto dist_done
+    set "_LIBS_CPATH=%%g"
+    goto dist_loop
+)
 call :dist_copy "%_LAUNCHER_SCRIPTS_DIR%\sl.bat" "%_TARGET_BIN_DIR%\"
 if not %_EXITCODE%==0 goto dist_done
 
@@ -321,10 +325,10 @@ if %_NATIVE%==1 (
     call :dist_copy "%_NATIVE_TARGET_DIR%\slnative.exe" "%_TARGET_BIN_DIR%\"
     if not !_EXITCODE!==0 goto dist_done
 )
+echo. > "%__TIMESTAMP_FILE%"
+
 :dist_done
 endlocal
-
-echo. > "%__TIMESTAMP_FILE%"
 goto :eof
 
 :dist_env
@@ -384,6 +388,19 @@ set "LIBPATH=c:\WINDOWS\Microsoft.NET\%__NET_FRAMEWORK%;%MSVC_HOME%\%__MSVC_LIB%
 set "PATH=%PATH%;%MSVC_HOME%\%__MSVC_BIN%"
 goto :eof
 
+@rem output parameter: _LIBS_CPATH
+:libs_cpath
+for %%f in ("%~dp0\.") do set "__BATCH_FILE=%%~dpfcpath.bat"
+if not exist "%__BATCH_FILE%" (
+    echo %_ERROR_LABEL% Batch file "%__BATCH_FILE%" not found 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+if %_DEBUG%==1 echo %_DEBUG_LABEL% "%__BATCH_FILE%" %_DEBUG% 1>&2
+call "%__BATCH_FILE%" %_DEBUG%
+set "_LIBS_CPATH=%_CPATH%"
+goto :eof
+
 @rem input parameter: 1=target file 2,3,..=path (wildcards accepted)
 @rem output parameter: _COMPILE_REQUIRED
 :compile_required
@@ -411,8 +428,8 @@ for /f "usebackq" %%i in (`powershell -c "gci -recurse -path %__PATH_ARRAY:~1% -
 call :newer %__SOURCE_TIMESTAMP% %__TARGET_TIMESTAMP%
 set _COMPILE_REQUIRED=%_NEWER%
 if %_DEBUG%==1 (
-    echo %_DEBUG_LABEL% %__TARGET_TIMESTAMP% '%__TARGET_FILE%' 1>&2
-    echo %_DEBUG_LABEL% %__SOURCE_TIMESTAMP% %__PATH_ARRAY:~1% 1>&2
+    echo %_DEBUG_LABEL% %__TARGET_TIMESTAMP% Target : '%__TARGET_FILE%' 1>&2
+    echo %_DEBUG_LABEL% %__SOURCE_TIMESTAMP% Sources: %__PATH_ARRAY:~1% 1>&2
     echo %_DEBUG_LABEL% _COMPILE_REQUIRED=%_COMPILE_REQUIRED% 1>&2
 ) else if %_VERBOSE%==1 if %_COMPILE_REQUIRED%==0 if %__SOURCE_TIMESTAMP% gtr 0 (
     echo No compilation needed ^(%__PATH_ARRAY1:~1%^) 1>&2
@@ -424,15 +441,15 @@ goto :eof
 set __TIMESTAMP1=%~1
 set __TIMESTAMP2=%~2
 
-set __TIMESTAMP1_DATE=%__TIMESTAMP1:~0,8%
-set __TIMESTAMP1_TIME=%__TIMESTAMP1:~-6%
+set __DATE1=%__TIMESTAMP1:~0,8%
+set __TIME1=%__TIMESTAMP1:~-6%
 
-set __TIMESTAMP2_DATE=%__TIMESTAMP2:~0,8%
-set __TIMESTAMP2_TIME=%__TIMESTAMP2:~-6%
+set __DATE2=%__TIMESTAMP2:~0,8%
+set __TIME2=%__TIMESTAMP2:~-6%
 
-if %__TIMESTAMP1_DATE% gtr %__TIMESTAMP2_DATE% ( set _NEWER=1
-) else if %__TIMESTAMP1_DATE% lss %__TIMESTAMP2_DATE% ( set _NEWER=0
-) else if %__TIMESTAMP1_TIME% gtr %__TIMESTAMP2_TIME% ( set _NEWER=1
+if %__DATE1% gtr %__DATE2% ( set _NEWER=1
+) else if %__DATE1% lss %__DATE2% ( set _NEWER=0
+) else if %__TIME1% gtr %__TIME2% ( set _NEWER=1
 ) else ( set _NEWER=0
 )
 goto :eof

@@ -24,7 +24,6 @@ if %_HELP%==1 (
 )
 
 set _GIT_PATH=
-set _GRAAL_PATH=
 set _MAVEN_PATH=
 set _MSVC_PATH=
 set _MSYS_PATH=
@@ -40,7 +39,7 @@ call :maven
 if not %_EXITCODE%==0 goto end
 
 call :msvs_2010
-rem call :msvs
+@rem call :msvs
 if not %_EXITCODE%==0 goto end
 
 call :msys
@@ -125,12 +124,12 @@ if not defined __ARG goto args_done
 
 if "%__ARG:~0,1%"=="-" (
     rem option
-    if /i "%__ARG%"=="-bash" ( set _BASH=1
-    ) else if /i "%__ARG%"=="-debug" ( set _DEBUG=1
-    ) else if /i "%__ARG%"=="-help" ( set _HELP=1
-    ) else if /i "%__ARG%"=="-java11" ( set _JAVA_INSTALL=java11
-    ) else if /i "%__ARG%"=="-sdk" ( set _SDK=1
-    ) else if /i "%__ARG%"=="-verbose" ( set _VERBOSE=1
+    if "%__ARG%"=="-bash" ( set _BASH=1
+    ) else if "%__ARG%"=="-debug" ( set _DEBUG=1
+    ) else if "%__ARG%"=="-help" ( set _HELP=1
+    ) else if "%__ARG%"=="-java11" ( set _JAVA_INSTALL=java11
+    ) else if "%__ARG%"=="-sdk" ( set _SDK=1
+    ) else if "%__ARG%"=="-verbose" ( set _VERBOSE=1
     ) else (
         echo %_ERROR_LABEL% Unknown option %__ARG% 1>&2
         set _EXITCODE=1
@@ -138,13 +137,13 @@ if "%__ARG:~0,1%"=="-" (
     )
 ) else (
     rem subcommand
-    set /a __N+=1
-    if /i "%__ARG%"=="help" ( set _HELP=1
+    if "%__ARG%"=="help" ( set _HELP=1
     ) else (
         echo %_ERROR_LABEL% Unknown subcommand %__ARG% 1>&2
         set _EXITCODE=1
         goto args_done
     )
+    set /a __N+=1
 )
 shift
 goto :args_loop
@@ -177,18 +176,16 @@ echo   %__BEG_P%Subcommands:%__END%
 echo     %__BEG_O%help%__END%        display this help message
 goto :eof
 
-rem output parameter(s): _GRAAL_HOME, _GRAAL_PATH
+rem output parameter(s): _GRAAL_HOME
 :graal
 set _GRAAL_HOME=
-set _GRAAL_PATH=
 
-set __JAVAC_EXE=
-for /f %%f in ('where javac.exe 2^>NUL') do set "__JAVAC_EXE=%%f"
-if defined __JAVAC_EXE (
+set __JAVAC_CMD=
+for /f %%f in ('where javac.exe 2^>NUL') do set "__JAVAC_CMD=%%f"
+if defined __JAVAC_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of javac executable found in PATH 1>&2
     for %%i in ("%__JAVAC_CMD%") do set "__GRAAL_BIN_DIR=%%~dpi"
     for %%f in ("!__GRAAL_BIN_DIR!\.") do set "_GRAAL_HOME=%%~dpf"
-    rem keep _GRAAL_PATH undefined since executable already in path
     goto :eof
 ) else if defined GRAAL_HOME (
     set _GRAAL_HOME=%GRAAL_HOME%
@@ -206,11 +203,9 @@ if not exist "%_GRAAL_HOME%\bin\javac.exe" (
     set _EXITCODE=1
     goto :eof
 )
-rem Here we use trailing separator because it will be prepended to PATH
-set "_GRAAL_PATH=%_GRAAL_HOME%\bin;"
 goto :eof
 
-rem output parameter(s): _MAVEN_HOME, _MAVEN_PATH
+@rem output parameter(s): _MAVEN_HOME, _MAVEN_PATH
 :maven
 set _MAVEN_HOME=
 set _MAVEN_PATH=
@@ -221,7 +216,7 @@ if defined __MVN_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Maven executable found in PATH 1>&2
     for %%i in ("%__MVN_CMD%") do set "__MVN_BIN_DIR=%%~dpi"
     for %%f in ("!__MVN_BIN_DIR!..") do set "_MAVEN_HOME=%%f"
-    rem keep _MAVEN_PATH undefined since executable already in path
+    @rem keep _MAVEN_PATH undefined since executable already in path
     goto :eof
 ) else if defined MAVEN_HOME (
     set _MAVEN_HOME=%MAVEN_HOME%
@@ -244,8 +239,8 @@ if %_DEBUG%==1 echo %_DEBUG_LABEL% Using default Maven installation directory "%
 set "_MAVEN_PATH=;%_MAVEN_HOME%\bin"
 goto :eof
 
-rem output paramters: _MSVC_HOME, _MSVS_HOME
-rem Visual Studio 10
+@rem output paramters: _MSVC_HOME, _MSVS_HOME
+@rem Visual Studio 10
 :msvs_2010
 set _MSVC_HOME=
 set _MSVS_HOME=
@@ -265,13 +260,13 @@ if not exist "%__VC_BATCH_FILE%" (
     goto :eof
 )
 set _MSVC_HOME=%_MSVS_HOME%\VC
-rem set __MSBUILD_HOME=
-rem set "__FRAMEWORK_DIR=%SystemRoot%\Microsoft.NET\Framework"
-rem for /f %%f in ('dir /ad /b "%__FRAMEWORK_DIR%\*" 2^>NUL') do set "__MSBUILD_HOME=%__FRAMEWORK_DIR%\%%f"
+@rem set __MSBUILD_HOME=
+@rem set "__FRAMEWORK_DIR=%SystemRoot%\Microsoft.NET\Framework"
+@rem for /f %%f in ('dir /ad /b "%__FRAMEWORK_DIR%\*" 2^>NUL') do set "__MSBUILD_HOME=%__FRAMEWORK_DIR%\%%f"
 goto :eof
 
-rem output parameters: _MSVC_HOME, _MSVC_HOME
-rem Visual Studio 2017/2019
+@rem output parameters: _MSVC_HOME, _MSVC_HOME
+@rem Visual Studio 2017/2019
 :msvs
 set _MSVC_HOME=
 set _MSVS_HOME=
@@ -293,13 +288,13 @@ if not exist "%__VC_BATCH_FILE%" (
 if "%__VC_BATCH_FILE:Community=%"=="%__VC_BATCH_FILE%" ( set "_MSVC_HOME=%_MSVS_HOME%\BuildTools\VC"
 ) else ( set "_MSVC_HOME=%_MSVS_HOME%\Community\VC"
 )
-rem call :subst_path "%_MSVS_HOME%"
-rem if not %_EXITCODE%==0 goto :eof
-rem set "_MSVS_HOME=%_SUBST_PATH%"
+@rem call :subst_path "%_MSVS_HOME%"
+@rem if not %_EXITCODE%==0 goto :eof
+@rem set "_MSVS_HOME=%_SUBST_PATH%"
 goto :eof
 
-rem input parameter: %1=directory path
-rem output parameter: _SUBST_PATH
+@rem input parameter: %1=directory path
+@rem output parameter: _SUBST_PATH
 :subst_path
 for %%f in (%~1) do set "_SUBST_PATH=%%f"
 
@@ -357,7 +352,7 @@ if not exist "%_MSYS_HOME%\usr\bin\make.exe" (
 set "_MSYS_PATH=;%_MSYS_HOME%\usr\bin;%_MSYS_HOME%\mingw64\bin"
 goto :eof
 
-rem native-image dependency
+@rem native-image dependency
 :sdk
 set "_SDK_HOME=C:\Program Files\Microsoft SDKs\Windows\v7.1"
 if not exist "%_SDK_HOME%" (
@@ -366,14 +361,14 @@ if not exist "%_SDK_HOME%" (
     set _EXITCODE=1
     goto :eof
 )
-rem From now on use short name of WinSDK installation path
+@rem From now on use short name of WinSDK installation path
 for %%f in ("%_SDK_HOME%") do set _SDK_HOME=%%~sf
 set __SDK_ARCH=
 if "%PROCESSOR_ARCHITECTURE%"=="AMD64" set __SDK_ARCH=\x64
 set "_SDK_PATH=;%_SDK_HOME%\bin%__SDK_ARCH%"
 goto :eof
 
-rem output parameter(s): _GIT_HOME, _GIT_PATH
+@rem output parameter(s): _GIT_HOME, _GIT_PATH
 :git
 set _GIT_HOME=
 set _GIT_PATH=
@@ -384,11 +379,11 @@ if defined __GIT_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Git executable found in PATH 1>&2
     for %%i in ("%__GIT_CMD%") do set "__GIT_BIN_DIR=%%~dpi"
     for %%f in ("!__GIT_BIN_DIR!\.") do set "_GIT_HOME=%%~dpf"
-    rem Executable git.exe is present both in bin\ and \mingw64\bin\
+    @rem Executable git.exe is present both in bin\ and \mingw64\bin\
     if not "!_GIT_HOME:mingw=!"=="!_GIT_HOME!" (
         for %%f in ("!_GIT_HOME!\.") do set "_GIT_HOME=%%~dpf"
     )
-    rem keep _GIT_PATH undefined since executable already in path
+    @rem keep _GIT_PATH undefined since executable already in path
     goto :eof
 ) else if defined GIT_HOME (
     set "_GIT_HOME=%GIT_HOME%"
@@ -418,10 +413,10 @@ set __GIT_HOME=%~2
 set "__VERSIONS_LINE1=  "
 set "__VERSIONS_LINE3=  "
 set __WHERE_ARGS=
-where /q javac.exe
+where /q "%JAVA_HOME%\bin":javac.exe
 if %ERRORLEVEL%==0 (
-    for /f "tokens=1,2,*" %%i in ('javac.exe -version 2^>^&1') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% javac %%j,"
-    set __WHERE_ARGS=%__WHERE_ARGS% javac.exe
+    for /f "tokens=1,2,*" %%i in ('"%JAVA_HOME%\bin\javac.exe" -version 2^>^&1') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% javac %%j,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%JAVA_HOME%\bin:javac.exe"
 )
 where /q mvn.cmd
 if %ERRORLEVEL%==0 (
@@ -447,25 +442,27 @@ echo Tool versions:
 echo %__VERSIONS_LINE1%
 echo %__VERSIONS_LINE3%
 if %__VERBOSE%==1 if defined __WHERE_ARGS (
-    rem if %_DEBUG%==1 echo %_DEBUG_LABEL% where %__WHERE_ARGS%
     echo Tool paths: 1>&2
     for /f "tokens=*" %%p in ('where %__WHERE_ARGS%') do echo    %%p 1>&2
 )
 if %__VERBOSE%==1 if defined MSVS_HOME (
     echo Environment variables: 1>&2
+    echo    JAVA_HOME="%JAVA_HOME%" 1>&2
+    echo    MAVEN_HOME="%MAVEN_HOME%" 1>&2
     echo    MSVC_HOME="%MSVC_HOME%" 1>&2
     echo    MSVS_HOME="%MSVS_HOME%" 1>&2
 )
 goto :eof
 
-rem ##########################################################################
-rem ## Cleanups
+@rem #########################################################################
+@rem ## Cleanups
 
 :end
 endlocal & (
     if %_EXITCODE%==0 (
+        if not defined GIT_HOME set "GIT_HOME=%_GIT_HOME%"
         if not defined GRAAL_HOME set "GRAAL_HOME=%_GRAAL_HOME%"
-        rem http://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/
+        @rem http://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/
         if not defined JAVA_HOME set "JAVA_HOME=%_GRAAL_HOME%"
         if not defined MAVEN_HOME set "MAVEN_HOME=%_MAVEN_HOME%"
         if not %_SDK%==1 (
@@ -473,12 +470,12 @@ endlocal & (
             if not defined MSVC_HOME set "MSVC_HOME=%_MSVC_HOME%"
             if not defined SDK_HOME set "SDK_HOME=%_SDK_HOME%"
         )
-        set "PATH=%_GRAAL_PATH%%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
+        set "PATH=%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
         call :print_env %_VERBOSE% "%_GIT_HOME%"
     )
     if %_DEBUG%==1 echo %_DEBUG_LABEL% _EXITCODE=%_EXITCODE% 1>&2
     for /f "delims==" %%i in ('set ^| findstr /b "_"') do set %%i=
-    rem must be called last
+    @rem must be called last
     if %_BASH%==1 (
         if %_DEBUG%==1 echo %_DEBUG_LABEL% %_GIT_HOME%\bin\bash.exe --login 1>&2
         cmd.exe /c "%_GIT_HOME%\bin\bash.exe --login"
