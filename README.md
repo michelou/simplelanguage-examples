@@ -73,7 +73,7 @@ We also define a virtual drive **`S:`** in our working environment in order to r
 > **:mag_right:** We use the Windows external command [**`subst`**][windows_subst] to create virtual drives; for instance:
 >
 > <pre style="font-size:80%;">
-> <b>&gt; subst S: %USERPROFILE%\workspace\simplelanguage-examples</b>
+> <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/subst">subst</a> S: %USERPROFILE%\workspace\simplelanguage-examples</b>
 > </pre>
 
 In the next section we give a brief description of the batch files present in this project.
@@ -203,8 +203,8 @@ GRMSDKIAI_EN_DVD.iso is a version for Itanium environment.
 There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
-<b>&gt; java -cp target\parser\libs\antlr-4.9-complete.jar org.antlr.v4.Tool | findstr Version</b>
-ANTLR Parser Generator  Version 4.9
+<b>&gt; <a href="https://docs.oracle.com/en/java/javase/11/tools/java.html">java</a> -cp target\parser\libs\antlr-4.9.1-complete.jar org.antlr.v4.Tool | findstr Version</b>
+ANTLR Parser Generator  Version 4.9.1
 </pre>
 
 <b name="footnote_04">[4]</b> ***Downloads*** [↩](#anchor_04)
