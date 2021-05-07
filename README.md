@@ -28,20 +28,20 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.9 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.30][git_downloads] ([*release notes*][git_relnotes])
+- [Git 2.31][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*February 2021*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*May 2021*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
-C:\opt\apache-maven-3.6.3\                            <i>( 10 MB)</i>
-C:\opt\graalvm-ce-java8-20.3.1\                       <i>(670 MB)</i>
-C:\opt\Git-2.30.0\                                    <i>(290 MB)</i>
+C:\opt\apache-maven-3.8.1\                            <i>( 10 MB)</i>
+C:\opt\graalvm-ce-java8-21.1.0\                       <i>(845 MB)</i>
+C:\opt\Git-2.31.1\                                    <i>(279 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
-<!-- 19.3.1 = 360 MB, 20.0.0 -> 670 MB, 20.3.0 -> 696 MB -->
+<!-- 19.3.1 = 360 MB, 20.0.0 -> 670 MB, 20.3.0 -> 696 MB, 21.1.0 -> 845 MB -->
 
 > **&#9755;** ***Installation policy***<br/>
 > When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`][linux_opt] directory on Unix).
@@ -129,13 +129,13 @@ Command [**`setenv`**](setenv.bat) is run once to setup our development environm
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
-   javac 1.8.0_282, mvn 3.6.3,
-   git 2.30.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   javac 1.8.0_292, mvn 3.8.1,
+   git 2.31.1.windows.1, diff 3.7 bash 4.4.23(1)-release
 
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where">where</a> javac mvn</b>
-C:\opt\graalvm-ce-java8-20.3.1\bin\javac.exe
-C:\opt\apache-maven-3.6.3\bin\mvn
-C:\opt\apache-maven-3.6.3\bin\mvn.cmd
+C:\opt\graalvm-ce-java8-21.1.0\bin\javac.exe
+C:\opt\apache-maven-3.8.1\bin\mvn
+C:\opt\apache-maven-3.8.1\bin\mvn.cmd
 </pre>
 
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
@@ -143,15 +143,15 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
-   javac 1.8.0_282, mvn 3.6.3,
-   git 2.30.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   javac 1.8.0_292, mvn 3.8.1,
+   git 2.31.1.windows.1, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
-   C:\opt\graalvm-ce-java8-20.3.1\bin\javac.exe
-   C:\opt\apache-maven-3.6.3\bin\mvn.cmd
-   C:\opt\Git-2.30.0\bin\git.exe
-   C:\opt\Git-2.30.0\mingw64\bin\git.exe
-   C:\opt\Git-2.30.0\usr\bin\diff.exe
-   C:\opt\Git-2.30.0\bin\bash.exe
+   C:\opt\graalvm-ce-java8-21.1.0\bin\javac.exe
+   C:\opt\apache-maven-3.8.1\bin\mvn.cmd
+   C:\opt\Git-2.31.1\bin\git.exe
+   C:\opt\Git-2.31.1\mingw64\bin\git.exe
+   C:\opt\Git-2.31.1\usr\bin\diff.exe
+   C:\opt\Git-2.31.1\bin\bash.exe
 Environment variables:
    MSVC_HOME="C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC"
    MSVS_HOME="C:\Program Files (x86)\Microsoft Visual Studio 10.0"
@@ -177,7 +177,7 @@ Usage of batch file [**`sl.bat`**](bin/simplelanguage/sl.bat) is presented in do
 
 ## Footnotes
 
-<b name="footnote_01">[1]</b> ***2 GraalVM editions*** [↩](#anchor_01)
+<span name="footnote_01">[1]</span> ***2 GraalVM editions*** [↩](#anchor_01)
 
 <p style="margin:0 0 1em 20px;">
 <a href="https://www.graalvm.org/docs/getting-started/">GraalVM</a> is available as Community Edition (CE) and Enterprise Edition (EE):
@@ -186,7 +186,7 @@ Usage of batch file [**`sl.bat`**](bin/simplelanguage/sl.bat) is presented in do
 <li><a href="https://www.oracle.com/technetwork/graalvm/downloads/index.html">GraalVM EE</a> is developed on top of the <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle Java SE 1.8.0_231</a> respectively on Oracle Java SE 11.</li>
 </ul>
 
-<b name="footnote_02">[2]</b> ***2018-09-24*** [↩](#anchor_02a)
+<span name="footnote_02">[2]</span> ***2018-09-24*** [↩](#anchor_02a)
 
 <p style="margin:0 0 1em 20px;">
 The two Microsoft software are listed in the <a href="https://github.com/oracle/graal/blob/master/compiler/README.md#windows-specifics-1">Windows Specifics</a> section of the <a href="https://github.com/oracle/graal/blob/master/compiler/README.md">oracle/graal README</a> file. That's fine but... what version should we download ?! We found the <a href="https://stackoverflow.com/questions/20115186/what-sdk-version-to-download/22987999#22987999">answer</a> (April 2014 !) on <a href="https://stackoverflow.com/">StackOverflow</a>:
@@ -197,7 +197,7 @@ GRMSDKX_EN_DVD.iso is a version for x64 environment.
 GRMSDKIAI_EN_DVD.iso is a version for Itanium environment.
 </pre>
 
-<b name="footnote_03">[3]</b> ***ANTLR distributions*** [↩](#anchor_03)
+<span name="footnote_03">[3]</span> ***ANTLR distributions*** [↩](#anchor_03)
 
 <p style="margin:0 0 1em 20px;">
 There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
@@ -207,22 +207,22 @@ There exists two binary distributions of <a href="https://www.antlr.org/download
 ANTLR Parser Generator  Version 4.9.1
 </pre>
 
-<b name="footnote_04">[4]</b> ***Downloads*** [↩](#anchor_04)
+<span name="footnote_04">[4]</span> ***Downloads*** [↩](#anchor_04)
 
 <p style="margin:0 0 1em 20px;">
 In our case we downloaded the following installation files (see section <a href="#section_01"><b>Project dependencies</b></a>):
 </p>
 <pre style="margin:0 0 1em 20px; font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.6.3-bin.zip</a>                 <i>(  8 MB)</i>
-<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.3.1">graalvm-ce-java8-windows-amd64-20.3.1.zip</a>  <i>(268 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                         <i>(570 MB)</i>
-<a href="https://git-scm.com/download/win">PortableGit-2.30.0-64-bit.7z.exe</a>    <i>       ( 41 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                  <i>(121 MB)</i>
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.8.1-bin.zip</a>                   <i>(  8 MB)</i>
+<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.1.0">graalvm-ce-java8-windows-amd64-21.1.0.zip</a>  <i>(268 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                           <i>(570 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.31.1-64-bit.7z.exe</a>             <i>( 41 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                    <i>(121 MB)</i>
 </pre>
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/February 2021* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/March 2021* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -232,7 +232,7 @@ In our case we downloaded the following installation files (see section <a href=
 [dotty_examples]: https://github.com/michelou/dotty-examples
 [git_downloads]: https://git-scm.com/download/win
 [git_cli]: https://git-scm.com/docs/git
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.30.0.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.31.1.txt
 [github_michelou_sl]: https://github.com/michelou/simplelanguage
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://github.github.com/gfm/
@@ -256,7 +256,7 @@ In our case we downloaded the following installation files (see section <a href=
 [maven_cli]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [maven_downloads]: https://maven.apache.org/download.cgi
 [maven_history]: https://maven.apache.org/docs/history.html
-[maven_relnotes]: https://maven.apache.org/docs/3.6.3/release-notes.html
+[maven_relnotes]: https://maven.apache.org/docs/3.8.1/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [trufflesqueak_examples]: https://github.com/michelou/trufflesqueak-examples
 [vs2010_cl]: https://docs.microsoft.com/en-us/cpp/build/reference/compiler-command-line-syntax?view=vs-2019

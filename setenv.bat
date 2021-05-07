@@ -56,6 +56,7 @@ goto end
 @rem output parameter(s): _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
 :env
 set _BASENAME=%~n0
+set _DRIVE_NAME=S
 set "_ROOT_DIR=%~dp0"
 
 call :env_colors
@@ -148,7 +149,49 @@ if "%__ARG:~0,1%"=="-" (
 shift
 goto :args_loop
 :args_done
-if %_DEBUG%==1 echo %_DEBUG_LABEL% _HELP=%_HELP% _BASH=%_BASH% _SDK=%_SDK% _VERBOSE=%_VERBOSE%
+call :subst %_DRIVE_NAME% "%_ROOT_DIR%"
+if %_DEBUG%==1 (
+    echo %_DEBUG_LABEL% Options  : _HELP=%_HELP% _BASH=%_BASH% _SDK=%_SDK% _VERBOSE=%_VERBOSE% 1>&2
+    echo %_DEBUG_LABEL% Variables: _DRIVE_NAME=%_DRIVE_NAME% 1>&2
+)
+goto :eof
+
+@rem input parameter(s): %1: drive letter, %2: path to be substituted
+:subst
+set __DRIVE_NAME=%~1
+set "__GIVEN_PATH=%~2"
+
+if not "%__DRIVE_NAME:~-1%"==":" set __DRIVE_NAME=%__DRIVE_NAME%:
+if /i "%__DRIVE_NAME%"=="%__GIVEN_PATH:~0,2%" goto :eof
+
+if "%__GIVEN_PATH:~-1%"=="\" set "__GIVEN_PATH=%__GIVEN_PATH:~0,-1%"
+if not exist "%__GIVEN_PATH%" (
+    echo %_ERROR_LABEL% Provided path does not exist ^(%__GIVEN_PATH%^) 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+for /f "tokens=1,2,*" %%f in ('subst ^| findstr /b "%__DRIVE_NAME%" 2^>NUL') do (
+    set "__SUBST_PATH=%%h"
+    if "!__SUBST_PATH!"=="!__GIVEN_PATH!" (
+        set __MESSAGE=
+        for /f %%i in ('subst ^| findstr /b "%__DRIVE_NAME%\"') do "set __MESSAGE=%%i"
+        if defined __MESSAGE (
+            if %_DEBUG%==1 ( echo %_DEBUG_LABEL% !__MESSAGE! 1>&2
+            ) else if %_VERBOSE%==1 ( echo !__MESSAGE! 1>&2
+            )
+        )
+        goto :eof
+    )
+)
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% subst "%__DRIVE_NAME%" "%__GIVEN_PATH%" 1>&2
+) else if %_VERBOSE%==1 ( echo Assign path %__GIVEN_PATH% to drive %__DRIVE_NAME% 1>&2
+)
+subst "%__DRIVE_NAME%" "%__GIVEN_PATH%"
+if not %ERRORLEVEL%==0 (
+    echo %_ERROR_LABEL% Failed to assigned drive %__DRIVE_NAME% to path 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
 goto :eof
 
 :help
@@ -390,7 +433,7 @@ if defined __GIT_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable GIT_HOME 1>&2
 ) else (
     set __PATH=C:\opt
-    if exist "!__PATH!\Git\" ( set _GIT_HOME=!__PATH!\Git
+    if exist "!__PATH!\Git\" ( set "_GIT_HOME=!__PATH!\Git"
     ) else (
         for /f %%f in ('dir /ad /b "!__PATH!\Git*" 2^>NUL') do set "_GIT_HOME=!__PATH!\%%f"
         if not defined _GIT_HOME (
@@ -409,34 +452,33 @@ goto :eof
 
 :print_env
 set __VERBOSE=%1
-set __GIT_HOME=%~2
 set "__VERSIONS_LINE1=  "
 set "__VERSIONS_LINE3=  "
 set __WHERE_ARGS=
-where /q "%JAVA_HOME%\bin":javac.exe
+where /q "%JAVA_HOME%\bin:javac.exe"
 if %ERRORLEVEL%==0 (
     for /f "tokens=1,2,*" %%i in ('"%JAVA_HOME%\bin\javac.exe" -version 2^>^&1') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% javac %%j,"
     set __WHERE_ARGS=%__WHERE_ARGS% "%JAVA_HOME%\bin:javac.exe"
 )
-where /q mvn.cmd
+where /q "%MAVEN_HOME%\bin:mvn.cmd"
 if %ERRORLEVEL%==0 (
-    for /f "tokens=1,2,3,*" %%i in ('mvn.cmd -version ^| findstr Apache') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% mvn %%k,"
-    set __WHERE_ARGS=%__WHERE_ARGS% mvn.cmd
+    for /f "tokens=1,2,3,*" %%i in ('"%MAVEN_HOME%\bin\mvn.cmd" -version ^| findstr Apache') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% mvn %%k,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%MAVEN_HOME%\bin:mvn.cmd"
 )
-where /q git.exe
+where /q "%GIT_HOME%\bin:git.exe"
 if %ERRORLEVEL%==0 (
-   for /f "tokens=1,2,*" %%i in ('git.exe --version') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% git %%k,"
-    set __WHERE_ARGS=%__WHERE_ARGS% git.exe
+   for /f "tokens=1,2,*" %%i in ('"%GIT_HOME%\bin\git.exe" --version') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% git %%k,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%GIT_HOME%\bin:git.exe"
 )
 where /q diff.exe
 if %ERRORLEVEL%==0 (
    for /f "tokens=1-3,*" %%i in ('diff.exe --version ^| findstr /B diff') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% diff %%l"
     set __WHERE_ARGS=%__WHERE_ARGS% diff.exe
 )
-where /q "%__GIT_HOME%\bin":bash.exe
+where /q "%GIT_HOME%\bin":bash.exe
 if %ERRORLEVEL%==0 (
-    for /f "tokens=1-3,4,*" %%i in ('"%__GIT_HOME%\bin\bash.exe" --version ^| findstr bash') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% bash %%l"
-    set __WHERE_ARGS=%__WHERE_ARGS% "%__GIT_HOME%\bin:bash.exe"
+    for /f "tokens=1-3,4,*" %%i in ('"%GIT_HOME%\bin\bash.exe" --version ^| findstr bash') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% bash %%l"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%GIT_HOME%\bin:bash.exe"
 )
 echo Tool versions:
 echo %__VERSIONS_LINE1%
@@ -447,10 +489,11 @@ if %__VERBOSE%==1 if defined __WHERE_ARGS (
 )
 if %__VERBOSE%==1 if defined MSVS_HOME (
     echo Environment variables: 1>&2
-    echo    JAVA_HOME="%JAVA_HOME%" 1>&2
-    echo    MAVEN_HOME="%MAVEN_HOME%" 1>&2
-    echo    MSVC_HOME="%MSVC_HOME%" 1>&2
-    echo    MSVS_HOME="%MSVS_HOME%" 1>&2
+    if defined GIT_HOME echo    "GIT_HOME=%GIT_HOME%" 1>&2
+    if defined JAVA_HOME echo    "JAVA_HOME=%JAVA_HOME%" 1>&2
+    if defined MAVEN_HOME echo    "MAVEN_HOME=%MAVEN_HOME%" 1>&2
+    if defined MSVC_HOME echo    "MSVC_HOME=%MSVC_HOME%" 1>&2
+    if defined MSVS_HOME echo    "MSVS_HOME=%MSVS_HOME%" 1>&2
 )
 goto :eof
 
@@ -471,7 +514,11 @@ endlocal & (
             if not defined SDK_HOME set "SDK_HOME=%_SDK_HOME%"
         )
         set "PATH=%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
-        call :print_env %_VERBOSE% "%_GIT_HOME%"
+        call :print_env %_VERBOSE%
+        if not "%CD:~0,2%"=="%_DRIVE_NAME%:" (
+            if %_DEBUG%==1 echo %_DEBUG_LABEL% cd /d %_DRIVE_NAME%: 1>&2
+            cd /d %_DRIVE_NAME%:
+        )
     )
     if %_DEBUG%==1 echo %_DEBUG_LABEL% _EXITCODE=%_EXITCODE% 1>&2
     for /f "delims==" %%i in ('set ^| findstr /b "_"') do set %%i=

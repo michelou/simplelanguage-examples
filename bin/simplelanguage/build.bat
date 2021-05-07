@@ -86,8 +86,8 @@ if not exist "%_VCVARSALL_FILE%" (
 set _GIT_CMD=git.exe
 set _GIT_OPTS=
 
-if not exist "%MAVEN_HOME%" (
-    echo %_ERROR_LABEL% Could not find installation directory for Maven 3 1>&2
+if not exist "%MAVEN_HOME%\bin\mvn.cmd" (
+    echo %_ERROR_LABEL% Maven 3 installation directory not found 1>&2
     set _EXITCODE=1
     goto :eof
 )
@@ -193,7 +193,8 @@ goto :args_loop
 if %_DEBUG%==1 (
     echo %_DEBUG_LABEL% Options    : _NATIVE=%_NATIVE% _TIMER=%_TIMER% _VERBOSE=%_VERBOSE% 1>&2
     echo %_DEBUG_LABEL% Subcommands: _CLEAN=%_CLEAN% _DIST=%_DIST% _PARSER=%_PARSER% _TEST=%_TEST% _UPDATE=%_UPDATE% 1>&2
-    echo %_DEBUG_LABEL% Variables  : JAVA_HOME="%JAVA_HOME%" MAVEN_HOME="%MAVEN_HOME%" 1>&2
+    echo %_DEBUG_LABEL% Variables  : "JAVA_HOME=%JAVA_HOME%" 1>&2
+    echo %_DEBUG_LABEL% Variables  : "MAVEN_HOME=%MAVEN_HOME%" 1>&2
 )
 if %_TIMER%==1 for /f "delims=" %%i in ('powershell -c "(Get-Date)"') do set _TIMER_START=%%i
 goto :eof
@@ -279,8 +280,8 @@ goto :eof
 :dist
 set "__TIMESTAMP_FILE=%_TARGET_DIR%\.latest-build"
 
-call :compile_required "%__TIMESTAMP_FILE%" "%_LANGUAGE_SOURCE_DIR%\*.java" "%_LAUNCHER_SOURCE_DIR%\*.java"
-if %_COMPILE_REQUIRED%==0 goto :eof
+call :action_required "%__TIMESTAMP_FILE%" "%_LANGUAGE_SOURCE_DIR%\*.java" "%_LAUNCHER_SOURCE_DIR%\*.java"
+if %_ACTION_REQUIRED%==0 goto :eof
 
 setlocal
 call :dist_env
@@ -402,8 +403,8 @@ set "_LIBS_CPATH=%_CPATH%"
 goto :eof
 
 @rem input parameter: 1=target file 2,3,..=path (wildcards accepted)
-@rem output parameter: _COMPILE_REQUIRED
-:compile_required
+@rem output parameter: _ACTION_REQUIRED
+:action_required
 set "__TARGET_FILE=%~1"
 
 set __PATH_ARRAY=
@@ -426,13 +427,13 @@ for /f "usebackq" %%i in (`powershell -c "gci -recurse -path %__PATH_ARRAY:~1% -
     set __SOURCE_TIMESTAMP=%%i
 )
 call :newer %__SOURCE_TIMESTAMP% %__TARGET_TIMESTAMP%
-set _COMPILE_REQUIRED=%_NEWER%
+set _ACTION_REQUIRED=%_NEWER%
 if %_DEBUG%==1 (
     echo %_DEBUG_LABEL% %__TARGET_TIMESTAMP% Target : '%__TARGET_FILE%' 1>&2
     echo %_DEBUG_LABEL% %__SOURCE_TIMESTAMP% Sources: %__PATH_ARRAY:~1% 1>&2
-    echo %_DEBUG_LABEL% _COMPILE_REQUIRED=%_COMPILE_REQUIRED% 1>&2
-) else if %_VERBOSE%==1 if %_COMPILE_REQUIRED%==0 if %__SOURCE_TIMESTAMP% gtr 0 (
-    echo No compilation needed ^(%__PATH_ARRAY1:~1%^) 1>&2
+    echo %_DEBUG_LABEL% _ACTION_REQUIRED=%_ACTION_REQUIRED% 1>&2
+) else if %_VERBOSE%==1 if %_ACTION_REQUIRED%==0 if %__SOURCE_TIMESTAMP% gtr 0 (
+    echo No action required ^(%__PATH_ARRAY1:~1%^) 1>&2
 )
 goto :eof
 
