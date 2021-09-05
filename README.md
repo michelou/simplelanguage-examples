@@ -11,7 +11,7 @@
   </tr>
 </table>
 
-[GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Scala 3][scala3_examples] and [TruffleSqueak][trufflesqueak_examples] are other topics we are currently investigating.
+[Deno][deno_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Rust][rust_examples], [Scala 3][scala3_examples] and [TruffleSqueak][trufflesqueak_examples] are other topics we are currently investigating.
 
 ## <span id="section_01">Project dependencies</span>
 
@@ -232,7 +232,7 @@ In our case we downloaded the following installation files (see section <a href=
 
 [antlr_downloads]: https://www.antlr.org/download.html
 [antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.9.2
-[scala3_examples]: https://github.com/michelou/dotty-examples
+[deno_examples]: https://github.com/michelou/deno-examples
 [git_downloads]: https://git-scm.com/download/win
 [git_cli]: https://git-scm.com/docs/git
 [git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.33.0.txt
@@ -261,6 +261,8 @@ In our case we downloaded the following installation files (see section <a href=
 [maven_history]: https://maven.apache.org/docs/history.html
 [maven_relnotes]: https://maven.apache.org/docs/3.8.2/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+[rust_examples]: https://github.com/michelou/rust-examples
+[scala3_examples]: https://github.com/michelou/dotty-examples
 [trufflesqueak_examples]: https://github.com/michelou/trufflesqueak-examples
 [vs2010_cl]: https://docs.microsoft.com/en-us/cpp/build/reference/compiler-command-line-syntax?view=vs-2019
 [vs2010_downloads]: https://visualstudio.microsoft.com/vs/older-downloads/
