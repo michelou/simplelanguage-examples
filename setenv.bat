@@ -147,7 +147,7 @@ if "%__ARG:~0,1%"=="-" (
     set /a __N+=1
 )
 shift
-goto :args_loop
+goto args_loop
 :args_done
 call :subst %_DRIVE_NAME% "%_ROOT_DIR%"
 if %_DEBUG%==1 (
@@ -237,7 +237,7 @@ if defined __JAVAC_CMD (
     set __PATH=C:\opt
     for /f %%f in ('dir /ad /b "!__PATH!\graalvm-ce-%_JAVA_INSTALL%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
     if not defined _GRAAL_HOME (
-        set __PATH=C:\Progra~1
+        set "__PATH=%ProgramFiles%"
         for /f %%f in ('dir /ad /b "!__PATH!\graalvm-ce-%_JAVA_INSTALL%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
     )
 )
@@ -248,7 +248,7 @@ if not exist "%_GRAAL_HOME%\bin\javac.exe" (
 )
 goto :eof
 
-@rem output parameter(s): _MAVEN_HOME, _MAVEN_PATH
+@rem output parameters: _MAVEN_HOME, _MAVEN_PATH
 :maven
 set _MAVEN_HOME=
 set _MAVEN_PATH=

@@ -32,7 +32,7 @@ Optionally one may also install the following software:
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*August 2021*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*September 2021*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.8.2\                            <i>( 10 MB)</i>
@@ -225,7 +225,7 @@ In our case we downloaded the following installation files (see section <a href=
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/August 2021* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/September 2021* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
