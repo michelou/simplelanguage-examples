@@ -219,10 +219,11 @@ echo   %__BEG_P%Subcommands:%__END%
 echo     %__BEG_O%help%__END%        display this help message
 goto :eof
 
-rem output parameter(s): _GRAAL_HOME
+rem output parameter: _GRAAL_HOME
 :graal
 set _GRAAL_HOME=
 
+set __GRAAL_DISTRO=graalvm-ce-java11
 set __JAVAC_CMD=
 for /f %%f in ('where javac.exe 2^>NUL') do set "__JAVAC_CMD=%%f"
 if defined __JAVAC_CMD (
@@ -235,14 +236,14 @@ if defined __JAVAC_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable GRAAL_HOME 1>&2
 ) else (
     set __PATH=C:\opt
-    for /f %%f in ('dir /ad /b "!__PATH!\graalvm-ce-%_JAVA_INSTALL%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
+    for /f %%f in ('dir /ad /b "!__PATH!\%__GRAAL_DISTRO%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
     if not defined _GRAAL_HOME (
         set "__PATH=%ProgramFiles%"
-        for /f %%f in ('dir /ad /b "!__PATH!\graalvm-ce-%_JAVA_INSTALL%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
+        for /f %%f in ('dir /ad /b "!__PATH!\%__GRAAL_DISTRO%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
     )
 )
 if not exist "%_GRAAL_HOME%\bin\javac.exe" (
-    echo %_ERROR_LABEL% javac executable not found ^(%_GRAAL_HOME%^) 1>&2
+    echo %_ERROR_LABEL% javac executable not found ^("%_GRAAL_HOME%"^) 1>&2
     set _EXITCODE=1
     goto :eof
 )

@@ -16,7 +16,7 @@
 This project depends on several external software for the **Microsoft Windows** platform:
 
 - [Apache Maven 3.8][maven_downloads] ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*][maven_relnotes])
-- [GraalVM Community Edition 21.2 LTS][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
+- [GraalVM Community Edition 22 LTS][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
 - [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
 <!--
@@ -26,23 +26,25 @@ This project depends on several external software for the **Microsoft Windows** 
 Optionally one may also install the following software:
 
 - [ANTLR 4.9 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.33][git_downloads] ([*release notes*][git_relnotes])
+- [Git 2.35][git_downloads] ([*release notes*][git_relnotes])
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*August 2021*):
+For instance our development environment looks as follows (*February 2022*):
 
 <pre style="font-size:80%;">
-C:\opt\apache-maven-3.8.2\                            <i>( 10 MB)</i>
-C:\opt\graalvm-ce-java8-21.2.0\                       <i>(845 MB)</i>
-C:\opt\Git-2.33.0\                                    <i>(290 MB)</i>
+C:\opt\apache-maven-3.8.4\                            <i>( 10 MB)</i>
+C:\opt\graalvm-ce-java11-22.0.0.2\                    <i>(845 MB)</i>
+C:\opt\graalvm-ce-java17-22.0.0.2\                    <i>(845 MB)</i>
+C:\opt\Git-2.35.1\                                    <i>(290 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
 <!-- 19.3.1 = 360 MB, 20.9.0 -> 670 MB, 20.1.0 -> 785 MB, 20.2.0 -> 664 MB -->
+<!-- 21.1.0 = 661 MB, 22.0.0.2 ->  -->
 
 > **&#9755;** ***Installation policy***<br/>
-> When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [`/opt/`][unix_opt] directory on Unix).
+> When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [**`/opt/`**][unix_opt] directory on Unix).
 
 
 ## Directory structure
@@ -152,14 +154,14 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
-   javac 1.8.0_302, mvn 3.8.2, cl 16.00.40219.01 for x64
+   javac 11.0.14, mvn 3.8.4, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.33.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.35.1.windows.1, diff 3.8, bash 4.4.23(1)-release
 
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where_1">where</a> javac mvn</b>
-C:\opt\graalvm-ce-java8-21.2.0\bin\javac.exe
-C:\opt\apache-maven-3.8.2\bin\mvn
-C:\opt\apache-maven-3.8.2\bin\mvn.cmd
+C:\opt\graalvm-ce-java11-22.0.0.2\bin\javac.exe
+C:\opt\apache-maven-3.8.4\bin\mvn
+C:\opt\apache-maven-3.8.4\bin\mvn.cmd
 </pre>
 
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
@@ -167,21 +169,21 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
-   javac 1.8.0_302, mvn 3.8.2, cl 16.00.40219.01 for x64
+   javac 11.0.14, mvn 3.8.4, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.33.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   git 2.35.1.windows.1, diff 3.8, bash 4.4.23(1)-release
 Tool paths:
-   C:\opt\graalvm-ce-java8-21.2.0\bin\javac.exe
-   C:\opt\apache-maven-3.8.2\bin\mvn.cmd
+   C:\opt\graalvm-ce-java11-22.0.0.2\bin\javac.exe
+   C:\opt\apache-maven-3.8.4\bin\mvn.cmd
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\link.exe
-   C:\opt\Git-2.33.0\usr\bin\link.exe
+   C:\opt\Git-2.35.1\usr\bin\link.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
-   C:\opt\Git-2.33.0\bin\git.exe
-   C:\opt\Git-2.33.0\mingw64\bin\git.exe
-   C:\opt\Git-2.33.0\usr\bin\diff.exe
-   C:\opt\Git-2.33.0\bin\bash.exe
+   C:\opt\Git-2.35.1\bin\git.exe
+   C:\opt\Git-2.35.1\mingw64\bin\git.exe
+   C:\opt\Git-2.35.1\usr\bin\diff.exe
+   C:\opt\Git-2.35.1\bin\bash.exe
 </pre>
 
 
@@ -193,7 +195,7 @@ Directory **`simplelanguage\`** contains our fork of the [graalvm/simplelanguage
 
 <pre style="font-size:80%;">
 <b>&gt; cp bin\simplelanguage\*.bat simplelanguage</b>
-<b>&gt; cd simplelanguage</b>
+<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cd">cd</a> simplelanguage</b>
 </pre>
 
 Command [**`build.bat -verbose clean`**](bin/simplelanguage/build.bat) deletes all output directories.
@@ -225,14 +227,14 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [INFO] simplelanguage-graalvm-component                                   [pom]
 [INFO]
 [INFO] ------------------< com.oracle:simplelanguage-parent >------------------
-[INFO] Building simplelanguage-parent 21.2.0                              [1/5]
+[INFO] Building simplelanguage-parent 22.0.0.2                            [1/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [...]
 [INFO] --------------< com.oracle:simplelanguage-graalvm-native >--------------
-[INFO] Building simplelanguage-graalvm-native 21.2.0                      [4/5]
+[INFO] Building simplelanguage-graalvm-native 21.3.0                      [4/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]
-[INFO] --- exec-maven-plugin:1.6.0:exec (make_native) @ simplelanguage-graalvm-native ---
+[INFO] --- exec-maven-plugin:3.0.0:exec (make_native) @ simplelanguage-graalvm-native ---
 [S:\SIMPLE~3\native\target\slnative:1136]    classlist:   8,658.29 ms,  1.18 GB
 [S:\SIMPLE~3\native\target\slnative:1136]        (cap):  10,003.99 ms,  1.18 GB
 [S:\SIMPLE~3\native\target\slnative:1136]        setup:  12,775.64 ms,  1.66 GB
@@ -252,7 +254,7 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [S:\SIMPLE~3\native\target\slnative:1136]      [total]:  84,987.77 ms,  5.30 GB
 [INFO]     
 [INFO] ------------< com.oracle:simplelanguage-graalvm-component >-------------
-[INFO] Building simplelanguage-graalvm-component 21.2.0                   [5/5]
+[INFO] Building simplelanguage-graalvm-component 21.3.0                   [5/5]
 [INFO] --------------------------------[ pom ]---------------------------------
 [INFO]   
 [INFO] --- exec-maven-plugin:1.6.0:exec (make_component) @ simplelanguage-graalvm-component ---
@@ -270,9 +272,9 @@ Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) ge
 [INFO] Total time:  05:35 min
 [INFO] Finished at: 2020-06-13T21:32:24+02:00
 [INFO] ------------------------------------------------------------------------
-Copy file simplelanguage-21.2.0.jar to directory "target\sl\lib\"
-Copy file launcher-21.2.0.jar to directory "target\sl\lib\"
-Copy file antlr4-runtime-4.9.2.jar to directory "target\sl\lib\"
+Copy file simplelanguage-22.0.0.2.jar to directory "target\sl\lib\"
+Copy file launcher-22.0.0.2.jar to directory "target\sl\lib\"
+Copy file antlr4-runtime-4.9.3.jar to directory "target\sl\lib\"
 Copy file sl.bat to directory "target\sl\bin\"
 Copy file slnative.exe to directory "target\sl\bin\"
 </pre>
@@ -288,24 +290,24 @@ Copy file slnative.exe to directory "target\sl\bin\"
 Output directory is **`target\sl\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
-<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/tree">tree</a> /f target | findstr /v /b "[A-Z]"</b>
+<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/tree">tree</a> /f target | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> /v /b "[A-Z]"</b>
 \---sl
     +---bin
     |       sl.bat
     |       slnative.exe
     |
     \---lib
-            antlr4-runtime-4.9.2.jar
-            launcher-21.2.0.jar
-            simplelanguage-21.2.0.jar
+            antlr4-runtime-4.9.3.jar
+            launcher-22.0.0.2.jar
+            simplelanguage-22.0.0.2.jar
 </pre>
 
 > **:mag_right:** As expected the file sizes for the JVM and native versions are very different:
 > <pre style="font-size:80%;">
 > <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where">where</a> /t /r target\sl\lib *.jar</b>
->    337904   22.12.2020      17:41:46  S:\simplelanguage\target\sl\lib\antlr4-runtime-4.9.2.jar
->      6000   13.01.2021      21:27:04  S:\simplelanguage\target\sl\lib\launcher-21.2.0.jar
->    404099   13.01.2021      21:27:02  S:\simplelanguage\target\sl\lib\simplelanguage-21.2.0.jar
+>    337904   22.12.2020      17:41:46  S:\simplelanguage\target\sl\lib\antlr4-runtime-4.9.3.jar
+>      6000   13.01.2021      21:27:04  S:\simplelanguage\target\sl\lib\launcher-22.0.0.2.jar
+>    404099   13.01.2021      21:27:02  S:\simplelanguage\target\sl\lib\simplelanguage-22.0.0.2.jar
 >
 > <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where">where</a> /t /r target\sl\bin *.exe</b>
 >  27879936   13.01.2021      21:32:21  S:\simplelanguage\target\sl\bin\slnative.exe
@@ -337,7 +339,7 @@ We can now execute both versions (JVM and native) of our application:
 
 > **:mag_right:** For instance we can use command [**`dumpbin`**][windows_dumpbin] to display the definitions exported from executable **`slnative.exe`** whose name starts with **`graal_`**:
 > <pre style="font-size:80%;">
-> <b>&gt; dumpbin /exports target\sl\bin\slnative.exe | awk '/[A-F0-9] graal_/ {print $4}'</b>
+> <b>&gt; <a href="https://docs.microsoft.com/en-us/cpp/build/reference/dumpbin-command-line?view=msvc-160">dumpbin</a> /exports target\sl\bin\slnative.exe | awk '/[A-F0-9] graal_/ {print $4}'</b>
 > graal_attach_thread
 > graal_create_isolate
 > graal_detach_thread
@@ -355,10 +357,10 @@ Command [**`generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) with
 Output directory is **`target\parser\`**; its structure looks as follows:
 
 <pre style="font-size:80%;">
-<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/tree">tree</a> /a /f target | findstr /v /b "[A-Z]"</b>
+<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/tree">tree</a> /a /f target | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> /v /b "[A-Z]"</b>
 \---parser
     +---libs
-    |       antlr-4.9.2-complete.jar
+    |       antlr-4.9.3-complete.jar
     |
     \---src
             SimpleLanguage.interp
@@ -376,7 +378,7 @@ Output directory **`target\parser\`** now contains two additional elements:<br/>
 - the subdirectory **`classes\**\*.class`**:
 
 <pre style="font-size:80%;">
-<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/tree">tree</a> /a /f target | findstr /v /b "[A-Z]"</b>
+<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/tree">tree</a> /a /f target | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> /v /b "[A-Z]"</b>
 \---parser
     |   source_list.txt
     |
@@ -393,7 +395,7 @@ Output directory **`target\parser\`** now contains two additional elements:<br/>
     |               language
     |
     +---libs
-    |       antlr-4.9.2-complete.jar
+    |       antlr-4.9.3-complete.jar
     |
     \---src
             SimpleLanguage.interp
@@ -426,9 +428,9 @@ Replacing option **`-verbose`** by **`-debug`** in the above command (i.e. [**`g
 <pre style="font-size:80%;">
 <b>&gt; <a href="bin/simplelanguage/generate_parser.bat">generate_parser</a> -debug test</b>
 [generate_parser] _DEBUG=1 _TEST=1 _VERBOSE=0
-[generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.9.2-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
-[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.9.2-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
-[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.9.2-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-21.2.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.9.2-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
+[generate_parser] java.exe -cp S:\target\parser\libs\antlr-4.9.3-complete.jar org.antlr.v4.Tool -package com.oracle.truffle.sl.parser -no-listener S:\language\src\main\java\com\oracle\truffle\sl\parser\SimpleLanguage.g4 -o S:\target\parser\src
+[generate_parser] javac.exe -cp ;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.9.3-complete.jar;S:\target\parser\classes -d "S:\target\parser\classes" @"S:\target\parser\source_list.txt"
+[generate_parser] java.exe  -Dtruffle.class.path.append=S:\target\parser\libs\antlr-4.9.3-complete.jar;S:\target\parser\classes -cp ;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\locator.jar;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\truffle-api.jar;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\truffle-dsl-processor.jar;C:\opt\graalvm-ce-java8-21.3.0\jre\lib\truffle\truffle-tck.jar;S:\target\parser\libs\antlr-4.9.3-complete.jar;S:\target\parser\classes com.oracle.truffle.sl.parser.SLMain "S:\language\tests\Add.sl"
 == running on org.graalvm.polyglot.Engine@56cbfb61
 7
 34
@@ -510,98 +512,107 @@ For instance, the SL source file [**`Fibonacci.sl`**](/simplelanguage/blob/maste
 10: 55
 </pre>
 
-## Footnotes
+## <span id="footnotes">Footnotes</span>
 
-<span name="footnote_01">[1]</span> ***2 GraalVM editions*** [↩](#anchor_01)
+<span id="footnote_01">[1]</span> ***2 GraalVM editions*** [↩](#anchor_01)
 
-<p style="margin:0 0 1em 20px;">
-<a href="https://www.graalvm.org/docs/getting-started/">GraalVM</a> is available as Community Edition (CE) and Enterprise Edition (EE):
-</p>
-<ul><li>GraalVM CE is based either on the <a href="https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot">OpenJDK 8</a> or on <a href="https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot">OpenJDK 11</a> and</li>
-<li><a href="https://www.oracle.com/technetwork/graalvm/downloads/index.html">GraalVM EE</a> is developed on top of the <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle Java SE 1.8.0_301</a> respectively on Oracle Java SE 11.</li>
-</ul>
+<dl><dd>
+The <a href="https://www.graalvm.org/docs/getting-started/">GraalVM</a> software is available as Community Edition (CE) and Enterprise Edition (EE).
+</dd>
+<dd>
+Starting with version 22, <a href="https://www.graalvm.org/docs/getting-started/">GraalVM</a> is based on <a href="https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot">OpenJDK 11</a> or on <a href="https://adoptium.net/?variant=openjdk17&jvmVariant=hotspot">OpenJDK 17</a> (previous versions are based on <a href="https://adoptium.net/?variant=openjdk8&jvmVariant=hotspot">OpenJDK 8</a> or on <a href="https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot">OpenJDK 11</a>).
+</dd></dl>
 
-<span name="footnote_02">[2]</span> ***2018-09-24*** [↩](#anchor_02a)
+<span id="footnote_02">[2]</span> ***2018-09-24*** [↩](#anchor_02a)
 
-<p style="margin:0 0 1em 20px;">
+<dl><dd>
 The two Microsoft software are listed in the <a href="https://github.com/oracle/graal/blob/master/compiler/README.md#windows-specifics-1">Windows Specifics</a> section of the <a href="https://github.com/oracle/graal/blob/master/compiler/README.md">oracle/graal README</a> file. That's fine but... what version should we download ?! We found the <a href="https://stackoverflow.com/questions/20115186/what-sdk-version-to-download/22987999#22987999">answer</a> (April 2014 !) on <a href="https://stackoverflow.com/">StackOverflow</a>:
-</p>
-<pre style="margin:0 0 1em 20px;font-size:80%;">
+</dd>
+<dd>
+<pre style="font-size:80%;">
 GRMSDK_EN_DVD.iso is a version for x86 environment.
 GRMSDKX_EN_DVD.iso is a version for x64 environment.
 GRMSDKIAI_EN_DVD.iso is a version for Itanium environment.
 </pre>
-<p style="margin:0 0 1em 20px;">
+</dd>
+<dd>
 In our case we downloaded the following installation files (see section <a href="#section_01"><b>Project dependencies</b></a>):
-</p>
-<pre style="margin:0 0 1em 20px; font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.8.2-bin.zip</a>          <i>(  8 MB)</i>
-<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.2.0">graalvm-ce-windows-amd64-21.2.0.zip</a> <i>(170 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                  <i>(570 MB)</i>
-<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>           <i>(121 MB)</i>
+</dd>
+<dd>
+<pre style="font-size:80%;">
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.8.4-bin.zip</a>                   <i>(  8 MB)</i>
+<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-22.0.0.2">graalvm-ce-java11-windows-amd64-22.0.0.2.zip</a> <i>(170 MB)</i>
+<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-22.0.0.2">graalvm-ce-java17-windows-amd64-22.0.0.2.zip</a> <i>(170 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                           <i>(570 MB)</i>
+<a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                    <i>(121 MB)</i>
 </pre>
+</dd></dl>
 
-<b name="footnote_03">[3]</b> ***ANTLR distributions*** [↩](#anchor_03)
+<span id="footnote_03">[3]</span> ***ANTLR distributions*** [↩](#anchor_03)
 
-<p style="margin:0 0 1em 20px;">
+<dl><dd>
 There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="bin/simplelanguage/generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
-</p>
-<pre style="margin:0 0 1em 20px; font-size:80%;">
-<b>&gt; <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html">java</a> -cp target\parser\libs\antlr-4.9.2-complete.jar org.antlr.v4.Tool | findstr Version</b>
-ANTLR Parser Generator  Version 4.9.2
+</dd>
+<dd>
+<pre style="font-size:80%;">
+<b>&gt; <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html">java</a> -cp target\parser\libs\antlr-4.9.3-complete.jar org.antlr.v4.Tool | findstr Version</b>
+ANTLR Parser Generator  Version 4.9.3
 </pre>
+</dd></dl>
 
-<b name="footnote_04">[4]</b> ***Parser generation*** [↩](#anchor_04)
+<span id="footnote_04">[4]</span> ***Parser generation*** [↩](#anchor_04)
 
-<p style="margin:0 0 1em 20px;">
+<dl><dd>
 Batch file <a href="bin/simplelanguage/generate_parser.bat"><b><code>generate_parser.bat</code></b></a> delegates the addition of the copyright notice to the generated source files to the PowerShell script <a href="bin/simplelanguage/generate_parser.ps1"><b><code>generate_parser.ps1</code></b></a>.
-</p>
+</dd></dl>
 
-<b name="footnote_05">[5]</b> ***EBNF grammar*** [↩](#anchor_05)
+<span id="footnote_05">[5]</span> ***EBNF grammar*** [↩](#anchor_05)
 
-<p style="margin:0 0 1em 20px;">
+<dl><dd>
 We used the online tool <a href="https://www.bottlecaps.de/rr/ui">Railroad Diagram Generator</a> to generate the PNG images presented in file <a href="docs/ebnf/SimpleLanguage.md"><b><code>docs\ebnf\SimpleLanguage.md</code></b></a> (based on the grammar file <a href="docs/ebnf/SimpleLanguage.ebnf"><b><code>docs\ebnf\SimpleLanguage.ebnf</code></b></a>).
-</p>
+</dd></dl>
 
-<b name="footnote_05">[5]</b> ***Missing library `hsdis-amd64.dll`*** [↩](#anchor_05)
+<span id="footnote_05">[5]</span> ***Missing library `hsdis-amd64.dll`*** [↩](#anchor_05)
 
-<p style="margin:0 0 1em 20px;">
+<dl><dd>
 Command <b><code>sl -disassemble</code></b> generates the error message <code>Could not load hsdis-amd64.dll</code> with some <b><code>.sl</code></b> files:
-</p>
-<pre style="margin:0 0 1em 20px; font-size:80%;">
+</dd>
+<dd>
+<pre style="font-size:80%;">
 <b>&gt; sl -disassemble language\tests\SumPrint.sl</b>
 CompilerOracle: print *OptimizedCallTarget.callRoot
 CompilerOracle: exclude *OptimizedCallTarget.callRoot
-OpenJDK 64-Bit GraalVM CE 20.1.0 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
+OpenJDK 64-Bit GraalVM CE 22.0.0.2 warning: printing of assembly code is enabled; turning on DebugNonSafepoints to gain additional output
 == running on org.graalvm.polyglot.Engine@783e6358
 [...]
 Could not load hsdis-amd64.dll; library not loadable; PrintAssembly is disabled
 </pre>
-<p style="margin:0 0 1em 20px;">
+</dd>
+<dd>
 Since library file <b><code>hsdis-amd64.dll</code></b> is not available anywhere we have to <a href="https://dropzone.nfshost.com/hsdis/">build it ourself</a>.
-</p>
-<p style="margin:0 0 1em 20px;">
+</dd>
+<dd>
 DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-on-windows">Running -XX:CompileCommand on Windows</a></i>" by Dustin Marx (September 7, 2016) provdies more information about that topics.
-</p>
+</dd></dl>
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/August 2021* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/February 2022* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
 
 [antlr]: https://www.antlr.org/
 [antlr_downloads]: https://www.antlr.org/download.html
-[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.9.2
+[antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.9.3
 [git_cli]: https://git-scm.com/docs/git
 [git_downloads]: https://git-scm.com/download/win
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.33.0.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.35.1.txt
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://guides.github.com/features/mastering-markdown/
 [graalvm]: https://www.graalvm.org/
-[graalvm_downloads]: https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.2.0
-[graalvm_relnotes]: https://www.graalvm.org/docs/release-notes/20_3/
+[graalvm_downloads]: https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-22.0.0.2
+[graalvm_relnotes]: https://www.graalvm.org/release-notes/22_0/
 [graalvm_simplelanguage]: https://github.com/graalvm/simplelanguage
 [man1_awk]: https://www.linux.org/docs/man1/awk.html
 [man1_diff]: https://www.linux.org/docs/man1/diff.html
@@ -609,7 +620,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 [man1_wc]: https://www.linux.org/docs/man1/wc.html
 [maven_downloads]: http://maven.apache.org/download.cgi
 [maven_project]: https://maven.apache.org/guides/getting-started/
-[maven_relnotes]: http://maven.apache.org/docs/3.8.2/release-notes.html
+[maven_relnotes]: http://maven.apache.org/docs/3.8.4/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [unix_opt]: http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/opt.html
 [vs2010_downloads]: https://visualstudio.microsoft.com/vs/older-downloads/
