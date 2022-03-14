@@ -3,7 +3,7 @@
 <table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:60px;max-width:100px;">
-    <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="https://www.graalvm.org/resources/img/graalvm.png" alt="GraalVM logo"/></a>
+    <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="docs/images/GraalVM-rgb.svg" alt="GraalVM project"/></a>
   </td>
   <td style="border:0;padding:0;vertical-align:text-top;">
     In the following we describe how to modify the <b><code><a href="https://github.com/graalvm/simplelanguage" rel="external">SimpleLanguage</a></code></b> (aka SL) example project on a Windows machine.<br/>In particular we show how to add new builtins, extend the SL parser.
@@ -11,7 +11,7 @@
   </tr>
 </table>
 
-[Ada][ada_examples], [Deno][deno_examples], [Golang][golang_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Rust][rust_examples], [Scala 3][scala3_examples], [Spring][spring_examples] and [TruffleSqueak][trufflesqueak_examples] are other topics we are currently investigating.
+[Ada][ada_examples], [Akka][akka_examples], [Deno][deno_examples], [Golang][golang_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Node.js][nodejs_examples], [Rust][rust_examples], [Scala 3][scala3_examples], [Spring][spring_examples] and [TruffleSqueak][trufflesqueak_examples] are other topics we are currently investigating.
 
 ## <span id="section_01">Project dependencies</span>
 
@@ -232,12 +232,13 @@ In our case we downloaded the following installation files (see section <a href=
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/February 2022* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/March 2022* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
 
 [ada_examples]: https://github.com/michelou/ada-examples
+[akka_examples]: https://github.com/michelou/akka-examples
 [antlr_downloads]: https://www.antlr.org/download.html
 [antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.9.3
 [deno_examples]: https://github.com/michelou/deno-examples
@@ -256,6 +257,7 @@ In our case we downloaded the following installation files (see section <a href=
 [kotlin_examples]: https://github.com/michelou/kotlin-examples
 [linux_opt]: https://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/opt.html
 [llvm_examples]: https://github.com/michelou/llvm-examples
+[nodejs_examples]: https://github.com/michelou/nodejs-examples
 [man1_awk]: https://www.linux.org/docs/man1/awk.html
 [man1_diff]: https://www.linux.org/docs/man1/diff.html
 [man1_file]: https://www.linux.org/docs/man1/file.html

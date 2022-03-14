@@ -3,7 +3,7 @@
 <table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:60px;max-width:100px;">
-    <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="https://www.graalvm.org/resources/img/graalvm.png" alt="GraalVM"/></a>
+    <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="docs/images/GraalVM-rgb.svg" alt="GraalVM"/></a>
   </td>
   <td style="border:0;padding:0;vertical-align:text-top;">
     In the following we describe how to build/run the <b><code><a href="https://github.com/graalvm/simplelanguage" rel="external">SimpleLanguage</a></code></b> (aka SL) example project on a Windows machine.<br/>In particular we show how to generate both the JVM version and the native version of the SL parser.
@@ -30,7 +30,7 @@ Optionally one may also install the following software:
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*February 2022*):
+For instance our development environment looks as follows (*March 2022*):
 
 <pre style="font-size:80%;">
 C:\opt\apache-maven-3.8.4\                            <i>( 10 MB)</i>
@@ -64,9 +64,9 @@ README.md
 </pre>
 
 - file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** both inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
-- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) <sup id="anchor_04">[[4]](#footnote_04)</sup> is the batch script for generating the SL parser source files.
+- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) <sup id="anchor_04">[4](#footnote_04)</sup> is the batch script for generating the SL parser source files.
 - file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
-- directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[[5]](#footnote_05)</sup>.
+- directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[5](#footnote_05)</sup>.
 - directory [**`simplelanguage\`**](https://github.com/michelou/simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage][graalvm_simplelanguage] repository as a Github submodule.
 - file [**`BUILD.md`**](BUILD.md) is the [Markdown][github_markdown] document of this page.
 - file [**`README.md`**](README.md) is the [Markdown][github_markdown] document describing this project.
@@ -211,7 +211,7 @@ Delete directory S:\simplelanguage\target
 
 > **:mag_right:** Unlike the other shell scripts [**`component\make_component.sh`**](https://github.com/michelou/simplelanguage/component/make_component.sh) generates its output directly into directory **`component\`** instead of **`component\target\`**. We changed that behavior: the corresponding batch file [**`component\make_component.bat`**](bin/simplelanguage/component/make_component.bat) generates its output into directory **`component\target\`**.
 
-Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) generates both the JVM version and the native version of our application.
+Command [**`build.bat -native -verbose dist`**](bin/simplelanguage/build.bat) generates both the JVM version and the native version of our application <sup id="anchor_06">[6](#footnote_06)</sup>.
 
 <pre style="font-size:80%;">
 <b>&gt; <a hre="bin/simplelanguage/build.bat">build</a> -verbose -native dist</b>
@@ -572,7 +572,20 @@ Batch file <a href="bin/simplelanguage/generate_parser.bat"><b><code>generate_pa
 We used the online tool <a href="https://www.bottlecaps.de/rr/ui">Railroad Diagram Generator</a> to generate the PNG images presented in file <a href="docs/ebnf/SimpleLanguage.md"><b><code>docs\ebnf\SimpleLanguage.md</code></b></a> (based on the grammar file <a href="docs/ebnf/SimpleLanguage.ebnf"><b><code>docs\ebnf\SimpleLanguage.ebnf</code></b></a>).
 </dd></dl>
 
-<span id="footnote_05">[5]</span> ***Missing library `hsdis-amd64.dll`*** [↩](#anchor_05)
+<span id="footnote_06">[6]</span> ***Replace JUnit `assertThat` with Hamcrest*** [↩](#anchor_06)
+
+<dl><dd>
+The JUnit <code>Assert.assertThat</code> method is deprecated (see <a href="https://jsparrow.github.io/rules/replace-j-unit-assert-that-with-hamcrest.html">jSparrow article</a>).
+</dd>
+<dd>
+Concretely we need to change <code>org.junit.Assert.assertThat</code> to <code>org.hamcrest.MatcherAssert.assertThat</code> to get rid the of deprecation warning in the following source files (directory <code>language/src/test/java/</code>) :
+<ul>
+<li><code>com/oracle/truffle/sl/test/SLJavaInteropConversionTest.java</code></li>
+<li><code>com/oracle/truffle/sl/test/SLJavaInteropExceptionTest.java</code></li>
+</ul>
+</dd></dl>
+
+<span id="footnote_07">[7]</span> ***Missing library `hsdis-amd64.dll`*** [↩](#anchor_07)
 
 <dl><dd>
 Command <b><code>sl -disassemble</code></b> generates the error message <code>Could not load hsdis-amd64.dll</code> with some <b><code>.sl</code></b> files:
@@ -597,7 +610,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/February 2022* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/March 2022* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->

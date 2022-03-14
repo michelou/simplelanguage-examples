@@ -45,7 +45,7 @@ if not %_EXITCODE%==0 goto end
 call :msys
 if not %_EXITCODE%==0 goto end
 
-call :sdk
+call :winsdk 10
 if not %_EXITCODE%==0 goto end
 
 goto end
@@ -53,7 +53,7 @@ goto end
 @rem #########################################################################
 @rem ## Subroutines
 
-@rem output parameter(s): _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
+@rem output parameters: _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
 :env
 set _BASENAME=%~n0
 set _DRIVE_NAME=S
@@ -396,8 +396,21 @@ if not exist "%_MSYS_HOME%\usr\bin\make.exe" (
 set "_MSYS_PATH=;%_MSYS_HOME%\usr\bin;%_MSYS_HOME%\mingw64\bin"
 goto :eof
 
+@rem input parameter: %1=Windows SDK version
+@rem output parameter: _WINSDK_HOME
+:winsdk
+set "__VERSION=%~1"
+
+if not exist "%ProgramFiles(x86)%\Windows Kits\%__VERSION%" (
+    echo %_ERROR_LABEL% Windows SDK %__VERSION% installation not found 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+set "_WINSDK_HOME=%ProgramFiles(x86)%\Windows Kits\%__VERSION%"
+goto :eof
+
 @rem native-image dependency
-:sdk
+:winsdk_OLD
 set "_SDK_HOME=C:\Program Files\Microsoft SDKs\Windows\v7.1"
 if not exist "%_SDK_HOME%" (
     echo %_ERROR_LABEL% Could not find installation directory for Microsoft Windows SDK 7.1 1>&2
@@ -495,6 +508,7 @@ if %__VERBOSE%==1 if defined MSVS_HOME (
     if defined MAVEN_HOME echo    "MAVEN_HOME=%MAVEN_HOME%" 1>&2
     if defined MSVC_HOME echo    "MSVC_HOME=%MSVC_HOME%" 1>&2
     if defined MSVS_HOME echo    "MSVS_HOME=%MSVS_HOME%" 1>&2
+    if defined WINSDK_HOME echo    "WINSDK_HOME=%WINSDK_HOME%" 1>&2
 )
 goto :eof
 
@@ -509,12 +523,10 @@ endlocal & (
         @rem http://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/
         if not defined JAVA_HOME set "JAVA_HOME=%_GRAAL_HOME%"
         if not defined MAVEN_HOME set "MAVEN_HOME=%_MAVEN_HOME%"
-        if not %_SDK%==1 (
-            if not defined MSVS_HOME set "MSVS_HOME=%_MSVS_HOME%"
-            if not defined MSVC_HOME set "MSVC_HOME=%_MSVC_HOME%"
-            if not defined SDK_HOME set "SDK_HOME=%_SDK_HOME%"
-        )
-        set "PATH=%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_SDK_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
+        if not defined MSVS_HOME set "MSVS_HOME=%_MSVS_HOME%"
+        if not defined MSVC_HOME set "MSVC_HOME=%_MSVC_HOME%"
+        if not defined WINSDK_HOME set "WINSDK_HOME=%_WINSDK_HOME%"
+        set "PATH=%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
         call :print_env %_VERBOSE%
         if not "%CD:~0,2%"=="%_DRIVE_NAME%:" (
             if %_DEBUG%==1 echo %_DEBUG_LABEL% cd /d %_DRIVE_NAME%: 1>&2
