@@ -18,6 +18,7 @@
 This project depends on several external software for the **Microsoft Windows** platform:
 
 - [Apache Maven 3.8][maven_downloads] ([requires Java 7][maven_history])  ([*release notes*][maven_relnotes])
+- [Git 2.36][git_downloads] ([*release notes*][git_relnotes])
 - [GraalVM Community Edition 22 LTS][graalvm_releases] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
 - [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
@@ -27,18 +28,17 @@ This project depends on several external software for the **Microsoft Windows** 
 
 Optionally one may also install the following software:
 
-- [ANTLR 4.9 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-- [Git 2.35][git_downloads] ([*release notes*][git_relnotes])
+- [ANTLR 4.10 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*February 2022*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*April 2022*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
-C:\opt\apache-maven-3.8.4\                            <i>( 10 MB)</i>
+C:\opt\apache-maven-3.8.5\                            <i>( 10 MB)</i>
 C:\opt\graalvm-ce-java11-22.0.0.2\                    <i>(869 MB)</i>
 C:\opt\graalvm-ce-java17-22.0.0.2\                    <i>(937 MB)</i>
-C:\opt\Git-2.35.1\                                    <i>(279 MB)</i>
+C:\opt\Git-2.36.0\                                    <i>(279 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
@@ -130,13 +130,13 @@ Command [**`setenv`**](setenv.bat) is run once to setup our development environm
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
-   javac 1.8.0_322, mvn 3.8.4,
-   git 2.35.1.windows.1, diff 3.8, bash 4.4.23(1)-release
+   javac 1.8.0_322, mvn 3.8.5,
+   git 2.36.0.windows.1, diff 3.8, bash 4.4.23(1)-release
 
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where">where</a> javac mvn</b>
 C:\opt\graalvm-ce-java11-21.3.0\bin\javac.exe
-C:\opt\apache-maven-3.8.4\bin\mvn
-C:\opt\apache-maven-3.8.4\bin\mvn.cmd
+C:\opt\apache-maven-3.8.5\bin\mvn
+C:\opt\apache-maven-3.8.5\bin\mvn.cmd
 </pre>
 
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
@@ -144,19 +144,19 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
-   javac 1.8.0_302, mvn 3.8.4,
-   git 2.35.1.windows.1, diff 3.7 bash 4.4.23(1)-release
+   javac 1.8.0_302, mvn 3.8.5,
+   git 2.36.0.windows.1, diff 3.7 bash 4.4.23(1)-release
 Tool paths:
    C:\opt\graalvm-ce-java11-21.2.0\bin\javac.exe
-   C:\opt\apache-maven-3.8.4\bin\mvn.cmd
-   C:\opt\Git-2.35.1\bin\git.exe
-   C:\opt\Git-2.35.1\mingw64\bin\git.exe
-   C:\opt\Git-2.35.1\usr\bin\diff.exe
-   C:\opt\Git-2.35.1\bin\bash.exe
+   C:\opt\apache-maven-3.8.5\bin\mvn.cmd
+   C:\opt\Git-2.36.0\bin\git.exe
+   C:\opt\Git-2.36.0\mingw64\bin\git.exe
+   C:\opt\Git-2.36.0\usr\bin\diff.exe
+   C:\opt\Git-2.36.0\bin\bash.exe
 Environment variables:
-   "GIT_HOME=C:\opt\Git-2.35.1"
+   "GIT_HOME=C:\opt\Git-2.36.0"
    "JAVA_HOME=C:\opt\graalvm-ce-java11-21.2.0"
-   "MAVEN_HOME=C:\opt\apache-maven-3.8.4"
+   "MAVEN_HOME=C:\opt\apache-maven-3.8.5"
    "MSVC_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC"
    "MSVS_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0"
 </pre>
@@ -206,12 +206,12 @@ GRMSDKIAI_EN_DVD.iso is a version for Itanium environment.
 <span id="footnote_03">[3]</span> ***ANTLR distributions*** [↩](#anchor_03)
 
 <dl><dd>
-There exists two binary distributions of <a href="https://www.antlr.org/download/">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
+There exists two binary distributions of <a href="https://www.antlr.org/download.html" rel="external">ANTLR 4</a>: ANTLR tool and ANTLR runtime (with bindings to Java, JavaScript, C# and C++). Batch command <a href="generate_parser.bat"</a><b><code>generate_parser</code></b></a> requires ANTLR tool (<i>and</i> will download it if not present in output directory <b><code>target\parser\libs\</code></b>). 
 </dd>
 <dd>
 <pre style="font-size:80%;">
-<b>&gt; <a href="https://docs.oracle.com/en/java/javase/11/tools/java.html">java</a> -cp target\parser\libs\antlr-4.9.3-complete.jar org.antlr.v4.Tool | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> Version</b>
-ANTLR Parser Generator  Version 4.9.3
+<b>&gt; %JAVA_HOME%\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html">java</a> -cp target\parser\libs\antlr-4.10.1-complete.jar org.antlr.v4.Tool | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> Version</b>
+ANTLR Parser Generator  Version 4.10.1
 </pre>
 </dd></dl>
 
@@ -222,17 +222,17 @@ In our case we downloaded the following installation files (see section <a href=
 </dd>
 <dd>
 <pre style="font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.8.4-bin.zip</a>                  <i>(  8 MB)</i>
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.8.5-bin.zip</a>                  <i>(  8 MB)</i>
 <a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.23.0">graalvm-ce-java11-windows-amd64-21.3.0.zip</a>  <i>(268 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                          <i>(570 MB)</i>
-<a href="https://git-scm.com/download/win">PortableGit-2.35.1-64-bit.7z.exe</a>            <i>( 41 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.36.0-64-bit.7z.exe</a>            <i>( 41 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                   <i>(121 MB)</i>
 </pre>
 </dd></dl>
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/March 2022* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/April 2022* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -244,7 +244,7 @@ In our case we downloaded the following installation files (see section <a href=
 [deno_examples]: https://github.com/michelou/deno-examples
 [git_downloads]: https://git-scm.com/download/win
 [git_cli]: https://git-scm.com/docs/git
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.35.1.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.36.0.txt
 [github_michelou_sl]: https://github.com/michelou/simplelanguage
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://github.github.com/gfm/
@@ -270,7 +270,7 @@ In our case we downloaded the following installation files (see section <a href=
 [maven_cli]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [maven_downloads]: https://maven.apache.org/download.cgi
 [maven_history]: https://maven.apache.org/docs/history.html
-[maven_relnotes]: https://maven.apache.org/docs/3.8.4/release-notes.html
+[maven_relnotes]: https://maven.apache.org/docs/3.8.5/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [rust_examples]: https://github.com/michelou/rust-examples
 [scala3_examples]: https://github.com/michelou/dotty-examples
