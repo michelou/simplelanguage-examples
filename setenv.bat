@@ -25,21 +25,20 @@ if %_HELP%==1 (
 
 set _GIT_PATH=
 set _MAVEN_PATH=
-set _MSVC_PATH=
 set _MSYS_PATH=
-set _SDK_PATH=
+@rem set _SDK_PATH=
 
 call :git
 if not %_EXITCODE%==0 goto end
 
-call :graal
+call :graalvm17
 if not %_EXITCODE%==0 goto end
 
 call :maven
 if not %_EXITCODE%==0 goto end
 
-call :msvs_2010
-@rem call :msvs
+@rem call :msvs_2010
+call :msvs
 if not %_EXITCODE%==0 goto end
 
 call :msys
@@ -56,7 +55,6 @@ goto end
 @rem output parameters: _DEBUG_LABEL, _ERROR_LABEL, _WARNING_LABEL
 :env
 set _BASENAME=%~n0
-set _DRIVE_NAME=S
 set "_ROOT_DIR=%~dp0"
 
 call :env_colors
@@ -112,11 +110,11 @@ set _STRONG_BG_BLUE=[104m
 goto :eof
 
 @rem input parameter: %*
+@rem output parameters: _BASH, _HELP, _VERBOSE
 :args
-set _HELP=0
 set _BASH=0
-set _JAVA_INSTALL=java8
-set _SDK=0
+set _HELP=0
+set _USE_SDK=0
 set _VERBOSE=0
 set __N=0
 :args_loop
@@ -124,12 +122,11 @@ set "__ARG=%~1"
 if not defined __ARG goto args_done
 
 if "%__ARG:~0,1%"=="-" (
-    rem option
+    @rem option
     if "%__ARG%"=="-bash" ( set _BASH=1
     ) else if "%__ARG%"=="-debug" ( set _DEBUG=1
     ) else if "%__ARG%"=="-help" ( set _HELP=1
-    ) else if "%__ARG%"=="-java11" ( set _JAVA_INSTALL=java11
-    ) else if "%__ARG%"=="-sdk" ( set _SDK=1
+    ) else if "%__ARG%"=="-usesdk" ( set _USE_SDK=1
     ) else if "%__ARG%"=="-verbose" ( set _VERBOSE=1
     ) else (
         echo %_ERROR_LABEL% Unknown option %__ARG% 1>&2
@@ -137,7 +134,7 @@ if "%__ARG:~0,1%"=="-" (
         goto args_done
     )
 ) else (
-    rem subcommand
+    @rem subcommand
     if "%__ARG%"=="help" ( set _HELP=1
     ) else (
         echo %_ERROR_LABEL% Unknown subcommand %__ARG% 1>&2
@@ -149,49 +146,77 @@ if "%__ARG:~0,1%"=="-" (
 shift
 goto args_loop
 :args_done
-call :subst %_DRIVE_NAME% "%_ROOT_DIR%"
+call :drive_name "%_ROOT_DIR%"
+if not %_EXITCODE%==0 goto :eof
+
 if %_DEBUG%==1 (
-    echo %_DEBUG_LABEL% Options  : _HELP=%_HELP% _BASH=%_BASH% _SDK=%_SDK% _VERBOSE=%_VERBOSE% 1>&2
-    echo %_DEBUG_LABEL% Variables: _DRIVE_NAME=%_DRIVE_NAME% 1>&2
+    echo %_DEBUG_LABEL% Options    : _BASH=%_BASH% _USE_SDK=%_USE_SDK% _VERBOSE=%_VERBOSE% 1>&2
+    echo %_DEBUG_LABEL% Subcommands: _HELP=%_HELP% 1>&2
+    echo %_DEBUG_LABEL% Variables  : _DRIVE_NAME=%_DRIVE_NAME% 1>&2
 )
 goto :eof
 
-@rem input parameter(s): %1: drive letter, %2: path to be substituted
-:subst
-set __DRIVE_NAME=%~1
-set "__GIVEN_PATH=%~2"
+@rem input parameter: %1: path to be substituted
+@rem output parameter: _DRIVE_NAME (2 characters: letter + ':')
+:drive_name
+set "__GIVEN_PATH=%~1"
+@rem remove trailing path separator if present
+if "%__GIVEN_PATH:~-1,1%"=="\" set "__GIVEN_PATH=%__GIVEN_PATH:~0,-1%"
 
-if not "%__DRIVE_NAME:~-1%"==":" set __DRIVE_NAME=%__DRIVE_NAME%:
-if /i "%__DRIVE_NAME%"=="%__GIVEN_PATH:~0,2%" goto :eof
-
-if "%__GIVEN_PATH:~-1%"=="\" set "__GIVEN_PATH=%__GIVEN_PATH:~0,-1%"
-if not exist "%__GIVEN_PATH%" (
-    echo %_ERROR_LABEL% Provided path does not exist ^(%__GIVEN_PATH%^) 1>&2
+@rem https://serverfault.com/questions/62578/how-to-get-a-list-of-drive-letters-on-a-system-through-a-windows-shell-bat-cmd
+set __DRIVE_NAMES=F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:U:V:W:X:Y:Z:
+for /f %%i in ('wmic logicaldisk get deviceid ^| findstr :') do (
+    set "__DRIVE_NAMES=!__DRIVE_NAMES:%%i=!"
+)
+if %_DEBUG%==1 echo %_DEBUG_LABEL% __DRIVE_NAMES=%__DRIVE_NAMES% ^(WMIC^) 1>&2
+if not defined __DRIVE_NAMES (
+    echo %_ERROR_LABEL% No more free drive name 1>&2
     set _EXITCODE=1
     goto :eof
 )
-for /f "tokens=1,2,*" %%f in ('subst ^| findstr /b "%__DRIVE_NAME%" 2^>NUL') do (
+for /f "tokens=1,2,*" %%f in ('subst') do (
+    set "__SUBST_DRIVE=%%f"
+    set "__SUBST_DRIVE=!__SUBST_DRIVE:~0,2!"
     set "__SUBST_PATH=%%h"
-    if "!__SUBST_PATH!"=="!__GIVEN_PATH!" (
-        set __MESSAGE=
-        for /f %%i in ('subst ^| findstr /b "%__DRIVE_NAME%\"') do "set __MESSAGE=%%i"
-        if defined __MESSAGE (
-            if %_DEBUG%==1 ( echo %_DEBUG_LABEL% !__MESSAGE! 1>&2
-            ) else if %_VERBOSE%==1 ( echo !__MESSAGE! 1>&2
-            )
+    if "!__SUBST_DRIVE!"=="!__GIVEN_PATH:~0,2!" (
+        set _DRIVE_NAME=!__SUBST_DRIVE:~0,2!
+        if %_DEBUG%==1 ( echo %_DEBUG_LABEL% Select drive !_DRIVE_NAME! for which a substitution already exists 1>&2
+        ) else if %_VERBOSE%==1 ( echo Select drive !_DRIVE_NAME! for which a substitution already exists 1>&2
+        )
+        goto :eof
+    ) else if "!__SUBST_PATH!"=="!__GIVEN_PATH!" (
+        set "_DRIVE_NAME=!__SUBST_DRIVE!"
+        if %_DEBUG%==1 ( echo %_DEBUG_LABEL% Select drive !_DRIVE_NAME! for which a substitution already exists 1>&2
+        ) else if %_VERBOSE%==1 ( echo Select drive !_DRIVE_NAME! for which a substitution already exists 1>&2
         )
         goto :eof
     )
 )
-if %_DEBUG%==1 ( echo %_DEBUG_LABEL% subst "%__DRIVE_NAME%" "%__GIVEN_PATH%" 1>&2
-) else if %_VERBOSE%==1 ( echo Assign path %__GIVEN_PATH% to drive %__DRIVE_NAME% 1>&2
+for /f "tokens=1,2,*" %%i in ('subst') do (
+    set __USED=%%i
+    call :drive_names "!__USED:~0,2!"
 )
-subst "%__DRIVE_NAME%" "%__GIVEN_PATH%"
+if %_DEBUG%==1 echo %_DEBUG_LABEL% __DRIVE_NAMES=%__DRIVE_NAMES% ^(SUBST^) 1>&2
+
+set "_DRIVE_NAME=!__DRIVE_NAMES:~0,2!"
+if /i "%_DRIVE_NAME%"=="%__GIVEN_PATH:~0,2%" goto :eof
+
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% subst "%_DRIVE_NAME%" "%__GIVEN_PATH%" 1>&2
+) else if %_VERBOSE%==1 ( echo Assign drive %_DRIVE_NAME% to path "%__GIVEN_PATH%" 1>&2
+)
+subst "%_DRIVE_NAME%" "%__GIVEN_PATH%"
 if not %ERRORLEVEL%==0 (
-    echo %_ERROR_LABEL% Failed to assigned drive %__DRIVE_NAME% to path 1>&2
+    echo %_ERROR_LABEL% Failed to assign drive %_DRIVE_NAME% to path "%__GIVEN_PATH%" 1>&2
     set _EXITCODE=1
     goto :eof
 )
+goto :eof
+
+@rem input parameter: %1=Used drive name
+@rem output parameter: __DRIVE_NAMES
+:drive_names
+set "__USED_NAME=%~1"
+set "__DRIVE_NAMES=!__DRIVE_NAMES:%__USED_NAME%=!"
 goto :eof
 
 :help
@@ -210,43 +235,90 @@ echo Usage: %__BEG_O%%_BASENAME% { ^<option^> ^| ^<subcommand^> }%__END%
 echo.
 echo   %__BEG_P%Options:%__END%
 echo     %__BEG_O%-bash%__END%       start Git bash shell instead of Windows command prompt
-echo     %__BEG_O%-debug%__END%      show commands executed by this script
-echo     %__BEG_O%-java11%__END%     use Java 11 installation of GraalVM ^(instead of Java 8^)
-echo     %__BEG_O%-sdk%__END%        setup Windows SDK environment ^(%__BEG_O%SetEnv.cmd%__END%^)
-echo     %__BEG_O%-verbose%__END%    display environment settings
+echo     %__BEG_O%-debug%__END%      display commands executed by this script
+echo     %__BEG_O%-usesdk%__END%     setup Windows SDK environment ^(%__BEG_O%SetEnv.cmd%__END%^)
+echo     %__BEG_O%-verbose%__END%    display progress messages
 echo.
 echo   %__BEG_P%Subcommands:%__END%
 echo     %__BEG_O%help%__END%        display this help message
 goto :eof
 
-rem output parameter: _GRAAL_HOME
-:graal
-set _GRAAL_HOME=
+@rem input parameter: %1=Java version
+@rem output parameter: _GRAALVM_HOME
+@rem see https://graalvm.github.io/native-build-tools/0.9.6/graalvm-setup.html
+:graalvm
+set __JAVA_VERSION=%~1
+set _GRAALVM_HOME=
 
-set __GRAAL_DISTRO=graalvm-ce-java11
 set __JAVAC_CMD=
-for /f %%f in ('where javac.exe 2^>NUL') do set "__JAVAC_CMD=%%f"
+for /f "delims=" %%f in ('where javac.exe 2^>NUL') do (
+    set "__JAVAC_CMD=%%f"
+    @rem we ignore Scoop managed Java installation
+    if not "!__JAVAC_CMD:scoop=!"=="!__JAVAC_CMD!" set __JAVAC_CMD=
+)
 if defined __JAVAC_CMD (
-    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of javac executable found in PATH 1>&2
-    for %%i in ("%__JAVAC_CMD%") do set "__GRAAL_BIN_DIR=%%~dpi"
-    for %%f in ("!__GRAAL_BIN_DIR!\.") do set "_GRAAL_HOME=%%~dpf"
-    goto :eof
-) else if defined GRAAL_HOME (
-    set _GRAAL_HOME=%GRAAL_HOME%
-    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable GRAAL_HOME 1>&2
-) else (
-    set __PATH=C:\opt
-    for /f %%f in ('dir /ad /b "!__PATH!\%__GRAAL_DISTRO%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
-    if not defined _GRAAL_HOME (
-        set "__PATH=%ProgramFiles%"
-        for /f %%f in ('dir /ad /b "!__PATH!\%__GRAAL_DISTRO%*" 2^>NUL') do set "_GRAAL_HOME=!__PATH!\%%f"
+    call :jdk_version "%__JAVAC_CMD%"
+    if not !_JDK_VERSION!==%__JAVA_VERSION% (
+        @rem We ignore the command accessible from PATH
+        set __JAVAC_CMD=
     )
 )
-if not exist "%_GRAAL_HOME%\bin\javac.exe" (
-    echo %_ERROR_LABEL% javac executable not found ^("%_GRAAL_HOME%"^) 1>&2
+if defined __JAVAC_CMD (
+    for /f "delims=" %%i in ("%__JAVAC_CMD%") do set "__GRAALVM_BIN_DIR=%%~dpi"
+    for %%f in ("!__GRAALVM_BIN_DIR!\.") do set "_GRAALVM_HOME=%%~dpf"
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of javac executable found in PATH 1>&2
+    goto :eof
+) else if defined GRAALVM_HOME (
+    set "_GRAALVM_HOME=%GRAALVM_HOME%"
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable GRAALVM_HOME 1>&2
+) else (
+    set __PATH=C:\opt
+    for /f "delims=" %%f in ('dir /ad /b "!__PATH!\jdk-graalvm-ce-%__JAVA_VERSION%*" 2^>NUL') do set "_GRAALVM_HOME=!__PATH!\%%f"
+    if not defined _GRAALVM_HOME (
+        set "__PATH=%ProgramFiles%"
+        for /f "delims=" %%f in ('dir /ad /b "!__PATH!\jdk-graalvm-ce-%__JAVA_VERSION%*" 2^>NUL') do set "_GRAALVM_HOME=!__PATH!\%%f"
+    )
+)
+if not exist "%_GRAALVM_HOME%\bin\javac.exe" (
+    echo %_ERROR_LABEL% Executable javac.exe not found ^("%_GRAALVM_HOME%"^) 1>&2
     set _EXITCODE=1
     goto :eof
 )
+if not exist "%_GRAALVM_HOME%\bin\polyglot.cmd" (
+    echo %_ERROR_LABEL% Executable polyglot.cmd not found ^("%_GRAALVM_HOME%"^) 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+goto :eof
+
+@rem input parameter: %1=javac file path
+@rem output parameter: _JDK_VERSION
+:jdk_version
+set "__JAVAC_CMD=%~1"
+if not exist "%__JAVAC_CMD%" (
+    echo %_ERROR_LABEL% Command javac.exe not found ^("%__JAVAC_CMD%"^) 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+set __JAVAC_VERSION=
+for /f "usebackq tokens=1,*" %%i in (`"%__JAVAC_CMD%" -version 2^>^&1`) do set __JAVAC_VERSION=%%j
+set "__PREFIX=%__JAVAC_VERSION:~0,2%"
+@rem either 1.7, 1.8 or 11..18
+if "%__PREFIX%"=="1." ( set _JDK_VERSION=%__JAVAC_VERSION:~2,1%
+) else ( set _JDK_VERSION=%__PREFIX%
+)
+goto :eof
+
+@rem :java8
+@rem call :graalvm java8
+@rem if not %_EXITCODE%==0 goto :eof
+@rem if defined _GRAALVM_HOME set "_GRAALVM_HOME=%_GRAALVM_HOME%"
+@rem goto :eof
+
+:graalvm17
+call :graalvm 17
+if not %_EXITCODE%==0 goto :eof
+if defined _GRAALVM_HOME set "_GRAALVM17_HOME=%_GRAALVM_HOME%"
 goto :eof
 
 @rem output parameters: _MAVEN_HOME, _MAVEN_PATH
@@ -255,31 +327,28 @@ set _MAVEN_HOME=
 set _MAVEN_PATH=
 
 set __MVN_CMD=
-for /f %%f in ('where mvn.cmd 2^>NUL') do set "__MVN_CMD=%%f"
+for /f "delims=" %%f in ('where mvn.cmd 2^>NUL') do set "__MVN_CMD=%%f"
 if defined __MVN_CMD (
-    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Maven executable found in PATH 1>&2
-    for %%i in ("%__MVN_CMD%") do set "__MVN_BIN_DIR=%%~dpi"
+    for /f "delims=" %%i in ("%__MVN_CMD%") do set "__MVN_BIN_DIR=%%~dpi"
     for %%f in ("!__MVN_BIN_DIR!..") do set "_MAVEN_HOME=%%f"
-    @rem keep _MAVEN_PATH undefined since executable already in path
-    goto :eof
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Maven executable found in PATH 1>&2
 ) else if defined MAVEN_HOME (
-    set _MAVEN_HOME=%MAVEN_HOME%
+    set "_MAVEN_HOME=%MAVEN_HOME%"
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable MAVEN_HOME 1>&2
 ) else (
     set __PATH=C:\opt
     for /f %%f in ('dir /ad /b "!__PATH!\apache-maven-*" 2^>NUL') do set "_MAVEN_HOME=!__PATH!\%%f"
     if not defined _MAVEN_HOME (
         set __PATH=C:\Progra~1
-        for /f %%f in ('dir /ad /b "!__PATH!\apache-maven-*" 2^>NUL') do set "_MAVEN_HOME=!__PATH!\%%f"
+        for /f "delims=" %%f in ('dir /ad /b "!__PATH!\apache-maven-*" 2^>NUL') do set "_MAVEN_HOME=!__PATH!\%%f"
     )
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using default Maven installation directory "%_MAVEN_HOME%" 1>&2
 )
 if not exist "%_MAVEN_HOME%\bin\mvn.cmd" (
-    echo %_ERROR_LABEL% Maven executable not found ^(%_MAVEN_HOME%^) 1>&2
+    echo %_ERROR_LABEL% Maven executable not found ^("%_MAVEN_HOME%"^) 1>&2
     set _EXITCODE=1
     goto :eof
 )
-if %_DEBUG%==1 echo %_DEBUG_LABEL% Using default Maven installation directory "%_MAVEN_HOME%" 1>&2
-
 set "_MAVEN_PATH=;%_MAVEN_HOME%\bin"
 goto :eof
 
@@ -303,7 +372,7 @@ if not exist "%__VC_BATCH_FILE%" (
     set _EXITCODE=1
     goto :eof
 )
-set _MSVC_HOME=%_MSVS_HOME%\VC
+set "_MSVC_HOME=%_MSVS_HOME%\VC"
 @rem set __MSBUILD_HOME=
 @rem set "__FRAMEWORK_DIR=%SystemRoot%\Microsoft.NET\Framework"
 @rem for /f %%f in ('dir /ad /b "%__FRAMEWORK_DIR%\*" 2^>NUL') do set "__MSBUILD_HOME=%__FRAMEWORK_DIR%\%%f"
@@ -362,17 +431,17 @@ if not defined __ASSIGNED_PATH (
 set _SUBST_PATH=%__DRIVE_NAME%
 goto :eof
 
-@rem output parameter(s): _MSYS_HOME, _MSYS_PATH
+@rem output parameters: _MSYS_HOME, _MSYS_PATH
 :msys
 set _MSYS_HOME=
 set _MSYS_PATH=
 
 set __MAKE_CMD=
-for /f %%f in ('where make.exe 2^>NUL') do set "__MAKE_CMD=%%f"
+for /f "delims=" %%f in ('where make.exe 2^>NUL') do set "__MAKE_CMD=%%f"
 if defined __MAKE_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of GNU Make executable found in PATH 1>&2
     for /f "delims=" %%i in ("%__MAKE_CMD%") do set "__MAKE_BIN_DIR=%%~dpi"
-    for %%f in ("!__MAKE_BIN_DIR!") do set "_MSYS_HOME=%%~dpf"
+    for %%f in ("!__MAKE_BIN_DIR!..") do set "_MSYS_HOME=%%~dpf"
     @rem keep _MSYS_PATH undefined since executable already in path
     goto :eof
 ) else if defined MSYS_HOME (
@@ -431,7 +500,7 @@ set _GIT_HOME=
 set _GIT_PATH=
 
 set __GIT_CMD=
-for /f %%f in ('where git.exe 2^>NUL') do set "__GIT_CMD=%%f"
+for /f "delims=" %%f in ('where git.exe 2^>NUL') do set "__GIT_CMD=%%f"
 if defined __GIT_CMD (
     if %_DEBUG%==1 echo %_DEBUG_LABEL% Using path of Git executable found in PATH 1>&2
     for %%i in ("%__GIT_CMD%") do set "__GIT_BIN_DIR=%%~dpi"
@@ -452,7 +521,7 @@ if defined __GIT_CMD (
         for /f %%f in ('dir /ad /b "!__PATH!\Git*" 2^>NUL') do set "_GIT_HOME=!__PATH!\%%f"
         if not defined _GIT_HOME (
             set "__PATH=%ProgramFiles%"
-            for /f %%f in ('dir /ad /b "!__PATH!\Git*" 2^>NUL') do set "_GIT_HOME=!__PATH!\%%f"
+            for /f "delims=" %%f in ('dir /ad /b "!__PATH!\Git*" 2^>NUL') do set "_GIT_HOME=!__PATH!\%%f"
         )
     )
 )
@@ -467,8 +536,10 @@ goto :eof
 :print_env
 set __VERBOSE=%1
 set "__VERSIONS_LINE1=  "
+set "__VERSIONS_LINE2=  "
 set "__VERSIONS_LINE3=  "
 set __WHERE_ARGS=
+
 where /q "%JAVA_HOME%\bin:javac.exe"
 if %ERRORLEVEL%==0 (
     for /f "tokens=1,2,*" %%i in ('"%JAVA_HOME%\bin\javac.exe" -version 2^>^&1') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% javac %%j,"
@@ -479,15 +550,42 @@ if %ERRORLEVEL%==0 (
     for /f "tokens=1,2,3,*" %%i in ('"%MAVEN_HOME%\bin\mvn.cmd" -version ^| findstr Apache') do set "__VERSIONS_LINE1=%__VERSIONS_LINE1% mvn %%k,"
     set __WHERE_ARGS=%__WHERE_ARGS% "%MAVEN_HOME%\bin:mvn.cmd"
 )
+@rem Microsoft Visual Studio 10 or 2022
+set "__MSVC_BIN_DIR=%MSVC_HOME%\bin\Hostx64\x64"
+
+where /q "%__MSVC_BIN_DIR%:cl.exe"
+if %ERRORLEVEL%==0 (
+    for /f "tokens=1-6,7,*" %%i in ('"%__MSVC_BIN_DIR%\cl.exe" 2^>^&1 ^| findstr version') do (
+        set "__VERSION_STR=%%n"
+        setlocal enabledelayedexpansion
+        set "__VERSIONS_LINE1=%__VERSIONS_LINE1% cl!__VERSION_STR:version=!,"
+    )
+    set __WHERE_ARGS=%__WHERE_ARGS% "%__MSVC_BIN_DIR%:cl.exe"
+)
+where /q "%__MSVC_BIN_DIR%:dumpbin.exe"
+if %ERRORLEVEL%==0 (
+    for /f "tokens=1-5,*" %%i in ('"%__MSVC_BIN_DIR%\dumpbin.exe" 2^>^&1 ^| findstr Version') do set "__VERSIONS_LINE2=%__VERSIONS_LINE2% dumpbin %%n,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%__MSVC_BIN_DIR%:dumpbin.exe"
+)
+where /q "%__MSVC_BIN_DIR%:link.exe"
+if %ERRORLEVEL%==0 (
+    for /f "tokens=1-5,*" %%i in ('"%__MSVC_BIN_DIR%\link.exe" ^| findstr Version 2^>^NUL') do set "__VERSIONS_LINE2=%__VERSIONS_LINE2% link %%n,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%__MSVC_BIN_DIR%:link.exe"
+)
+where /q "%MSYS_HOME%\usr\bin:uuidgen.exe"
+if %ERRORLEVEL%==0 (
+    for /f "tokens=1-3,4,*" %%f in ('"%MSYS_HOME%\usr\bin\uuidgen.exe" --version ^| findstr /B uuidgen') do set "__VERSIONS_LINE2=%__VERSIONS_LINE2% uuidgen %%i,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%MSYS_HOME%\usr\bin:uuidgen.exe"
+)
 where /q "%GIT_HOME%\bin:git.exe"
 if %ERRORLEVEL%==0 (
-   for /f "tokens=1,2,*" %%i in ('"%GIT_HOME%\bin\git.exe" --version') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% git %%k,"
+    for /f "tokens=1,2,*" %%i in ('"%GIT_HOME%\bin\git.exe" --version') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% git %%k,"
     set __WHERE_ARGS=%__WHERE_ARGS% "%GIT_HOME%\bin:git.exe"
 )
-where /q diff.exe
+where /q "%GIT_HOME%\usr\bin:diff.exe"
 if %ERRORLEVEL%==0 (
-   for /f "tokens=1-3,*" %%i in ('diff.exe --version ^| findstr /B diff') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% diff %%l"
-    set __WHERE_ARGS=%__WHERE_ARGS% diff.exe
+    for /f "tokens=1-3,*" %%i in ('"%GIT_HOME%\usr\bin\diff.exe" --version ^| findstr /B diff') do set "__VERSIONS_LINE3=%__VERSIONS_LINE3% diff %%l,"
+    set __WHERE_ARGS=%__WHERE_ARGS% "%GIT_HOME%\usr\bin:diff.exe"
 )
 where /q "%GIT_HOME%\bin":bash.exe
 if %ERRORLEVEL%==0 (
@@ -496,19 +594,26 @@ if %ERRORLEVEL%==0 (
 )
 echo Tool versions:
 echo %__VERSIONS_LINE1%
+echo %__VERSIONS_LINE2%
 echo %__VERSIONS_LINE3%
 if %__VERBOSE%==1 if defined __WHERE_ARGS (
+    @rem if %_DEBUG%==1 echo %_DEBUG_LABEL% where %__WHERE_ARGS%
     echo Tool paths: 1>&2
     for /f "tokens=*" %%p in ('where %__WHERE_ARGS%') do echo    %%p 1>&2
 )
-if %__VERBOSE%==1 if defined MSVS_HOME (
+if %__VERBOSE%==1 if defined MSVC_HOME (
     echo Environment variables: 1>&2
     if defined GIT_HOME echo    "GIT_HOME=%GIT_HOME%" 1>&2
+    if defined GRAALVM_HOME echo    "GRAALVM_HOME=%_GRAALVM_HOME%" 1>&2
+    if defined GRAALVM17_HOME echo    "GRAALVM17_HOME=%_GRAALVM17_HOME%" 1>&2
     if defined JAVA_HOME echo    "JAVA_HOME=%JAVA_HOME%" 1>&2
     if defined MAVEN_HOME echo    "MAVEN_HOME=%MAVEN_HOME%" 1>&2
     if defined MSVC_HOME echo    "MSVC_HOME=%MSVC_HOME%" 1>&2
     if defined MSVS_HOME echo    "MSVS_HOME=%MSVS_HOME%" 1>&2
+    if defined MSYS_HOME echo    "MSYS_HOME=%MSYS_HOME%" 1>&2
     if defined WINSDK_HOME echo    "WINSDK_HOME=%WINSDK_HOME%" 1>&2
+    echo Path associations: 1>&2
+    for /f "delims=" %%i in ('subst') do echo    %%i 1>&2
 )
 goto :eof
 
@@ -519,28 +624,30 @@ goto :eof
 endlocal & (
     if %_EXITCODE%==0 (
         if not defined GIT_HOME set "GIT_HOME=%_GIT_HOME%"
-        if not defined GRAAL_HOME set "GRAAL_HOME=%_GRAAL_HOME%"
+        if not defined GRAALVM_HOME set "GRAALVM_HOME=%_GRAALVM_HOME%"
+        if not defined GRAALVM17_HOME set "GRAALVM17_HOME=%_GRAALVM17_HOME%"
         @rem http://www.graalvm.org/docs/graalvm-as-a-platform/implement-language/
-        if not defined JAVA_HOME set "JAVA_HOME=%_GRAAL_HOME%"
+        if not defined JAVA_HOME set "JAVA_HOME=%_GRAALVM_HOME%"
         if not defined MAVEN_HOME set "MAVEN_HOME=%_MAVEN_HOME%"
-        if not defined MSVS_HOME set "MSVS_HOME=%_MSVS_HOME%"
         if not defined MSVC_HOME set "MSVC_HOME=%_MSVC_HOME%"
+        if not defined MSVS_HOME set "MSVS_HOME=%_MSVS_HOME%"
+        if not defined MSYS_HOME set "MSYS_HOME=%_MSYS_HOME%"
         if not defined WINSDK_HOME set "WINSDK_HOME=%_WINSDK_HOME%"
         set "PATH=%PATH%%_MAVEN_PATH%%_MSYS_PATH%%_GIT_PATH%;%_ROOT_DIR%bin"
         call :print_env %_VERBOSE%
-        if not "%CD:~0,2%"=="%_DRIVE_NAME%:" (
-            if %_DEBUG%==1 echo %_DEBUG_LABEL% cd /d %_DRIVE_NAME%: 1>&2
-            cd /d %_DRIVE_NAME%:
+        if not "%CD:~0,2%"=="%_DRIVE_NAME%" (
+            if %_DEBUG%==1 echo %_DEBUG_LABEL% cd /d %_DRIVE_NAME% 1>&2
+            cd /d %_DRIVE_NAME%
         )
     )
     if %_DEBUG%==1 echo %_DEBUG_LABEL% _EXITCODE=%_EXITCODE% 1>&2
     for /f "delims==" %%i in ('set ^| findstr /b "_"') do set %%i=
     @rem must be called last
     if %_BASH%==1 (
-        if %_DEBUG%==1 echo %_DEBUG_LABEL% %_GIT_HOME%\bin\bash.exe --login 1>&2
+        if %_DEBUG%==1 echo %_DEBUG_LABEL% "%_GIT_HOME%\bin\bash.exe" --login 1>&2
         cmd.exe /c "%_GIT_HOME%\bin\bash.exe --login"
-    ) else if %_SDK%==1 if not defined WindowsSDKDir (
+    ) else if %_USE_SDK%==1 if not defined WindowsSDKDir (
         timeout /t 2 1>NUL
-        cmd.exe /E:ON /V:ON /T:0E /K %_SDK_HOME%\bin\setEnv.cmd
+        cmd.exe /E:ON /V:ON /T:0E /K "%_WINSDK_HOME%\bin\setEnv.cmd"
     )
 )

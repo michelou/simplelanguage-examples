@@ -1,6 +1,6 @@
-# <span id="top">SimpleLanguage on Microsoft Windows</span>
+# <span id="top">Playing with SimpleLanguage on Windows</span>
 
-<table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
+<table style="font-family:Helvetica,Arial;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:60px;max-width:100px;">
     <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="docs/images/GraalVM-rgb.svg" alt="GraalVM project"/></a>
@@ -17,8 +17,8 @@
 
 This project depends on several external software for the **Microsoft Windows** platform:
 
-- [Apache Maven 3.8][maven_downloads] ([requires Java 7][maven_history])  ([*release notes*][maven_relnotes])
-- [Git 2.36][git_downloads] ([*release notes*][git_relnotes])
+- [Apache Maven 3.9][maven_downloads] ([requires Java 8+][maven_history])  ([*release notes*][maven_relnotes])
+- [Git 2.41][git_downloads] ([*release notes*][git_relnotes])
 - [GraalVM Community Edition 22 LTS][graalvm_releases] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
 - [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
 - [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
@@ -28,17 +28,17 @@ This project depends on several external software for the **Microsoft Windows** 
 
 Optionally one may also install the following software:
 
-- [ANTLR 4.10 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
+- [ANTLR tool 4.13][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
 
 > **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc].
 
-For instance our development environment looks as follows (*April 2022*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
+For instance our development environment looks as follows (*Augustl 2023*) <sup id="anchor_04">[[4]](#footnote_04)</sup> :
 
 <pre style="font-size:80%;">
-C:\opt\apache-maven-3.8.5\                            <i>( 10 MB)</i>
+C:\opt\apache-maven-3.9.4\                            <i>( 10 MB)</i>
 C:\opt\graalvm-ce-java11-22.0.0.2\                    <i>(869 MB)</i>
 C:\opt\graalvm-ce-java17-22.0.0.2\                    <i>(937 MB)</i>
-C:\opt\Git-2.36.0\                                    <i>(279 MB)</i>
+C:\opt\Git-2.41.0\                                    <i>(279 MB)</i>
 C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
 C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
 </pre>
@@ -54,7 +54,7 @@ This project is organized as follows:
 <pre style="font-size:80%;">
 bin\simplelanguage\
 docs\
-simplelanguage\  <i>(<a href=".gitmodules">Git submodule</a>)</i>
+<a href="https://github.com/michelou/simplelanguage">simplelanguage</a>\  <i>(<a href=".gitmodules">Git submodule</a>)</i>
 <a href="BUILD.md">BUILD.md</a>
 README.md
 <a href="setenv.bat">setenv.bat</a>
@@ -109,7 +109,7 @@ We distinguish different sets of batch commands:
      Options:
        -debug      show commands executed by this script
        -native     generate native executable (native-image)
-       -timer      display total elapsed time
+       -timer      display total execution time
        -verbose    display progress messages
    &nbsp;
     Subcommands:
@@ -130,13 +130,14 @@ Command [**`setenv`**](setenv.bat) is run once to setup our development environm
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
-   javac 1.8.0_322, mvn 3.8.5,
-   git 2.36.0.windows.1, diff 3.8, bash 4.4.23(1)-release
+   javac 1.8.0_322, mvn 3.9.4, cl 19.36.32532,
+   dumpbin 14.36.32532.0, link 14.36.32532.0, uuidgen 2.35.2,
+   git 2.41.0.windows.1, diff 3.8, bash 5.2.15(1)-release
 
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where">where</a> javac mvn</b>
 C:\opt\graalvm-ce-java11-21.3.0\bin\javac.exe
-C:\opt\apache-maven-3.8.5\bin\mvn
-C:\opt\apache-maven-3.8.5\bin\mvn.cmd
+C:\opt\apache-maven-3.9.4\bin\mvn
+C:\opt\apache-maven-3.9.4\bin\mvn.cmd
 </pre>
 
 Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
@@ -144,21 +145,31 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
-   javac 1.8.0_302, mvn 3.8.5,
-   git 2.36.0.windows.1, diff 3.7 bash 4.4.23(1)-release
+   javac 17.0.8, mvn 3.9.4, cl 19.36.32532,
+   dumpbin 14.36.32532.0, link 14.36.32532.0, uuidgen 2.35.2,
+   git 2.41.0.windows.1, diff 3.9, bash 5.2.15(1)-release
 Tool paths:
-   C:\opt\graalvm-ce-java11-21.2.0\bin\javac.exe
-   C:\opt\apache-maven-3.8.5\bin\mvn.cmd
-   C:\opt\Git-2.36.0\bin\git.exe
-   C:\opt\Git-2.36.0\mingw64\bin\git.exe
-   C:\opt\Git-2.36.0\usr\bin\diff.exe
-   C:\opt\Git-2.36.0\bin\bash.exe
+   C:\opt\jdk-graalvm-ce-17.0.8_7.1\bin\javac.exe
+   C:\opt\apache-maven-3.9.4\bin\mvn.cmd
+   X:\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\cl.exe
+   X:\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\dumpbin.exe
+   X:\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\link.exe
+   C:\opt\msys64\usr\bin\uuidgen.exe
+   C:\opt\Git-2.41.0\bin\git.exe
+   C:\opt\Git-2.41.0\usr\bin\diff.exe
+   C:\opt\Git-2.41.0\bin\bash.exe
 Environment variables:
-   "GIT_HOME=C:\opt\Git-2.36.0"
-   "JAVA_HOME=C:\opt\graalvm-ce-java11-21.2.0"
-   "MAVEN_HOME=C:\opt\apache-maven-3.8.5"
-   "MSVC_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC"
-   "MSVS_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0"
+   "GIT_HOME=C:\opt\Git-2.41.0"
+   "GRAAL_HOME=C:\opt\jdk-graalvm-ce-17.0.8_7.1"
+   "JAVA_HOME=C:\opt\jdk-graalvm-ce-17.0.8_7.1"
+   "MAVEN_HOME=C:\opt\apache-maven-3.9.4"
+   "MSVC_HOME=X:\VC\Tools\MSVC\14.36.32532"
+   "MSVS_HOME=X:"
+   "MSYS_HOME=C:\opt\msys64\"
+   "WINSDK_HOME=C:\Program Files (x86)\Windows Kits\10"
+Path associations:
+   O:\: => %USERPROFILE%\workspace-perso\simplelanguage-examples
+   X:\: => C:\Program Files\Microsoft Visual Studio\2022\Community
 </pre>
 
 Command [**`setenv -sdk`**](setenv.bat) is aimed to users who prefer to rely on the *"Windows SDK 7.1 Command Prompt"* shortcut (target **`C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd`**) to setup their development environment.
@@ -222,10 +233,10 @@ In our case we downloaded the following installation files (see section <a href=
 </dd>
 <dd>
 <pre style="font-size:80%;">
-<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.8.5-bin.zip</a>                  <i>(  8 MB)</i>
+<a href="https://archive.apache.org/dist/ant/binaries/">apache-maven-3.9.4-bin.zip</a>                  <i>(  8 MB)</i>
 <a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.23.0">graalvm-ce-java11-windows-amd64-21.3.0.zip</a>  <i>(268 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=8442">GRMSDKX_EN_DVD.iso</a>                          <i>(570 MB)</i>
-<a href="https://git-scm.com/download/win">PortableGit-2.36.0-64-bit.7z.exe</a>            <i>( 41 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.41.0-64-bit.7z.exe</a>            <i>( 41 MB)</i>
 <a href="https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422">VC-Compiler-KB2519277.exe</a>                   <i>(121 MB)</i>
 </pre>
 </dd></dl>
@@ -244,7 +255,7 @@ In our case we downloaded the following installation files (see section <a href=
 [deno_examples]: https://github.com/michelou/deno-examples
 [git_downloads]: https://git-scm.com/download/win
 [git_cli]: https://git-scm.com/docs/git
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.36.0.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.41.0.txt
 [github_michelou_sl]: https://github.com/michelou/simplelanguage
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://github.github.com/gfm/
@@ -270,7 +281,7 @@ In our case we downloaded the following installation files (see section <a href=
 [maven_cli]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [maven_downloads]: https://maven.apache.org/download.cgi
 [maven_history]: https://maven.apache.org/docs/history.html
-[maven_relnotes]: https://maven.apache.org/docs/3.8.5/release-notes.html
+[maven_relnotes]: https://maven.apache.org/docs/3.9.4/release-notes.html
 [mvn_cmd]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [rust_examples]: https://github.com/michelou/rust-examples
 [scala3_examples]: https://github.com/michelou/dotty-examples

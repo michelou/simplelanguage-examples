@@ -22,6 +22,8 @@
 *.js text linguist-language=JavaScript
 *.json text linguist-language=JSON
 *.jsx text linguist-language=JavaScript
+*.kt text linguist-vendored=Kotlin
+*.kts text linguist-vendored=Kotlin
 *.md text linguist-documentation=true
 *.properties text linguist-language=INI
 *.py text linguist-language=Python

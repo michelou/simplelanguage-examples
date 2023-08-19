@@ -1,6 +1,6 @@
-# <span id="top">Building SimpleLanguage on Microsoft Windows</span> <span style="size:30%;"><a href="README.md">↩</a></span>
+# <span id="top">Building SimpleLanguage on Windows</span> <span style="size:30%;"><a href="README.md">↩</a></span>
 
-<table style="font-family:Helvetica,Arial;font-size:14px;line-height:1.6;">
+<table style="font-family:Helvetica,Arial;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:60px;max-width:100px;">
     <a href="https://www.graalvm.org/" rel="external"><img style="border:0;" src="docs/images/GraalVM-rgb.svg" alt="GraalVM"/></a>
@@ -10,67 +10,6 @@
   </td>
   </tr>
 </table>
-
-## <span id="section_01">Project dependencies</span>
-
-This project depends on several external software for the **Microsoft Windows** platform:
-
-- [Apache Maven 3.8][maven_downloads] ([requires Java 7](http://maven.apache.org/docs/history.html))  ([*release notes*][maven_relnotes])
-- [Git 2.36][git_downloads] ([*release notes*][git_relnotes])
-- [GraalVM Community Edition 22 LTS][graalvm_downloads] <sup id="anchor_01">[[1]](#footnote_01)</sup> ([*release notes*][graalvm_relnotes])
-- [Microsoft Visual Studio 10][vs2010_downloads] ([*release notes*][vs2010_relnotes])
-- [Microsoft Windows SDK for Windows 7 and .NET Framework 4][windows_sdk] <sup id="anchor_02a">[[2]](#footnote_02)</sup>
-<!--
-- [Microsoft Visual C++ 2010 Service Pack 1 Compiler Update for the Windows SDK 7.1](https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=4422) <sup id="anchor_02b">[[2]](#footnote_02)</sup>
--->
-
-Optionally one may also install the following software:
-
-- [ANTLR 4.10 tool][antlr_downloads] ([*release notes*][antlr_relnotes]) <sup id="anchor_03">[[3]](#footnote_03)</sup>
-
-> **:mag_right:** Git for Windows provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**](https://www.linux.org/docs/man1/grep.html), [**`more`**](https://www.linux.org/docs/man1/more.html), [**`mv`**](https://www.linux.org/docs/man1/mv.html), [**`rmdir`**](https://www.linux.org/docs/man1/rmdir.html), [**`sed`**](https://www.linux.org/docs/man1/sed.html) and [**`wc`**][man1_wc].
-
-For instance our development environment looks as follows (*April 2022*):
-
-<pre style="font-size:80%;">
-C:\opt\apache-maven-3.8.5\                            <i>( 10 MB)</i>
-C:\opt\graalvm-ce-java11-22.0.0.2\                    <i>(845 MB)</i>
-C:\opt\graalvm-ce-java17-22.0.0.2\                    <i>(845 MB)</i>
-C:\opt\Git-2.36.0\                                    <i>(290 MB)</i>
-C:\Program Files\Microsoft SDKs\Windows\v7.1\         <i>(333 MB)</i>
-C:\Program Files (x86)\Microsoft Visual Studio 10.0\  <i>(555 MB)</i>
-</pre>
-<!-- 19.3.1 = 360 MB, 20.9.0 -> 670 MB, 20.1.0 -> 785 MB, 20.2.0 -> 664 MB -->
-<!-- 21.1.0 = 661 MB, 22.0.0.2 ->  -->
-
-> **&#9755;** ***Installation policy***<br/>
-> When possible we install software from a [Zip archive][zip_archive] rather than via a Windows installer. In our case we defined **`C:\opt\`** as the installation directory for optional software tools (*in reference to* the [**`/opt/`**][unix_opt] directory on Unix).
-
-
-## Directory structure
-
-This project is organized as follows:
-
-<pre style="font-size:80%;">
-<a href="bin/simplelanguage/build.bat">bin\simplelanguage\build.bat</a>
-<a href="bin/simplelanguage/generate_parser.bat">bin\simplelanguage\generate_parser.bat</a>
-<a href="bin/simplelanguage/sl.bat">bin\simplelanguage\sl.bat</a>
-docs\
-simplelanguage\  <i>(<a href=".gitmodules">Git submodule</a>)</i>
-BUILD.md
-README.md
-<a href="RESOURCES.md">RESOURCES.md</a>
-<a href="setenv.bat">setenv.bat</a>
-</pre>
-
-- file [**`bin\simplelanguage\build.bat`**](bin/simplelanguage/build.bat) is the batch script for running **`mvn package`** both inside or *outside* of the *Windows SDK 7.1 Command Prompt*.
-- file [**`bin\simplelanguage\generate_parser.bat`**](bin/simplelanguage/generate_parser.bat) <sup id="anchor_04">[4](#footnote_04)</sup> is the batch script for generating the SL parser source files.
-- file [**`bin\simplelanguage\sl.bat`**](bin/simplelanguage/sl.bat) is the batch script for executing the generated SL parser.
-- directory [**`docs\`**](docs/) contains SL related documentation <sup id="anchor_05">[5](#footnote_05)</sup>.
-- directory [**`simplelanguage\`**](https://github.com/michelou/simplelanguage/) contains our [fork](https://github.com/michelou/simplelanguage) of the [graalvm/simplelanguage][graalvm_simplelanguage] repository as a Github submodule.
-- file [**`BUILD.md`**](BUILD.md) is the [Markdown][github_markdown] document of this page.
-- file [**`README.md`**](README.md) is the [Markdown][github_markdown] document describing this project.
-- file [**`setenv.bat`**](setenv.bat) is the batch script for setting up our environment.
 
 The [**`SimpleLanguage`**][graalvm_simplelanguage] example project is a [Maven project][maven_project] with five POM files (one [main](simplelanguage/pom.xml) project and four subprojects).
 
@@ -156,7 +95,7 @@ Command [**`setenv`**](setenv.bat) is executed once to setup our development env
 Tool versions:
    javac 11.0.14, mvn 3.8.5, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.36.0.windows.1, diff 3.8, bash 4.4.23(1)-release
+   git 2.41.0.windows.1, diff 3.8, bash 4.4.23(1)-release
 
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where_1">where</a> javac mvn</b>
 C:\opt\graalvm-ce-java11-22.0.0.2\bin\javac.exe
@@ -171,19 +110,19 @@ Command [**`setenv -verbose`**](setenv.bat) also displays the tool paths:
 Tool versions:
    javac 11.0.14, mvn 3.8.5, cl 16.00.40219.01 for x64
    dumpbin 10.00.40219.01, link 10.00.40219.01, uuidgen v1.01
-   git 2.36.0.windows.1, diff 3.8, bash 4.4.23(1)-release
+   git 2.41.0.windows.1, diff 3.8, bash 4.4.23(1)-release
 Tool paths:
    C:\opt\graalvm-ce-java11-22.0.0.2\bin\javac.exe
    C:\opt\apache-maven-3.8.5\bin\mvn.cmd
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\cl.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\dumpbin.exe
    C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\link.exe
-   C:\opt\Git-2.36.0\usr\bin\link.exe
+   C:\opt\Git-2.41.0\usr\bin\link.exe
    C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\x64\Uuidgen.Exe
-   C:\opt\Git-2.36.0\bin\git.exe
-   C:\opt\Git-2.36.0\mingw64\bin\git.exe
-   C:\opt\Git-2.36.0\usr\bin\diff.exe
-   C:\opt\Git-2.36.0\bin\bash.exe
+   C:\opt\Git-2.41.0\bin\git.exe
+   C:\opt\Git-2.41.0\mingw64\bin\git.exe
+   C:\opt\Git-2.41.0\usr\bin\diff.exe
+   C:\opt\Git-2.41.0\bin\bash.exe
 </pre>
 
 
@@ -610,7 +549,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/April 2022* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/August 2023* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -620,7 +559,7 @@ DZone article "<i><a href="https://dzone.com/articles/running-xccompilecommand-o
 [antlr_relnotes]: https://github.com/antlr/antlr4/releases/tag/4.10.1
 [git_cli]: https://git-scm.com/docs/git
 [git_downloads]: https://git-scm.com/download/win
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.36.0.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.41.0.txt
 [github_graalvm_sl]: https://github.com/graalvm/simplelanguage
 [github_markdown]: https://guides.github.com/features/mastering-markdown/
 [graalvm]: https://www.graalvm.org/
